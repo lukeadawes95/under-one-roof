@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Notifications</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+
+<body>
+<!--Header-->
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a>
+  <h1 id="pageTitle">Notifications</h1>
+</header>
+<!--Page Content-->
+<div id="page-content" style="padding:2%; min-height:90vh">
+  <div id=notif>
+    <h2 id="notifHeading">Notifications</h2>
+    <div id="notifContent">
+      <ol id="notifList">
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!--Footer-->
+<div class="footer-basic">
+  <footer>
+    <div id="icons" style="text-align:center;">
+      <h2>Under One Roof</h2>
+      <a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+      <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+      <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a> 
+    </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script> 
+<script>
+//Configuring firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+  
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    //User is signed in.
+	var currentProperty = localStorage.getItem("prop");
+	firebase.database().ref('addresses/'+currentProperty+'/notificationUpdates').orderByChild('timeStamp').on("child_added", function(data){
+		  //Set Local Variables
+		  var type = data.child("type").val();
+		  var updateBody = data.child("body").val();
+		  var title = data.child("title").val();
+		  var forWho = data.child("forWho").val();
+		  console.log(forWho);
+		  firebase.database().ref('users/'+user.uid+'/userType').on("value", function(data){
+			  var userType = data.val
+		  if(title != '' && forWho == 'Everyone'){
+			  var appendNotif = "<li style='background-color: #94C2ED; color:#444753; padding: 10px;font-size:14px;  border-radius: 10px;margin:5px;'><strong>"+capitalLetter(type)+"</strong> Update for: <u>"+title+"</u><br>"+updateBody+"</li>";
+			  $('#notifList').prepend(appendNotif);
+		  }
+		  else if(title == '' && forWho == 'Everyone'){
+			  var appendNotif = "<li style='background-color: #94C2ED; color:#444753; padding: 10px;font-size:14px;  border-radius: 10px;margin:5px;'><strong>"+capitalLetter(type)+"</strong><br>"+updateBody+"</li>";
+			  $('#notifList').prepend(appendNotif);
+		  }
+		  else if(title == '' && forWho == user.uid){
+			  console.log('user')
+			  var appendNotif = "<li style='background-color: #94C2ED; color:#444753; padding: 10px;font-size:14px;  border-radius: 10px;margin:5px;'><strong>"+capitalLetter(type)+"</strong><br>"+updateBody+"</li>";
+			  $('#notifList').prepend(appendNotif);
+		  }
+		  if(forWho == userType){
+			  console.log('only landlord')
+			  var appendNotif = "<li style='background-color: #94C2ED; color:#444753; padding: 10px;font-size:14px;  border-radius: 10px;margin:5px;'><strong>"+capitalLetter(type)+"</strong><br>"+updateBody+"</li>";
+			  $('#notifList').prepend(appendNotif);
+		  }
+		  
+		  });
+	  });
+	
+
+  } else {
+    // No user is signed in.
+	location = 'index.html';
+  }
+});
+</script>
+</body>
+</html>

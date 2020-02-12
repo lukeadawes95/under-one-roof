@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>index</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+
+</head>
+
+<body>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a><h1 id="pageTitle">Tenants</h1></header>
+<div id="page-content">
+<div class="personal-details">
+  <div class="details-container">
+    <h2 class="info-title"><strong style="color:#5d6f56;">Basic Information</strong></h2>
+    <div class="profile-group">
+      <p id="first-name-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="last-name-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="user-type-profile"></p>
+    </div>
+  </div>
+</div>
+<div class="personal-details">
+  <div class="details-container">
+    <h2 class="info-title"><strong style="color:#5d6f56;">Contact Information</strong></h2>
+    <div class="profile-group">
+      <p id="email-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="mobile-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-one-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-two-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-three-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-town-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-city-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-county-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-postcode-profile"></p>
+    </div>
+  </div>
+</div>
+<div id="emContactField" class="personal-details">
+  <div class="details-container">
+    <h2 class="info-title"><strong style="color:#5d6f56;">Emergency Contact</strong></h2>
+    <div id="alertErrorMessage" class="alertError hidden">Emergency contact wasn't submitted. Please check your connection and try again.</div>
+     <div id="alertMessage" class="alert hidden">Emergency contact successfully submitted.</div>
+    <div class="profile-group">
+      <p id="em-name-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-mobile-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-email-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-one-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-two-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-three-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-town-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-city-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-county-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-postcode-profile"></p>
+    </div>
+    <div class="profile-group">
+    </div>
+  </div>
+  <div id="emContactForm" class="pop-up-box hidden">
+    <div class="pop-up-content">
+    	<i class="fa fa-times" onClick="hide(emContactForm)"></i>
+      <h2 style="padding-bottom: 20px;">Emergency Contact Information</h2>
+
+      <div class="profile-group">
+        <input id="txtEmName" class="form-control" type="text" placeholder="Full Name">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmEmail" class="form-control" type="email" placeholder="Email">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmMobile" class="form-control" type="tel" placeholder="Mobile">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddOne" class="form-control" type="text" placeholder="Line One">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddTwo" class="form-control" type="text" placeholder="Line Two">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddThree" class="form-control" type="text" placeholder="Line Three">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddTown" class="form-control" type="text" placeholder="Town">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddCity" class="form-control" type="text" placeholder="City">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddCounty" class="form-control" type="text" placeholder="County">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddPostcode" class="form-control" type="text" placeholder="Postcode">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSubEmContact" style="background-color:#5d6f56; border-color:#5d6f56" onclick="submitEmContact()">Submit Emergency Contact</button>
+    </div>
+  </div>
+</div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script>
+<script>
+//Configure firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+firebase.initializeApp(config);
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+
+  }<!--End of user if statement->
+  else {
+    // No user is signed in.
+	location = 'index.html'; //if theres no user signed in, redirect the page to index.html
+  }<!--End of user else statement->
+});
+</script>
+</body>
+</html>

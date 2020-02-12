@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html style="background-color:#5d6f56;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Under One Roof - Login</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+
+<body>
+    <header><a href="index.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a></header>
+    <div id="login_container">
+    	<div class="login-clean">
+            <h2 class="sr-only">Login Form</h2>
+            <div class="illustration">
+            	<i class="icon ion-ios-navigate" style="color:#5d6f56;">
+            	</i>
+            </div>
+            <div class="form-group">
+            	<input id="txtEmail_log"class="form-control" type="email" placeholder="Email" />
+            </div>
+            <div class="form-group">
+            	<input id="txtPassword_log" class="form-control" type="password" placeholder="Password" />
+            </div>
+            <div class="form-group">
+            	<button id="btnLogin" class="btn btn-primary btn-block" type="submit" onClick="login()" style="background-color:#5d6f56;">
+                	Log In
+                </button>
+            </div>
+            <a href="#" class="forgot">Forgot your email or password?</a>
+            <div id ="alertErrorMessage" class="alertError hidden"></div>
+    	</div>
+    </div>
+    <div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/webjs.js"></script>
+    <script>
+	var config = {
+	  apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+	  authDomain: "under-one-roof.firebaseapp.com",
+	  databaseURL: "https://under-one-roof.firebaseio.com",
+	  projectId: "under-one-roof",
+	  storageBucket: "under-one-roof.appspot.com",
+	  messagingSenderId: "842485534285"
+  	};
+  	firebase.initializeApp(config);
+	
+	firebase.auth().onAuthStateChanged(function(user) {
+	  if (user) {
+		// User is signed in.
+		location = 'home.html'
+	  } else {
+		// No user is signed in.
+	  }
+	});
+	function login(){
+	  var email = document.getElementById("txtEmail_log").value;
+	  var password = document.getElementById("txtPassword_log").value;
+	  
+	  firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
+		  getCurrentProp();
+		  location = 'home.html';
+	  }, function(error) {
+		// Handle Errors here.
+		var errorMessage = error.message;
+		var errorAlert = document.getElementById("alertErrorMessage");
+		errorAlert.innerHTML = errorMessage;
+		show(alertErrorMessage);
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},5000);
+	  });
+	}
+	</script>
+</body>
+
+</html>

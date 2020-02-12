@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Tenants</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+
+</head>
+
+<body>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a><h1 id="pageTitle">Tenants</h1></header>
+<div id ="alertMessage" class="alert hidden"></div>
+<div id="page-content">
+<button class="btn btn-primary btn-block" type="submit" id="addTenant" onclick="show(addTenantForm)" style="background-color:#5d6f56;border-color:#5d6f56;"><i class="far fa-plus-square" style="margin-right:5px;"></i>Add Tenant</button>
+<div id="tenantRequest" class="pop-up-box hidden">
+  <div class="pop-up-content">
+    <i class="fa fa-times" onClick="hide(tenantRequest)"></i>
+    <h2 style="padding-bottom: 20px;" class="center">Tenant Request(s)</h2>
+    <p id="welcome-message"></p>
+    <div class="profile-group">
+      <table id="requestTable" class="tg">
+      </table>
+    </div>
+  </div>
+</div>
+<div id="addTenantForm" class="pop-up-box hidden">
+  <div class="pop-up-content" style="height:0;">
+    <i class="fa fa-times" onClick="hide(addTenantForm)"></i>
+    <h2 style="padding-bottom: 20px;" class="center">Search for Tenant by Username</h2>
+    <input id="searchTenantUsernameTxt" class="form-control" type="text" placeholder="Please enter Tenants Username ">
+    <button class="btn btn-primary btn-block" type="submit" id="searchTenant" onclick="searchForTenant()" style="background-color:#5d6f56;border-color:#5d6f56;">Search<i class="fas fa-search" style="margin-left:5px;"></i></button>
+    <div class="profile-group">
+      <table id="tenantSearchTable" class="tg" style="margin-top:10px;">
+      </table>
+    </div>
+    <p style="text-align:center;">Teant not registered? Invite your tenant to register <a href="mailto:?subject=Come join Under One Roof!&body=Hi, check out Under One Roof and sign up here http://itsuite.it.bton.ac.uk/ld329/under-one-roof/index.html. Thanks, see you soon" style="color:#5d6f56;">here.</a> </p></div>
+  </div>
+</div>
+<div id="foot" class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script>
+<script>
+//Configure firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+firebase.initializeApp(config);
+
+	
+function openChat(ele){
+	var key = ele.getAttribute("value");
+	localStorage.setItem("1-1-key", key);
+	window.open("chat.html");
+}
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	
+	//Set Variables
+	var ref = firebase.database().ref().child('users').child(user.uid);
+	var refAdd = firebase.database().ref().child('addresses');
+	var reff = firebase.database().ref().child('users');
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database();
+	
+	refAdd.child(currentProperty).child('tenant').orderByKey().once("value", function(snapshot){
+		if(snapshot.val()){
+			var update = {
+				"propertyStatus": "Occupied"
+				}
+			db.ref('addresses/'+currentProperty).update(update);
+		}
+		snapshot.forEach(function(child){
+		  var key = child.key;
+		  var tenantUsername;
+		  var tenantName;
+		  var tenantMobile;
+		  var tenantEmail;
+		  reff.child(key).child("username").on('value', function(data){
+			  tenantUsername = data.val();
+			  console.log('first' +  data.val());
+			  var appendUsername = "<div class='personal-details'><div id='tenantGroup' class='details-container'><h2 id='tenantUsername' class='info-title center'><i class='far fa-comment-alt float-left' value='"+key+"' onclick='openChat(this)' style='cursor:pointer;'></i>" + tenantUsername + "<i id='deleteTenantIcon' class='far fa-trash-alt' value='"+tenantUsername+"' onclick='deleteTenant(this)'></i></h2><div id='tenantDetails"+tenantUsername+"' class='profile-group'></div></div>";
+			  $('#page-content').append(appendUsername);
+			  ref.child("userType").on('value', function(data){
+				  userType = data.val();
+				  if(userType == 'Tenant'){
+					  hide(deleteTenantIcon);
+				  }
+			  });
+		  });
+		  reff.child(key).child("firstName").on('value', function(data){
+			  console.log('second ' + data.val());
+			  tenantName = data.val();
+			  var appendName = "<p id='tenantFirstName'>Name: "+tenantName+"</p>";
+			  $('#tenantDetails'+tenantUsername).append(appendName);
+		  });
+		  reff.child(key).child("lastName").on('value', function(data){
+			  if(data.val() != ''){
+				  $('#tenantFirstName').remove();
+				  tenantName += ' ' + data.val();
+				  var appendFullName = "<p>Name: "+tenantName+"</p>";
+				  $('#tenantDetails'+tenantUsername).append(appendFullName);
+			  }
+		  });
+		  reff.child(key).child("mobile").on('value', function(data){
+			  tenantMobile = data.val();
+			  var appendMobile = "<p>Contant Number: <a href='tel:"+tenantMobile+"'>"+tenantMobile+"</a></p>";
+			  $('#tenantDetails'+tenantUsername).append(appendMobile);
+		  });
+		  reff.child(key).child("email").on('value', function(data){
+			  tenantEmail = data.val();
+			  var appendEmail = "<p>Email: <a href='mailto:"+tenantEmail+"?subject=Re:'style='color:#007bff;cursor:pointer'>"+tenantEmail+"</a></p><button class='btn btn-primary btn-block tenantBtn' type='submit' value='"+key+"' onclick='goToProfile(this)' style='border-color:#5d6f56;background-color:#5d6f56;'>Profile</button></div></div>";
+			  $('#tenantDetails'+tenantUsername).append(appendEmail);
+		  });
+		});
+	});
+	
+	
+	ref.child("userType").on('value', function(data){
+		userType = data.val();
+		if(userType == 'Landlord'){//If current user is Landlord
+			//Database query to get tenants request for current property.
+			refAdd.child(currentProperty).child('requests').on("child_added", function(data){
+				var name = data.child("name").val();
+				var email = data.child("email").val();
+				var uid = data.child("uid").val();
+				if(name != ''){
+					//If name is not equal to nothing, append tenant requests for the current property.
+					console.log(name);
+					show(tenantRequest);
+					var appendRequest = "<tr id='"+uid+"'><td id='title' class='tg-us36'><strong>" + capitalLetter(name) + "</strong><br>Wants to join your property group.</td><td class='tg-us36'><button class='btn btn-primary' value='"+uid+"' onclick='requestAccepted(this)' style='border-color:#79c879;background-color:#79c879;width:100%;'>Accept</button></td><td class='tg-us36'><button class='btn btn-primary' value='"+uid+"' onclick='requestRejected(this)' style='border-color:#79c879;background-color:#b72c2c;width:100%;'>Reject</button></td></tr>";
+					$('#requestTable').append(appendRequest);
+				}
+			});<!--End of request database query-->
+		}<!--End of userType == 'Landlord' if statement->
+		else{
+			//If current user is Tenant
+		}<!--End of userType == 'Landlord' else statement->
+	});<!--End of 'userType' database query-->
+  }<!--End of user if statement->
+  else {
+    // No user is signed in.
+	location = 'index.html'; //if theres no user signed in, redirect the page to index.html
+  }<!--End of user else statement->
+});
+
+<!--function for Accept Request button-->
+function requestAccepted(ele){
+	//Set variables
+	var tenant = ele.getAttribute('value');
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child('users').child(user.uid);
+	var refAdd = firebase.database().ref().child('addresses');
+	var reff = firebase.database().ref().child('users');
+	var currentProperty = localStorage.getItem("prop");
+	var tenantRequest = document.getElementById("tenantRequest");
+	var table = document.getElementById("requestTable");
+	var db = firebase.database();
+	
+	if (confirm("Are you sure you want to accept the request?")) {
+		//adding tenant to the current property in database
+		refAdd.child(currentProperty).child('tenant').child(tenant).set({"name":""}).then(function(user){
+			console.log("Tenant added to property.");
+		});
+		db.ref('addressByUid/'+tenant).orderByChild("status").on('value', function(snapshot){
+			snapshot.forEach(function(data){
+				var key = data.key;
+				var update = {
+					"status": "accepted"
+					}
+				db.ref('addressByUid/'+tenant+'/'+key).update(update).then(function(){
+				});
+			});
+		});
+		
+		<!--Query to find uid under request matching the tenant who sent the request uid.-->
+		refAdd.child(currentProperty).child("requests").orderByChild("uid").equalTo(tenant).once("value", function(snapshot) {
+		  snapshot.forEach(function(child) {
+			var key = child.key;
+			<!--Query to remove request from database once it's been accepted-->
+			refAdd.child(currentProperty).child("requests").child(key).remove().then(function(){
+				$('#'+tenant).remove();
+				console.log(document.getElementById("requestTable").innerHTML+ " inner");
+			});<!--End of query to remove request from database once it's been accepted-->
+		  });<!--End of snaoshot-->
+		});<!--End of query to find uid under request matching the tenant who sent the request uid.-->
+		
+		<!--Query to remove key matching the tenant who sent the request uid in addressByUid.-->
+		
+		<!--setting the tenant who sent the request 'registered property' to the key for the current property-->
+			var up = {
+				"registeredProperty": currentProperty
+			}
+		reff.child(tenant).update(up).then(function(){
+			console.log("user property set to " + currentProperty);
+		});
+		db.ref('users/'+tenant+'/firstName').on("value", function(data){
+			var name;
+			var firstName = data.val();
+			db.ref('users/'+tenant+'/lastName').on("value", function(data){
+				var lastName = data.val();
+				if(lastName != ''){
+					name = firstName+" "+lastName;
+				}
+				else{
+					name = firstName;
+				}
+				var updateNotif = {
+					"type": "New tenant added",
+					"body": name+" has been added to this group.",
+					"title":"",
+					"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+					"forWho":"Everyone"
+					}
+				db.ref("addresses/"+currentProperty+"/notificationUpdates").push(updateNotif).then(function(data){
+				});
+			});
+			
+		});
+	
+	} else {
+    }
+
+}
+
+function requestRejected(ele){
+	var tenant = ele.getAttribute('value');
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	db.ref().child("addresses").child(currentProperty).child("requests").orderByChild("uid").equalTo(tenant).once("value", function(snapshot) {
+		  snapshot.forEach(function(child) {
+			var key = child.key;
+			<!--Query to remove request from database once it's been accepted-->
+			db.ref().child("addresses").child(currentProperty).child("requests").child(key).remove().then(function(){
+				db.ref('addressByUid/'+tenant).orderByChild("status").on('value', function(snapshot){
+					snapshot.forEach(function(data){
+						var key = data.key;
+						var update = {
+							"status": "rejected"
+							}
+						db.ref('addressByUid/'+tenant+'/'+key).update(update).then(function()
+						{
+						});
+					});
+				});
+				$('#'+tenant).remove();
+			});<!--End of query to remove request from database once it's been accepted-->
+		  });<!--End of snaoshot-->
+		});
+}
+
+function deleteTenant(ele){
+	var username = ele.getAttribute('value');
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref();
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database();
+	
+	if (confirm('Are you sure you want to delete this tenant?')) {
+		// Delete Tenant
+		ref.child('users').orderByChild('username').equalTo(username).once("value", function(snapshot) {
+		  snapshot.forEach(function(child) {
+			var key = child.key;
+			ref.child('addresses').child(currentProperty).child('tenant').child(key).remove().then(function(user){
+				ref.child('users').child(key).update({"registeredProperty": ''}).then(function(){
+					var errorAlert = document.getElementById("alertMessage");
+					errorAlert.innerHTML = 'Tenant Successfully Removed';
+					show(alertMessage);
+					setTimeout(function(){
+						hide(alertMessage);
+						location.reload();
+					},3000);
+					db.ref('users/'+key+'/firstName').on("value", function(data){
+						var name;
+						var firstName = data.val();
+						db.ref('users/'+key+'/lastName').on("value", function(data){
+							var lastName = data.val();
+							if(lastName != ''){
+								name = firstName+" "+lastName;
+							}
+							else{
+								name = firstName;
+							}
+							var updateNotif = {
+								"type": "Tenant Removed",
+								"body": name+" has been removed from this group.",
+								"title":"",
+								"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+								"forWho":"Everyone"
+								}
+							db.ref("addresses/"+currentProperty+"/notificationUpdates").push(updateNotif).then(function(data){
+							});
+						});
+						
+					});
+				});
+			});
+		  });
+		});
+	} else {
+		// Do nothing!
+	}
+}
+
+function goToProfile(ele){
+	var uid = ele.getAttribute('value');
+	localStorage.setItem("tenantUid", uid);
+	location = 'profile.html';
+}
+
+function searchForTenant(){
+	document.getElementById("tenantSearchTable").innerHTML = '';
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child('users');
+	var username = document.getElementById("searchTenantUsernameTxt").value;
+	ref.orderByChild('username').equalTo(username.toLowerCase()).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		var uid = child.key;
+		ref.child(uid).once("value", function(data) {
+			var name;
+			name = data.child("firstName").val();
+			name += ' ' + data.child("lastName").val();
+			
+			if(name != ''){
+				name = capitalLetter(name);
+				//append address to table
+				var appendTenant = "<tr><td class='tg-xxzo'>Name</td><td class='tg-xxzo'>Username</td><td class='tg-xxzo'></td></tr><tr><td class='tg-us36'>"+name+"</td><td class='tg-us36'>"+username+"</td><td class='tg-us36'><button class='btn btn-primary' onclick='sendRequestByUsername(this)' style='border-color:#79c879;;background-color:#79c879;;width:100%;'>Send Request</button></td></tr>";
+				$('#tenantSearchTable').append(appendTenant);
+			}
+		});
+	  });
+	});
+	
+}
+
+</script>
+</body>
+</html>

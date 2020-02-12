@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Maintenance Issues</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+<body>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a>
+  <h1 id="pageTitle">Maintenance Issues</h1>
+</header>
+<div id="page-content" style="background-color:#fff">
+  <button class="btn btn-primary btn-block" type="submit" id="createIssue" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="show(maintenanceForm)"><i class="far fa-plus-square" style="margin-right:5px;"></i>Create Maintenance Issue</button>
+  <div id ="alertMessage" class="alert hidden"></div>
+  <div id="alertErrorMessageLoad" class="alertError hidden"></div>
+  <div id="maintenanceForm" class="pop-up-box hidden">
+    <div class="pop-up-content"> <i class="fa fa-times" onClick="hide(maintenanceForm)"></i>
+      <h2 style="padding-bottom: 20px;">Create Maintenance Issue</h2>
+      <div class="profile-group">
+        <input id="issueTitle" class="form-control" type="text" placeholder="Title">
+      </div>
+      <div class="profile-group" style="height:40px;">
+        <h4 class="float-left" style="margin:0;padding:5px;">Category</h4>
+        <select id="selectMenuCat" class="form-control float-right">
+          <option selected="" value="Structure and Exterior of the Building"> Structure and Exterior of the Building </option>
+          <option value="Plumbing">Plumbing</option>
+          <option value="Central Heating/Hot Water">Central Heating/Hot Water</option>
+          <option value="Chimneys and Ventilation">Chimneys and Ventilation</option>
+          <option value="Gas Appliances">Gas Appliances</option>
+          <option value="Electric Wiring">Electric Wiring</option>
+        </select>
+      </div>
+      <div class="profile-group" style="height:40px;">
+		  <h4 class="float-left" style="margin:0;padding:5px;">Severity</h4><br>
+        <select id="selectMenuColor" class="form-control float-right">
+          <option selected="" value="Red">Red</option>
+          <option value="Amber">Amber</option>
+          <option value="Green">Green</option>
+        </select>
+      </div>
+      <div class="profile-group" style="margin-bottom: 20px;">
+        <textarea id="issueDescription" rows="4" cols="45" placeholder="Please enter desciption of maintenance issue..."></textarea>
+      </div>
+      <div class="profile-group" style="margin-bottom: 20px;">
+        <textarea id="issueNotes" rows="4" cols="45" placeholder="Notes for maintenance issue..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSubIssue" onclick="submitIssue()" style="background-color:#5d6f56;border-color:#5d6f56;">Create Maintenance Issue</button>
+    </div>
+  </div>
+  <table id="issueTable" class="tg">
+    <tr>
+      <th class="tg-h28u" colspan="4"> <h4 class="float-left" style="margin:0;padding:5px; float:right;">Sort by</h4>
+        <select id="selectMenuSort" class="form-control float-right" style="width:40%;">
+          <option selected="" value="Date: Most Recent">Date: Most Recent</option>
+          <option value="Severity: Low - High">Severity: Low - High</option>
+          <option value="Severity: High - Low">Severity: High - Low</option>
+          <option value="Completed">Completed</option>
+          <option value="Not Completed">Not Completed</option>
+        </select>
+      </th>
+    </tr>
+    <tr>
+      <td class="tg-xxzo">Maintenance Issue<br></td>
+      <td class="tg-xxzo">Serverity<br></td>
+      <td class="tg-xxzo">Date Created<br></td>
+      <td class="tg-xxzo">Date Completed<br></td>
+    </tr>
+  </table>
+  <div id="issueDetails" class="pop-up-box hidden">
+    <div id="issueContent" class="pop-up-content"> <i class="fa fa-times" onClick="hide(issueDetails)"></i> <i id="editIssueIcon" class="fas fa-edit hidden" style="float:left;margin-right:3px;" onclick="editIssue()"></i><i id="emailIcon" class="far fa-envelope hidden" style="float:right;font-size:125%" onclick="emailIssue(this)"></i>
+      <h2 id="issue-title" class="center" style="padding-bottom: 20px;"></h2>
+      <div id="alertErrorMessage" class="alertError hidden">Maintenance issue wasn't submitted. Please check your connection and try again.</div>
+      <div class="profile-group">
+        <h3><strong>Category: </strong></h3>
+        <p id="issue-cat"></p>
+      </div>
+      <div class="profile-group">
+        <h3><strong>Severity: </strong></h3>
+        <p id="issue-color"></p>
+      </div>
+      <div class="profile-group">
+        <h3><strong>Description: </strong></h3>
+        <p id="issue-desc"></p>
+      </div>
+      <div class="profile-group">
+        <h3><strong>Notes: </strong></h3>
+        <p id="issue-notes"></p>
+      </div>
+      <div class="profile-group">
+        <h3><strong>Creator: </strong></h3>
+        <p id="issue-creator"></p>
+      </div>
+      <div class="profile-group">
+        <div id="created">
+          <h3><strong>Date Created :</strong></h3>
+          <p id="issue-date-created"></p>
+        </div>
+        <div id="completed">
+          <h3><strong>Date Completed :</strong></h3>
+          <p id="issue-date-completed">N/A</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="editIssueDetails" class="pop-up-box hidden">
+      <div id="editIssueContent" class="pop-up-content"><i class="fa fa-times" onClick="closeEditIssue()"></i>
+        <h2 id="edit-issue-title" class="center" style="padding-bottom: 20px;"></h2>
+        <div id="alertErrorMessage" class="alertError hidden">Maintenance issue wasn't submitted. Please check your connection and try again.</div>
+        <div class="profile-group">
+        <label><strong>Title</strong></label>
+          <input id="editIssueTitle" class="form-control" type="text" placeholder="Title">
+        </div>
+        <div class="profile-group" style="height:40px;">
+        	<label id="editSelectMenuCat"></label>
+        </div>
+        <div class="profile-group" style="height:40px;">
+          <label id="editSelectMenuColor"></label>
+        </div>
+        <div class="profile-group" style="margin-bottom: 20px;">
+          <label id="editDescription"></label>
+        </div>
+        <div class="profile-group" style="margin-bottom: 20px;">
+        <label id="editDateCreated"></label>
+        </div>
+        <div class="profile-group" style="margin-bottom: 20px;">
+        <label id="editDateCompleted"></label>
+        </div>
+        <div class="profile-group" style="margin-bottom: 20px;">
+          <label><strong>Notes</strong></label>
+          <textarea id="editIssueNotes" rows="4" cols="45" placeholder="Notes for maintenance issue..."></textarea>
+        </div>
+        <div class="profile-group" style="margin-bottom: 20px;">
+        	<div class="form-check">
+              <input id="resolvedCheckBox" class="form-check-input" type="checkbox" id="formCheck-1">
+              <label class="form-check-label" for="formCheck-1" style="width:30%">Resolved?</label>
+            </div>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" id="saveIssue" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="saveIssue()"><i class="fas fa-save" style="color:#fff;"></i></button>
+      </div>
+    </div>
+    <div id="emailSentYN" class="pop-up-box hidden">
+      <div id="editEmailSentYNContent" class="pop-up-content"><i class="fa fa-times" onClick="close(emailSentYN)"></i>
+        <h2 class="center" style="padding-bottom: 20px;">Did you send an email to tradesman</h2>
+        <div class="profile-group">
+        	<div id="buttons" style="width:100%;">
+                <button class="btn btn-primary" type="button" id="emailSentY" onclick="sendEmailQ(this)" style="border-color:#79c879;background-color:#79c879;width:50%;float:left;">Yes</button>
+            <button class="btn btn-primary" type="button" onclick="hide(emailSentYN)" style="border-color:#b72c2c;background-color:#b72c2c;width:50%;float:right;">No</button>
+        	</div>
+        </div>
+      </div>
+    </div>
+    <div id="nonUserIssues" class="pop-up-box hidden">
+      <div id="nonUserIssuesContent" class="pop-up-content">
+        <h2 class="center" style="padding-bottom: 20px;">Please enter the first line off the property's address.</h2>
+        <div class="profile-group">
+        	<input id="maintenanceFirstLine" class="form-control" type="text" placeholder="First Line">
+            <div id="alertErrorMessageM" class="alertError hidden" style="margin-bottom: 5px;"></div>
+            <div id="alertMessageM" class="alert hidden" style="margin-bottom: 5px;"></div>
+        </div>
+        <div id="mainTableNonUser" class="profile-group">
+          <table id="mainAddTable" class="tg">
+              <tr>
+                <td class="tg-xxzo">Address</td>
+              </tr>
+            </table>
+          </div>
+      </div>
+    </div>
+    <div id="selectTradesman" class="pop-up-box hidden">
+        <div class="pop-up-content"><i class="fa fa-times" onClick="hide(selectTradesman)"></i>
+          <h2 style="padding-bottom: 20px;" class="center">Select a tradesman to send maintenance issue to</h2>
+          <div class="profile-group">
+          <table id="selectTradeTable" class="tg">
+              <tr>
+                <td class="tg-xxzo">Name/Company Name</td>
+                <td class="tg-xxzo">Profession</td>
+                <td class="tg-xxzo"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script> 
+<script>
+//Configure firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+
+  
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	
+	//Set variables
+	var ref = firebase.database().ref().child("addresses");
+	var currentProperty = localStorage.getItem("prop");    
+	ref.child(currentProperty).child("maintenanceIssues").on("child_added", function(data){
+		//Set Local Variables
+		var titlep = data.child("title").val();
+		var cat = data.child("category").val();
+		var color = data.child("severity").val();
+		var desc = data.child("description").val();
+		var notes = data.child("notes").val();
+		var dateCreated = data.child("dateCreated").val();
+		var dateCompleted = data.child("dateCompleted").val();
+		var i;
+		var issueDetails = [title, cat, color, desc, notes, dateCreated, dateCompleted];
+		var title = "";
+		
+		//for loop to loop through array
+		for(i = 0; i < issueDetails.length; i++){
+			//if array value is empty move to the next value
+			if(issueDetails[i] == "" || issueDetails[i] == null){
+				i++;
+			}
+			else{
+				//if at the end of the array
+				if(i == issueDetails.length - 1){
+					title += issueDetails[i];
+				}
+				else{
+					title += issueDetails[i] + ", ";
+				} 
+			}   
+		}
+		if(title != ""){
+			//add values of array to (address) to title heading
+			var appendIssue = "<tr><td id='title' class='tg-us36' value='" + titlep + "' onclick='getIssueDetails(this)'><strong>" + titlep + "</strong><br>" + desc + "<br></td><td class='tg-us36'>" + color + "<br></td><td class='tg-us36'>" + dateCreated + "</td><td class='tg-us36'>" + dateCompleted + "</td></tr>";
+			$("#issueTable").append(appendIssue);
+		}
+	
+	}, function(error){
+		//error message
+		var errorMessage = error.message;
+		var errorAlert = document.getElementById("alertErrorMessageLoad");
+		errorAlert.innerHTML = errorMessage
+		show(alertErrorMessageLoad);
+		setTimeout(function(){
+			hide(alertErrorMessageLoad);
+		},3000);
+	});
+		
+  } else {
+	// No user is signed in.
+		var pIn = document.getElementById("maintenanceFirstLine").value = '';
+		var currentProperty = localStorage.getItem("prop");
+		console.log(currentProperty)
+		if(currentProperty == ''){
+			show(nonUserIssues);
+		}
+		else{
+			var ref = firebase.database().ref().child("addresses");
+			var currentProperty = localStorage.getItem("prop");    
+			ref.child(currentProperty).child("maintenanceIssues").on("child_added", function(data){
+				//Set Local Variables
+				var titlep = data.child("title").val();
+				var cat = data.child("category").val();
+				var color = data.child("severity").val();
+				var desc = data.child("description").val();
+				var notes = data.child("notes").val();
+				var dateCreated = data.child("dateCreated").val();
+				var dateCompleted = data.child("dateCompleted").val();
+				var i;
+				var issueDetails = [title, cat, color, desc, notes, dateCreated, dateCompleted];
+				var title = "";
+				
+				//for loop to loop through array
+				for(i = 0; i < issueDetails.length; i++){
+					//if array value is empty move to the next value
+					if(issueDetails[i] == "" || issueDetails[i] == null){
+						i++;
+					}
+					else{
+						//if at the end of the array
+						if(i == issueDetails.length - 1){
+							title += issueDetails[i];
+						}
+						else{
+							title += issueDetails[i] + ", ";
+						} 
+					}   
+				}
+				if(title != ""){
+					//add values of array to (address) to title heading
+					var appendIssue = "<tr><td id='title' class='tg-us36' value='" + titlep + "' onclick='getIssueDetails(this)'><strong>" + titlep + "</strong><br>" + desc + "<br></td><td class='tg-us36'>" + color + "<br></td><td class='tg-us36'>" + dateCreated + "</td><td class='tg-us36'>" + dateCompleted + "</td></tr>";
+					$("#issueTable").append(appendIssue);
+				}
+			
+			}, function(error){
+				//error message
+				var errorMessage = error.message;
+				var errorAlert = document.getElementById("alertErrorMessageLoad");
+				errorAlert.innerHTML = errorMessage
+				show(alertErrorMessageLoad);
+				setTimeout(function(){
+					hide(alertErrorMessageLoad);
+				},3000);
+			});
+			setTimeout(function(){
+				window.onbeforeunload = function(){
+					//set tenantUid to nothing if user leaves page
+					localStorage.setItem("prop", '');
+				  return 'Are you sure you want to leave?';
+				};
+			},4000);
+		}
+	}
+});
+
+
+$(document).ready(function(){
+//Check Passwords are Matching
+	$('#maintenanceFirstLine').keyup(function(){
+		var firstLine = document.getElementById("maintenanceFirstLine");
+		var currentProperty = localStorage.getItem("prop");
+		var db = firebase.database();
+		
+		if(document.getElementById("mainAddTable").innerHTML != "<tr><td class='tg-xxzo'>Address</td></tr>"){
+			document.getElementById("mainTableNonUser").innerHTML = '';
+			var t = "<table id='mainAddTable' class='tg'><tr><td class='tg-xxzo'>Address</td></tr></table>";
+			$('#mainTableNonUser').append(t);
+		}
+		if(document.getElementById("maintenanceFirstLine").value != ''){
+			var alertErrorM = document.getElementById("alertErrorMessageM");
+			alertErrorM.innerHTML = "Not match found!";
+			show(alertErrorMessageM);
+		}
+		db.ref('addresses').orderByChild('firstLine').equalTo(firstLine.value.toLowerCase()).once("child_added", function(data){
+			hide(alertErrorMessageM);
+			show(alertMessageM);
+			setTimeout(function(){
+				hide(alertMessageM);
+			},3000);
+			var alertM = document.getElementById("alertMessageM");
+			alertM.innerHTML = "Match found!";
+			document.getElementById("mainAddTable").innerHTML = '';
+			document.getElementById("mainAddTable").innerHTML = "<tr><td class='tg-xxzo'>Address</td></tr>";
+			var address;
+			var key = data.key;
+			var firstLine = data.child("firstLine").val();
+			address = firstLine;
+			var secondLine = data.child("secondLine").val();
+			if(secondLine != ''){
+				address += ', ' + secondLine
+			}
+			var thirdLine = data.child("thirdLine").val();
+			if(thirdLine != ''){
+				address += ', ' + thirdLine;
+			}
+			var town = data.child("town").val();
+			if(town != ''){
+				address += ', ' + town;
+			}
+			var city = data.child("city").val();
+			if(city != ''){
+				address += ', ' + city;
+			}
+			var county = data.child("county").val();
+			if(county != ''){
+				address += ', ' + county;
+			}
+			var postcode = data.child("postcode").val();
+			address += ', ' + postcode.toUpperCase();
+			
+			if(address != ''){
+				address = capitalLetter(address);
+				//append address to table
+				var appendIssue = "<tr><td class='tg-us36' value='"+key+"' onclick='openPass(this)'>"+address+"</td></tr>";
+				$('#mainAddTable').append(appendIssue);
+			}
+		});
+	});
+});
+
+function openPass(ele){
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database()
+	var key = ele.getAttribute("value");
+	var div = document.getElementById("nonUserIssues");
+	div.innerHTML = "<div id='nonUserIssuesContent' class='pop-up-content'><h2 class='center' style='padding-bottom: 20px;'>Please enter password to view maintenance history.</h2><div class='profile-group'><input id='maintenancePass' class='form-control' type='password' placeholder='Password'><div id='alertErrorMessageP' class='alertError hidden' style='margin-bottom: 5px;'></div><div id='alertMessageP' class='alert hidden' style='margin-bottom: 5px;'></div></div></div>"
+	
+	$(document).ready(function(){
+//Check Passwords are Matching
+	$('#maintenancePass').keyup(function(){
+		if(document.getElementById("maintenancePass").value != ''){
+		  var alertErrorP = document.getElementById("alertErrorMessageP");
+		  alertErrorP.innerHTML = "Password Incorect";
+		  show(alertErrorMessageP);
+		}
+			
+		db.ref('addresses/'+key+'/maintenanceIssues/password').once("value", function(data){
+			var password = data.val()
+			var inputPass = document.getElementById("maintenancePass").value;
+			if(password == inputPass){
+				hide(alertErrorMessageP);
+				var alertP = document.getElementById("alertMessageP");
+				alertP.innerHTML = "Password Correct";
+				show(alertMessageP);
+				setTimeout(function(){
+					hide(alertMessageP);
+				},3000);
+				localStorage.setItem("prop", key);
+				hide(nonUserIssues);
+				location.reload();
+			}
+		});
+	});
+});
+}
+
+function submitIssue(){
+	//Set variables
+	var title = document.getElementById("issueTitle");
+	var cat = document.getElementById("selectMenuCat");
+	var color = document.getElementById("selectMenuColor");
+	var desc = document.getElementById("issueDescription");
+	var notes = document.getElementById("issueNotes");
+	var date = new Date();
+	var dd = date.getDate();
+	var mm = date.getMonth()+1; //January is 0!
+	var yyyy = date.getFullYear();
+	var currentProperty = localStorage.getItem("prop");
+	var currentPropLine = localStorage.getItem("firstLine");
+	var user = firebase.auth().currentUser;	
+	var ref = firebase.database().ref().child("users").child(user.uid);
+	var refAdd = firebase.database().ref().child("addresses");
+	var db = firebase.database();
+	//adds a 0 before the day if its a single diget
+	if(dd<10){
+		dd="0"+dd;
+	} 
+	//adds a 0 before the month if its a single diget
+	if(mm<10){
+		mm="0"+mm;
+	} 
+	var date = dd+"/"+mm+"/"+yyyy;
+	
+	var issueDetails = {
+		"title": title.value,
+		"category": cat.options[cat.selectedIndex].value,
+		"severity": color.options[color.selectedIndex].value,
+		"description": desc.value,
+		"notes": notes.value,
+		"dateCreated": date,
+		"dateCompleted": "",
+		"relatedAddress": currentPropLine,
+		"creator": user.uid
+		};
+	db.ref('users/'+user.uid+'/firstName').on("value", function(data){
+		var name;
+		var firstName = data.val();
+		db.ref('users/'+user.uid+'/lastName').on("value", function(data){
+			var lastName = data.val();
+			if(lastName != ''){
+				name = firstName+" "+lastName;
+			}
+			else{
+				name = firstName;
+			}
+			var updateNotif = {
+				"type": "New Maintenance Issue Created",
+				"body": name+" has created a new maintenance issue: <u>"+title.value+"</u><br><ol style='margin-left:10px'><li>Description: "+desc.value+"</li><li>Serverity: "+color.options[color.selectedIndex].value+"</li></ol>",
+				"title":"",
+				"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+				"forWho": "Everyone"
+				}
+			db.ref("addresses/"+currentProperty+"/notificationUpdates").push(updateNotif);
+		});
+	});
+	//Submitting maintennace issue details to databse
+	refAdd.child(currentProperty).child("maintenanceIssues").push(issueDetails).then(function(user){
+		var errorAlert = document.getElementById("alertMessage");
+		errorAlert.innerHTML = "Maintenance issue sucessfully submitted.";
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		show(alertMessage);
+		setTimeout(function(){
+			hide(alertMessage);
+		},3000);
+		title.value = "";
+		desc.value = "";
+		notes.value = "";
+		hide(maintenanceForm);
+	}, function(error){
+		//if connection hasn"t been made with firebase and property details have not been sent to the database.
+		var errorMessage = error.message;
+		var errorAlert = document.getElementById("alertErrorMessage");
+		errorAlert.innerHTML = errorMessage;
+		show(alertErrorMessage);
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	});
+}
+
+//Function to show maintenance issue details when title clicked
+function getIssueDetails(ele){
+	show(issueDetails); //Show isse details pop up box
+	//Set variables
+	var currentProperty = localStorage.getItem("prop");
+	var title = ele.getAttribute("value");
+	var user = firebase.auth().currentUser;	
+	var ref = firebase.database().ref().child("addresses").child(currentProperty).child("maintenanceIssues");
+	var userRef = firebase.database().ref();
+	var issueTitle = document.getElementById("issue-title");
+	var issueCat = document.getElementById("issue-cat");
+	var issueColor = document.getElementById("issue-color");
+	var issueDesc = document.getElementById("issue-desc");
+	var issueNotes = document.getElementById("issue-notes");
+	var issueDateCreated = document.getElementById("issue-date-created");
+	var issueDateCompleted = document.getElementById("issue-date-completed");
+	var creator = document.getElementById("issue-creator");
+	var name;
+	var key;
+	
+	//Query to get maintenance issue key by matching the title of the issue the user clicked on to a title in the database
+	ref.orderByChild("title").equalTo(title).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		key = child.key;
+		document.getElementById("emailIcon").setAttribute("value", key);
+	  });
+	});
+	
+	//Check to see if user is landlord, if so show edit and email icon if not, check to see if user if creator of issue, if so show only edit icon
+	if(user != null){
+		firebase.database().ref("users/"+user.uid+"/userType").on("value", function(data){
+			if(data.val() == "Landlord"){
+				show(editIssueIcon);
+				show(emailIcon);
+			}
+			else{
+				ref.child(key).child("creator").on("value", function(data){
+					var uid = data.val();
+					if(uid == user.uid){
+						show(editIssueIcon);
+					}
+				});
+			}
+		});
+	}
+	//Using the ket found, append the issue details to the pop up box
+	ref.child(key).child("title").on("value", function(data){
+		issueTitle.innerHTML = data.val();
+	});
+	ref.child(key).child("category").on("value", function(data){
+		issueCat.innerHTML = data.val();
+	});
+	ref.child(key).child("severity").on("value", function(data){
+		issueColor.innerHTML = data.val();
+	});
+	ref.child(key).child("description").on("value", function(data){
+		issueDesc.innerHTML = data.val();
+	});
+	ref.child(key).child("notes").on("value", function(data){
+		issueNotes.innerHTML = data.val();
+	});
+	ref.child(key).child("dateCreated").on("value", function(data){
+		issueDateCreated.innerHTML = data.val();
+	});
+	ref.child(key).child("creator").on("value", function(data){
+		var uid = data.val();
+		userRef.child("users").child(uid).child("firstName").on("value", function(data){
+			name = data.val();
+		});
+		userRef.child("users").child(uid).child("LastName").on("value", function(data){
+			if(data.val() != null){
+				name += " " + data.val();
+				creator.innerHTML = name;
+			}
+			creator.innerHTML = name;
+		});
+	});
+	ref.child(key).child("dateCompleted").on("value", function(data){
+		if(data.val() == ""){
+			issueDateCompleted.innerHTML = "N/A";
+		}
+		else{
+			issueDateCompleted.innerHTML = data.val();
+		}
+	}); 	
+}
+
+function editIssue(){
+	hide(issueDetails);
+	show(editIssueDetails);
+	console.log("clicked")
+	var title = document.getElementById("issue-title").innerHTML;
+	var currentProperty = localStorage.getItem("prop");
+	var user = firebase.auth().currentUser;	
+	var db = firebase.database();
+
+	db.ref("addresses/"+currentProperty+"/maintenanceIssues").orderByChild("title").equalTo(title).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		var key = child.key;
+		db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+key+"/title").once("value", function(snapshot) {
+			$("#editIssueTitle").val(snapshot.val());
+		});
+		db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+key+"/category").once("value", function(snapshot) {
+			document.getElementById("editSelectMenuCat").innerHTML = "<strong>Category:</strong> " + snapshot.val();
+		});
+		db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+key+"/severity").once("value", function(snapshot) {
+			document.getElementById("editSelectMenuColor").innerHTML = "<strong>Severity:<strong> " + snapshot.val();
+		});
+		db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+key+"/description").once("value", function(snapshot) {
+			document.getElementById("editDescription").innerHTML = "<strong>Description:</strong> " + snapshot.val();
+		});
+		db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+key+"/dateCreated").once("value", function(snapshot) {
+			document.getElementById("editDateCreated").innerHTML = "<strong>Date Created:</strong> " + snapshot.val();
+		});
+		db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+key+"/dateCompleted").once("value", function(snapshot) {
+			if(snapshot.val() != ""){
+				document.getElementById("editDateCompleted").innerHTML = "<strong>Date Completed:</strong> " + snapshot.val();
+			}
+			else{
+				document.getElementById("editDateCompleted").innerHTML = "<strong>Date Completed:</strong> N/A";
+			}
+		});
+		db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+key+"/notes").once("value", function(snapshot) {
+			$("#editIssueNotes").val(snapshot.val());
+		});
+	  });
+	});
+}
+
+function saveIssue(){
+	var currentProperty = localStorage.getItem("prop");
+	var user = firebase.auth().currentUser;	
+	var db = firebase.database();
+	var title = document.getElementById("issue-title").innerHTML;
+	var newTitle = document.getElementById("editIssueTitle").value;
+	var notes = document.getElementById("editIssueNotes").value;
+	var resolved = document.getElementById("resolvedCheckBox").checked;
+	var resolvedDate;
+	if(resolved == true){
+		var date = new Date;
+		day = date.getDate();
+		month = date.getMonth() + 1;										
+		year = date.getFullYear();
+		var newDate = [day, month, year].join("/");
+		resolvedDate = newDate;
+	}
+	else{
+		resolvedDate = "";
+	}
+	var update = {
+		"title": newTitle,
+		"notes": notes,
+		"dateCompleted": resolvedDate
+		};
+	var updateNotif = {
+		"title":title,
+		"type": "maintenance issue",
+		"body": "<ol style='margin-left:10px'><li>Notes: "+notes+"</li><li>Title: "+newTitle+"</li><li>Date Completed: "+resolvedDate+"</li></ol>",
+		"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+		"forWho":"Everyone"
+		};
+
+	db.ref("addresses/"+currentProperty+"/maintenanceIssues").orderByChild("title").equalTo(title).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		  var key = child.key;
+		  db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+key).update(update).then(function(){
+			  db.ref("addresses/"+currentProperty+"/notificationUpdates").push(updateNotif).then(function(){
+				  hide(editIssueDetails);
+				  var errorAlert = document.getElementById("alertMessage");
+				  errorAlert.innerHTML = "Maintenance issue updated";
+				  document.body.scrollTop = document.documentElement.scrollTop = 0;
+				  show(alertMessage);
+				  setTimeout(function(){
+					  //location.reload();
+					  hide(alertMessage);
+				  },3000);
+		  	  });
+		  });
+		  
+	  });
+	});
+	
+}
+
+function closeEditIssue(){
+	if (confirm("Are you sure you want to exit? Data will not be saved.")) {
+		// Save it!
+		hide(editIssueDetails);
+	} else {
+		// Do nothing!
+	}
+}
+
+function emailIssue(ele){
+	show(selectTradesman);
+	hide(issueDetails);
+	var currentProperty = localStorage.getItem("prop");
+	var user = firebase.auth().currentUser;	
+	var db = firebase.database();
+	var name;
+	var firstLine;
+	var emailBody; //%0D%0A
+	var maintenanceKey = ele.getAttribute("value");
+	
+	document.getElementById("emailSentY").setAttribute("value", maintenanceKey);
+	//reset table
+	document.getElementById("selectTradeTable").innerHTML = "<tr><td class='tg-xxzo'>Name/Company Name</td><td class='tg-xxzo'>Profession</td><td class='tg-xxzo'></td></tr>";
+	
+	
+	//Getting deails of maintenance issue to fill email body
+	db.ref("addresses/"+currentProperty+"/firstLine").once("value", function(snapshot) {
+		firstLine = snapshot.val();
+	});
+	db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+maintenanceKey+"/title").once("value", function(snapshot) {
+		var subject = snapshot.val();
+		emailBody = subject;
+	});
+	db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+maintenanceKey+"/category").once("value", function(snapshot) {
+		var cat = snapshot.val();
+		emailBody += "%0D%0A%0D%0ACategory: " + cat;
+	});
+	db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+maintenanceKey+"/severity").once("value", function(snapshot) {
+		var color = snapshot.val();
+		emailBody += "%0D%0ASeverity: " + color;
+	});
+	db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+maintenanceKey+"/description").once("value", function(snapshot) {
+		var desc = snapshot.val();
+		emailBody += "%0D%0ADescription: " + desc;
+	});
+	db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+maintenanceKey+"/dateCreated").once("value", function(snapshot) {
+		var dateComp = snapshot.val();
+		emailBody += "%0D%0ADate Created: " + dateComp + "%0D%0A%0D%0AAbove are the details for the maintenance issue for the above mention address.%0D%0A%0D%0A%0D%0ARegards,%0D%0A%0D%0A%0D%0A%0D%0A"
+	});
+	
+	
+	//pulling details from database of all landlords tradesman
+	db.ref("users/"+user.uid+"/tradesman").once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		var key = child.key;
+		  console.log(key)
+		db.ref("users/"+user.uid+"/tradesman/"+key+"/tradeName").once("value", function(snapshot) {
+			name = snapshot.val();
+			console.log(name);
+			var appendName = "<tr id='tradeDetails"+key+"'><td class='tg-us36' style='cursor:context-menu;''>"+name+"</td>";
+			$("#selectTradeTable").append(appendName);
+			db.ref("users/"+user.uid+"/tradesman/"+key+"/tradeWork").once("value", function(snapshot) {
+				var profession = snapshot.val();
+				console.log(profession)
+				var appendProfession = "<td class='tg-us36' style='cursor:context-menu;'>"+profession+"</td>";
+				$("#tradeDetails"+key).append(appendProfession);
+				db.ref("users/"+user.uid+"/tradesman/"+key+"/tradeEmail").once("value", function(snapshot) {
+					var email = snapshot.val();
+					var appendEmail = "<td class='tg-us36' style='cursor:context-menu;'><a href='mailto:"+email+"?&subject=Re: Maintenance Issue at "+capitalLetter(firstLine)+"&body="+emailBody+"'><i class='far fa-envelope' style='font-size:125%;text-align:center;' onclick='hide(selectTradesman);show(emailSentYN);'></a></td></tr>";
+					$("#tradeDetails"+key).append(appendEmail);
+				});
+			});
+		});
+	  });
+	});
+}
+
+function sendEmailQ(ele){
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database();
+	var maintenanceKey = ele.getAttribute("value");
+	db.ref("addresses/"+currentProperty+"/maintenanceIssues/"+maintenanceKey+"/title").once("value", function(data){
+		var title = data.val();
+		var updateNotif = {
+			"type": "Maintenance Issue Update for: "+title,
+			"body": "Above maintenance issue has been send to tradesman by email",
+			"title":"",
+			"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+			"forWho": "Everyone"
+			}
+		db.ref("addresses/"+currentProperty+"/notificationUpdates").push(updateNotif).then(function(data){
+			hide(emailSentYN);
+		});
+	}); 
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Expenses</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+
+</head>
+
+<body>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a><h1 id="pageTitle">Expenses</h1></header>
+<div id="page-content" style="background-color: #FFFFFF">
+<button class="btn btn-primary btn-block" type="submit" id="createExpense" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="showExpenseForm()"><i class="far fa-plus-square" style="margin-right:5px;"></i>Create Expense</button>
+      <div id ="alertMessage" class="alert hidden"></div>
+    <div id="expenseForm" class="pop-up-box hidden">
+      <div class="pop-up-content">
+        <i class="fa fa-times" onClick="closeExpenseForm()"></i>
+        <h2>Create Expense <span style="color:#b72c2c; float:right;">* Required</span></h2>
+        <div class="profile-group">
+          <h4>*Payment Date</h4>
+          <input id="expensePaymentDate" class="form-control" type="date" onclick="style.border = '1px solid #ced4da'">
+        </div>
+        <div class="profile-group">
+          <h4>*Payment Interval</h4>
+          <select id="selectMenuInterval" class="form-control">
+            <option selected="" onclick="hide(repeatDate)" value="None">None</option>
+            <option onclick="show(repeatDate)" value="Weekly">Weekly</option>
+            <option onclick="show(repeatDate)" value="Fortnightly">Fortnightly</option>
+            <option onclick="show(repeatDate)" value="Monthly">Monthly</option>
+            <option onclick="show(repeatDate)" value="Every 2 Months">Every 2 Months</option>
+            <option onclick="show(repeatDate)" value="Every 3 Months">Every 3 Months</option>
+            <option onclick="show(repeatDate)" value="Every 6 Months">Every 6 Months</option>
+            <option onclick="show(repeatDate)" value="Every 12 Months">Every 12 Months</option>
+          </select>
+        </div>
+        <div id="repeatDate" class="profile-group" >
+          <h4>*Repeat End Date</h4>
+          <input id="expenseRepeatEndDate" class="form-control" type="date" onclick="style.border = '1px solid #ced4da'">
+        </div>
+        <div class="profile-group" style="">
+          <h4>*Amount</h4>
+          <input id="expenseAmount" class="form-control" type="number" onclick="style.border = '1px solid #ced4da'">
+        </div>
+        <div class="profile-group" style="">
+          <h4>VAT (20.000%) in GBP</h4>
+          <p id="expenseVAT"></p>
+        </div>
+        <div class="profile-group" style="">
+          <h4>Total Amount in GBP</h4>
+          <p id="expense-total-amount"></p>
+        </div>
+        <div class="profile-group" >
+          <h4>Category</h4>
+          <select id="selectMenuCat" class="form-control">
+            <option selected="" value="Rent, Rates, Insurance, Ground Rents">Rent, Rates, Insurance, Ground Rents</option>
+            <option value="Property Repairs & Maintenance">Property Repairs &amp; Maintenance</option>
+            <option value="Loan Interest & Other Financial Cost">Loan Interest &amp; Other Financial Cost</option>
+            <option value="Legal Management & Professional Fees">Legal Management &amp; Professional Fees</option>
+            <option value="Cost of Services Provided">Cost of Services Provided</option>
+            <option value="Other Allowed Property Expense">Other Allowed Property Expense</option>
+          </select>
+        </div>
+        <div class="profile-group">
+        	<p>*Please do not use the special characters such as: ', #, $, £</p>
+          <textarea id="expenseDesc" rows="4" cols="45" placeholder="Description" onclick="style.border = '1px solid #ced4da'"></textarea>
+        </div>
+        <div class="profile-group">
+        	<p>Please do not use the following characters: ', #, $, £ </p>
+          <textarea id="expenseNotes" rows="4" cols="45" placeholder="Notes"></textarea>
+        </div>
+        <div class="profile-group">
+          <h4>*Paid</h4>
+          <select id="selectMenuPaid" class="form-control" style="width:50%;">
+            <option selected="" value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div class="profile-group">
+          <h4>*Payable by Tenant</h4>
+          <select id="selectMenuTenant" class="form-control">
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div id ="alertErrorMessage" class="alertError hidden" style="margin-bottom:10px;"></div>
+        <button class="btn btn-primary btn-block" type="submit" id="bntSubIssue" onclick="submitExpense()" style="background-color:#5d6f56;border-color:#5d6f56;">Create Expense</button>
+      </div>
+    </div>
+    <div id="expensePayment" class="pop-up-box hidden">
+      <div class="pop-up-content">
+        <i class="fa fa-times" onClick="hide(expensePayment), $('.paymentList').remove()"></i>
+        <h2 style="padding-bottom: 20px;"></h2>
+        <div class="profile-group">
+        <table id="paymentTable" class="tg">
+          <tr>
+          	<td class="tg-xxzo">Number<br></td>
+            <td class="tg-xxzo">Amount<br></td>
+            <td class="tg-xxzo">Payment Due On<br></td>
+            <td class="tg-xxzo">Status<br></td>
+            <td class="tg-xxzo">Payable By<br></td>
+          </tr>
+        </table>
+        </div>
+      </div>
+    </div>
+    <table id="expenseTable" class="tg">
+      <tr>
+        <th class="tg-h28u" colspan="6">
+        	<h4 class="float-left" style="margin:0;padding:5px; float:right;">Sort by</h4>
+        	<select id="selectMenuSort" class="form-control float-right" style="width:40%;">
+              <option selected="" value="Date: Most Recent">Date: Most Recent</option>
+              <option value="Severity: Low - High">Severity: Low - High</option>
+              <option value="Severity: High - Low">Severity: High - Low</option>
+              <option value="Completed">Completed</option>
+              <option value="Not Completed">Not Completed</option>
+      	    </select>
+        </th>
+      </tr>
+      <tr>
+        <td class="tg-xxzo">Expenses<br></td>
+        <td class="tg-xxzo table-hidden">Amount<br></td>
+        <td class="tg-xxzo table-hidden">Interval<br></td>
+        <td class="tg-xxzo table-hidden">Interval Start Date<br></td>
+        <td class="tg-xxzo table-hidden">Interval End Date<br></td>
+        <td class="tg-xxzo"><br></td>
+
+      </tr>
+    </table>
+    <div id="viewExpenseD" class="pop-up-box hidden">
+      <div id="viewExpenseContent" class="pop-up-content"> <i class="fa fa-times" onClick="hide(viewExpenseD)"></i><i id="editIssueIcon" class="fas fa-edit" style="float:left;margin-right:3px;" onclick="editExpense()"></i>
+        <h2 id="viewExpenseTitle" class="center" style="padding-bottom: 20px;"></h2>
+        <div id="alertMessage" class="alert hidden"></div>
+        <div class="profile-group">
+        <label><strong>Payment Date</strong></label>
+        <p id="viewPaymentDate"></p>
+        </div>
+        <div class="profile-group">
+        <label><strong>Payment Interval</strong></label>
+        <p id="viewPaymentInterval"></p>
+        </div>
+        <div class="profile-group">
+        <label><strong>Payment End Date</strong></label>
+        <p id="viewPaymentEndDate"></p>
+        </div>
+        <div class="profile-group">
+        <label><strong>Total Amount Including 20% VAT</strong></label>
+        <p id="viewAmount"></p>
+        </div>
+        <div class="profile-group">
+        <label><strong>Category</strong></label>
+        <p id="viewCat"></p>
+        </div>
+        <div class="profile-group">
+        <label><strong>Description</strong></label>
+        <p id="viewDesc"></p>
+        </div>
+        <div class="profile-group">
+        <label><strong>Notes</strong></label>
+        <p id="viewNotes"></p>
+        </div>
+        <div class="profile-group">
+        <label><strong>Paid</strong></label>
+        <p id="viewPaid"></p>
+        </div>
+        <div class="profile-group">
+        <label><strong>Payable by Tenant</strong></label>
+        <p id="viewPayable"></p>
+        </div>
+      </div>
+    </div>
+    <div id="editExpenseD" class="pop-up-box hidden">
+      <div id="editExpenseContent" class="pop-up-content"> <i class="fa fa-times" onClick="closeEditExpense()"></i>
+        <h2 id="editExpenseTitle" class="center" style="padding-bottom: 20px;"></h2>
+        <div class="profile-group">
+        <h4>Notes: Please do not use the following characters (', #, $, £)</h4>
+          <textarea id="editExpenseNotes" rows="4" cols="45" placeholder="Notes"></textarea>
+        </div>
+        <div class="profile-group">
+          <h4>Paid</h4>
+          <select id="editSelectMenuPaid" class="form-control" style="width:50%;">
+            <option selected="" value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" id="saveExpense" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="saveExpense()"><i class="fas fa-save" style="color:#fff;"></i></button>
+      </div>
+    </div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script>
+<script>
+//Configure firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+
+//Set global variables
+var amount = document.getElementById("expenseAmount");
+var vat = document.getElementById("expenseVAT");
+var totalAmount = document.getElementById("expense-total-amount");
+
+//When user types amount, automatically calculate VAT and total amount
+$(document).ready(function(){
+	//Check Passwords are Matching
+	$('#expenseAmount').keyup(function(){
+		vat.innerHTML = parseInt(amount.value, 10) * 0.2;
+		totalAmount.innerHTML = parseInt(amount.value, 10) + parseInt(vat.innerHTML, 10);
+	});
+});
+
+//Disables white spaces in user input but enables backspace
+$("input#expenseAmount").on({
+  keydown: function(e) {
+	if (e.which === 32)
+	  return false;
+  },
+  change: function() {
+	this.value = this.value.replace(/\s/g, "");
+  }
+});
+
+
+function submitExpense(){
+	//Set variable
+	var currentProperty = localStorage.getItem("prop");
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child("addresses");
+	var paymentDate = new Date($('#expensePaymentDate').val());
+	day = paymentDate.getDate();
+	month = paymentDate.getMonth() + 1;										
+	year = paymentDate.getFullYear();
+	var ePDate = [year,month,day].join('-');
+	var interval = document.getElementById("selectMenuInterval");
+	var repeatEndDate = new Date($('#expenseRepeatEndDate').val());
+	day1 = repeatEndDate.getDate();
+	month1 = repeatEndDate.getMonth() + 1;										
+	year1 = repeatEndDate.getFullYear();
+	var eRPEDate = [year1, month1, day1].join('-');
+	var amount = document.getElementById("expenseAmount");
+	var vat = document.getElementById("expenseVAT");
+	var totalAmount = document.getElementById("expense-total-amount");
+	var cat = document.getElementById("selectMenuCat");
+	var desc = document.getElementById("expenseDesc");
+	var notes = document.getElementById("expenseNotes");
+	var paid = document.getElementById("selectMenuPaid");
+	var payableByTenant = document.getElementById("selectMenuTenant");
+	
+	if(paid.options[paid.selectedIndex].value == 'Yes'){
+		paid = true;
+	}
+	else{
+		paid = false;
+	}
+	
+	if(payableByTenant.options[payableByTenant.selectedIndex].value == 'Yes'){
+		payableByTenant = true;
+	}
+	else{
+		payableByTenant = false;
+	}
+	if(!document.getElementById("expensePaymentDate").value){
+		show(alertErrorMessage);
+		var alertErrorM = document.getElementById("alertErrorMessage");
+		alertErrorM.innerHTML = 'Please enter payment date.';
+		document.getElementById("expensePaymentDate").style.border = 'solid';
+			document.getElementById("expensePaymentDate").style.borderColor = "#b72c2c";
+			document.getElementById("expensePaymentDate").style.borderRadius = ".25rem";
+		  setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else if(!document.getElementById("expenseRepeatEndDate").value){
+		show(alertErrorMessage);
+		var alertErrorM = document.getElementById("alertErrorMessage");
+		alertErrorM.innerHTML = 'Please enter payment end date.';
+		document.getElementById("expenseRepeatEndDate").style.border = 'solid';
+			document.getElementById("expenseRepeatEndDate").style.borderColor = "#b72c2c";
+			document.getElementById("expenseRepeatEndDate").style.borderRadius = ".25rem";
+		  setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}else if(!amount.value){
+		show(alertErrorMessage);
+		var alertErrorM = document.getElementById("alertErrorMessage");
+		alertErrorM.innerHTML = 'Please enter amount.';
+		amount.style.border = 'solid';
+		amount.style.borderColor = "#b72c2c";
+		amount.style.borderRadius = ".25rem";
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else if(!desc.value){
+		show(alertErrorMessage);
+		var alertErrorM = document.getElementById("alertErrorMessage");
+		alertErrorM.innerHTML = 'Please enter expense description.';
+		desc.style.border = 'solid';
+		desc.style.borderColor = "#b72c2c";
+		desc.style.borderRadius = ".25rem";
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else{
+		var expenseDetails = {
+			"paymentDate": ePDate,
+			"paymentInterval": interval.options[interval.selectedIndex].value,
+			"paymentRepeatEndDate": eRPEDate,
+			"amount": amount.value,
+			"vat": vat.innerHTML,
+			"totalAmount": totalAmount.innerHTML,
+			"category": cat.options[cat.selectedIndex].value,
+			"description": desc.value,
+			"notes": notes.value,
+			"paid": paid,
+			"payableByTenant": payableByTenant,
+			"creator": user.uid
+			};
+			
+		//Submit expense details to database
+		ref.child(currentProperty).child('expenses').push(expenseDetails).then(function(user){
+			show(alertMessage);
+			var errorAlert = document.getElementById("alertMessage");
+			errorAlert.innerHTML = 'Expense has been created successfully';
+			document.body.scrollTop = document.documentElement.scrollTop = 0;
+			setTimeout(function(){
+				hide(alertMessage);
+			},3000);
+			amount.value = '';
+			notes.value = '';
+			vat.innerHTML == '';
+			totalAmount.innerHTML = '';
+			window.alert("added");
+			hide(expenseForm);
+		},function(error){
+			console.log("Couldn'd Upload Expense Form, Please check connection and try again.")
+		});	
+	}
+}
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	
+	//Set variables
+	var ref = firebase.database().ref().child("addresses");
+	var reff = firebase.database().ref().child('users');
+	var currentProperty = localStorage.getItem("prop");
+	
+	//Fetch all expenses created for current property and appened them to html page.
+	ref.child(currentProperty).child('expenses').on("child_added", function(data){
+		//Set Local Variables
+		var paymentDate = data.child("paymentDate").val();
+		var paymentInterval = data.child("paymentInterval").val();
+		var repeatEndDate = data.child("paymentRepeatEndDate").val();
+		var amount = data.child("amount").val();
+		var vat = data.child("vat").val();
+		var totalAmount = data.child("totalAmount").val();
+		var cat = data.child("category").val();
+		var desc = data.child("description").val();
+		var notes = data.child("notes").val();
+		var paid = data.child("paid").val();
+		var payableByTenant = data.child("payableByTenant").val();
+		var creator = data.child("creator").val();
+		var expense = [paymentDate, paymentInterval, repeatEndDate, amount, vat, totalAmount, cat,
+						notes, paid, payableByTenant, creator];
+		var paidButtonCounter = 0;
+		localStorage.setItem("counter", paidButtonCounter);				
+		
+		
+		var newPaymentDate = new Date(paymentDate);
+		day = newPaymentDate.getDate();
+		month = newPaymentDate.getMonth() ;										
+		year = newPaymentDate.getFullYear();
+		var message = '';
+		var x = new Date();
+		x.setFullYear(year, month, day);
+		var today = new Date();
+		
+		if (today > x){
+		  var days = (today - x)/ 1000 /60 / 60 / 24;
+		  message = "Payment is overdue by " + Math.round(days) + " day(s)!";  
+		  }
+		else if (today < x){
+			  var days = (x - today)/ 1000 /60 / 60 / 24;
+		  message = Math.round(days) + " day(s) left to pay.";
+		  }
+		else {
+		  message = "Payment is due today!";
+		  }
+			//add values of array to (address) to title heading
+		var appendExpense = "<tr><td id='title' class='tg-us36' value='" + desc + "' onclick='viewExpense(this)'><strong>" + desc + "</strong><br>" + cat + "<br>"+message+"<br></td><td class='tg-us36 table-hidden'>£" + totalAmount + "<br></td><td class='tg-us36 table-hidden'>" + paymentInterval + "<br></td><td class='tg-us36 table-hidden'>" + paymentDate + "<br></td><td class='tg-us36 table-hidden'>" + repeatEndDate + "<br></td><td class='tg-us36'><button class='btn btn-primary btn-block' value='"+ desc +"'type='submit' id='viewPayments' onclick='viewPayments(this)' style='background-color:#5d6f56;border-color:#5d6f56;'>View Payments</button><br></td></tr>";
+		$('#expenseTable').append(appendExpense);
+	
+	}, function(error){
+		//error message
+		console.log("Error: Couldnt Load Issue");
+	});
+	
+	ref.child(currentProperty).child('tenant').orderByKey().once("value", function(snapshot) {
+		snapshot.forEach(function(child){
+		  var key = child.key;
+		  console.log(key);
+		  var tenantUsername;
+		  var tenantName;
+		  var tenantMobile
+		  var tenantEmail;
+		  reff.child(key).child("firstName").on('value', function(data){
+			  tenantName = data.val();
+			  var appendName = "<option id='firstNameSel' value='"+tenantName+"'>"+tenantName+"</option>";
+			  $('#selectMenuTenant').append(appendName);
+		  });
+		  reff.child(key).child("lastName").on('value', function(data){
+			  if(data.val() != ''){
+				  $('#firstNameSel').remove();
+				  tenantName += ' ' + data.val();
+				  var appendFullName = "<option id='firstNameSel' value='"+tenantName+"'>"+tenantName+"</option>";
+				  $('#selectMenuTenant').append(appendFullName);
+			  }
+		  });
+		});
+	});
+		
+  } else {
+	// No user is signed in.
+	location = 'index.html';
+  }
+});
+
+function viewPayments(ele){
+	show(expensePayment);
+	
+	//Set variables
+	var currentProperty = localStorage.getItem("prop");
+	console.log(currentProperty);
+	var descValue = ele.getAttribute('value');
+	var key = '';
+	var user = firebase.auth().currentUser;	
+	var ref = firebase.database().ref().child("addresses").child(currentProperty).child('expenses');
+	var paymentDate;
+	var paymentInterval;
+	var paymentEndDate;
+	var instalments;
+	var totalAmount;
+	var status
+	var counter = localStorage.getItem("counter");
+	var weekday = new Array(7);
+    weekday[0] = "Sun ";
+    weekday[1] = "Mon ";
+    weekday[2] = "Tues ";
+    weekday[3] = "Wed ";
+    weekday[4] = "Thurs ";
+    weekday[5] = "Fri ";
+    weekday[6] = "Sat ";
+	
+	//Fetching selected expense details from database and inserting the value to assign variables
+	ref.orderByChild("description").equalTo(descValue).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		key = child.key;
+	  });
+	});
+	ref.child(key).child("paymentDate").on('value', function(data){
+		paymentDate = data.val();
+	});
+	ref.child(key).child("paymentInterval").on('value', function(data){
+		paymentInterval = data.val();
+	});
+	ref.child(key).child("paymentRepeatEndDate").on('value', function(data){
+		paymentEndDate = data.val();
+	});
+	ref.child(key).child("totalAmount").on('value', function(data){
+		totalAmount = data.val();
+	});
+	
+	//if expense was weekly intervals how payments from start to end date
+	if(paymentInterval == 'Weekly'){
+		descValue = descValue.replace(/\s/g, '');
+		instalments = ((days(paymentDate, paymentEndDate)) / 7)+1;
+		var intervalDates = new Array(Math.round(instalments)-1);
+		var today = new Date();
+		intervalDates[0] = intervalDates[Math.round(instalments)];
+		intervalDates[Math.round(instalments)-1] = '';
+		var paidButtonCounter = localStorage.getItem("counter");
+		var newCount;
+
+		for(var i = 0; i < intervalDates.length; i++){
+			var holdDate
+			if(i != Math.round(instalments)){
+				var currentDate = new Date (paymentDate); 
+				currentDate.setDate(currentDate.getDate() + i*7);
+				var date = new Date(currentDate);
+				day = date.getDate();
+				month = date.getMonth()+1;										
+				year = date.getFullYear();
+				weekDay = weekday[date.getDay()];
+				var ePDate = [day,month,year].join('-');
+				holdDate = [year,month,day].join('-');
+				
+				intervalDates[i] = weekDay + "  " +ePDate + " " + i;
+			}
+			var today = new Date();
+			if(today > passToday(holdDate)){
+				var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+				status = 'Due '+Math.round(daysLeft)+ " days ago";
+			}
+			else if (today < passToday(holdDate)){
+			  var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+			  status = "Due in " + Math.round(daysLeft) + " day(s)";
+			}
+			else{
+				status = 'Due Today';
+			}
+			var appendExpense = "<tr class='paymentList'><td class='tg-us36'>"+(i+1)+"<br></td><td class='tg-us36'>£"+totalAmount+"<br></td><td class='tg-us36'>"+intervalDates[i]+"<br></td><td 'class='tg-us36'>"+status+"</td></tr>";
+			$('#paymentTable').append(appendExpense);
+		}
+	}<!--End of paymentInterval == 'Weekly' if else statement-->
+	//if expense was Fortnightly intervals, show how payments from start to end date
+	else if(paymentInterval == 'Fortnightly'){
+		instalments = ((days(paymentDate, paymentEndDate)) / 14)+1;
+		var intervalDates = new Array(Math.round(instalments)-1);
+		intervalDates[0] = intervalDates[Math.round(instalments)-1];
+		intervalDates[Math.round(instalments)-1] = '';
+		
+		//For loop that funds the n(arrays length) times and increments the month
+		for(var i = 0; i < intervalDates.length; i++){
+			var holdDate
+			if(i != Math.round(instalments)){
+				var currentDate = new Date (paymentDate);  
+				currentDate.setDate(currentDate.getDate() + i*14);
+				var date = new Date(currentDate);
+				day = date.getDate();
+				month = date.getMonth()+1;										
+				year = date.getFullYear();
+				weekDay = weekday[date.getDay()];
+				var ePDate = [day,month,year].join('-');
+				holdDate = [year,month,day].join('-');
+				
+				intervalDates[i] = weekDay + "  " +ePDate + " " + i;
+			}
+			var today = new Date();
+			if(today > passToday(holdDate)){
+				var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+				status = 'Due '+Math.round(daysLeft)+ " days ago";
+			}
+			else if (today < passToday(holdDate)){
+			  var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+			  status = "Due in " + Math.round(daysLeft) + " day(s)";
+			}
+			else{
+				status = 'Due Today';
+			}
+			var appendExpense = "<tr class='paymentList'><td class='tg-us36'>"+(i+1)+"<br></td><td class='tg-us36'>£"+totalAmount+"<br></td><td class='tg-us36'>"+intervalDates[i]+"<br></td><td 'class='tg-us36'>"+status+"</td></tr>";
+			$('#paymentTable').append(appendExpense);
+		}
+	}<!--End of paymentInterval == 'Fortnightly' if else statement-->
+	//if expense was Monthly intervals, show how payments from start to end date
+	else if(paymentInterval == 'Monthly'){
+		instalments = ((days(paymentDate, paymentEndDate)) / 30)+1; //Calculaing amount of instalment
+		var intervalDates = new Array(Math.round(instalments)-1); //Setting array length to equal instalment amount
+		intervalDates[0] = intervalDates[Math.round(instalments)-1];
+		intervalDates[Math.round(instalments)-1] = '';
+		
+		
+		//For loop that funds the n(arrays length) times and increments the month
+		for(var i = 0; i < intervalDates.length; i++){
+			var holdDate
+			if(i != Math.round(instalments)){
+				var currentDate = new Date (paymentDate);  
+				currentDate.setMonth(currentDate.getMonth() + i);
+				var date = new Date(currentDate);
+				day = date.getDate();
+				month = date.getMonth() + 1;										
+				year = date.getFullYear();
+				weekDay = weekday[date.getDay()];
+				var ePDate = [day,month,year].join('-');
+				holdDate = [year,month,day].join('-');
+				
+				intervalDates[i] = weekDay + "  " +ePDate + " " + i;
+			}
+			var today = new Date();
+			if(today > passToday(holdDate)){
+				var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+				status = 'Due '+Math.round(daysLeft)+ " days ago";
+			}
+			else if (today < passToday(holdDate)){
+			  var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+			  status = "Due in " + Math.round(daysLeft) + " day(s)";
+			}
+			else{
+				status = 'Due Today';
+			}
+			var appendExpense = "<tr class='paymentList'><td class='tg-us36'>"+(i+1)+"<br></td><td class='tg-us36'>£"+totalAmount+"<br></td><td class='tg-us36'>"+intervalDates[i]+"<br></td><td 'class='tg-us36'>"+status+"</td></tr>";
+			$('#paymentTable').append(appendExpense);
+		}	
+	}<!--End of paymentInterval == 'Every Month' if else statement-->
+	//if expense was Every 2 months  intervals, show how payments from start to end date
+	else if(paymentInterval == 'Every 2 Months'){
+		instalments = ((days(paymentDate, paymentEndDate)) / 60)+1;
+		var intervalDates = new Array(Math.round(instalments)-1);
+		intervalDates.push(paymentDate);
+		intervalDates[0] = intervalDates[Math.round(instalments)-1];
+		intervalDates[Math.round(instalments)-1] = '';
+		
+		for(var i = 0; i < intervalDates.length; i++){
+			var holdDate
+			if(i != Math.round(instalments)){
+				var currentDate = new Date (paymentDate);  
+				currentDate.setMonth(currentDate.getMonth() + i*2);
+				var date = new Date(currentDate);
+				day = date.getDate();
+				month = date.getMonth()+1;										
+				year = date.getFullYear();
+				weekDay = weekday[date.getDay()];
+				var ePDate = [day,month,year].join('-');
+				holdDate = [year,month,day].join('-');
+				
+				intervalDates[i+1] = weekDay + "  " +ePDate + " " + i;
+			}
+			var today = new Date();
+			if(today > passToday(holdDate)){
+				var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+				status = 'Due '+Math.round(daysLeft)+ " days ago";
+			}
+			else if (today < passToday(holdDate)){
+			  var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+			  status = "Due in " + Math.round(daysLeft) + " day(s)";
+			}
+			else{
+				status = 'Due Today';
+			}
+			var appendExpense = "<tr class='paymentList'><td class='tg-us36'>"+(i+1)+"<br></td><td class='tg-us36'>£"+totalAmount+"<br></td><td class='tg-us36'>"+intervalDates[i]+"<br></td><td 'class='tg-us36'>"+status+"</td></tr>";
+			$('#paymentTable').append(appendExpense);
+		}	
+	}<!--End of paymentInterval == 'Every 2 Months' if else statement-->
+	//if expense was every 3 months intervals, show how payments from start to end date
+	else if(paymentInterval == 'Every 3 Months'){
+		instalments = ((days(paymentDate, paymentEndDate)) / 90)+1;
+		var intervalDates = new Array(Math.round(instalments)-1);
+		intervalDates[0] = intervalDates[Math.round(instalments)-1];
+		intervalDates[Math.round(instalments)-1] = '';
+		
+		for(var i = 0; i < intervalDates.length; i++){
+			var holdDate
+			if(i != Math.round(instalments)){
+				var currentDate = new Date (paymentDate); 
+				currentDate.setMonth(currentDate.getMonth() + i*3);
+				var date = new Date(currentDate);
+				day = date.getDate();
+				month = date.getMonth()+1;										
+				year = date.getFullYear();
+				weekDay = weekday[date.getDay()];
+				var ePDate = [day,month,year].join('-');
+				holdDate = [year,month,day].join('-');
+				
+				intervalDates[i] = weekDay + "  " +ePDate + " " + i;
+			}
+			var today = new Date();
+			if(today > passToday(holdDate)){
+				var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+				status = 'Due '+Math.round(daysLeft)+ " days ago";
+			}
+			else if (today < passToday(holdDate)){
+			  var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+			  status = "Due in " + Math.round(daysLeft) + " day(s)";
+			}
+			else{
+				status = 'Due Today';
+			}
+			var appendExpense = "<tr class='paymentList'><td class='tg-us36'>"+(i+1)+"<br></td><td class='tg-us36'>£"+totalAmount+"<br></td><td class='tg-us36'>"+intervalDates[i]+"<br></td><td 'class='tg-us36'>"+status+"</td></tr>";
+			$('#paymentTable').append(appendExpense);
+		}
+	}<!--End of paymentInterval == 'Every 3 Months' if else statement-->
+	//if expense was every 6 months intervals, show how payments from start to end date
+	else if(paymentInterval == 'Every 6 Months'){
+		instalments = ((days(paymentDate, paymentEndDate)) / 180)+1;
+		var intervalDates = new Array(Math.round(instalments)-1);
+		intervalDates[0] = intervalDates[Math.round(instalments)-1];
+		intervalDates[Math.round(instalments)-1] = '';
+		
+		for(var i = 0; i < intervalDates.length; i++){
+			var holdDate
+			if(i != Math.round(instalments)){
+				var currentDate = new Date (paymentDate);  
+				currentDate.setMonth(currentDate.getMonth() + i*6);
+				var date = new Date(currentDate);
+				day = date.getDate();
+				month = date.getMonth()+1;										
+				year = date.getFullYear();
+				weekDay = weekday[date.getDay()];
+				var ePDate = [day,month,year].join('-');
+				holdDate = [year,month,day].join('-');
+				
+				intervalDates[i+1] = weekDay + "  " +ePDate + " " + i;
+			}
+			var today = new Date();
+			if(today > passToday(holdDate)){
+				var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+				status = 'Due '+Math.round(daysLeft)+ " days ago";
+			}
+			else if (today < passToday(holdDate)){
+			  var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+			  status = "Due in " + Math.round(daysLeft) + " day(s)";
+			}
+			else{
+				status = 'Due Today';
+			}
+			var appendExpense = "<tr class='paymentList'><td class='tg-us36'>"+(i+1)+"<br></td><td class='tg-us36'>£"+totalAmount+"<br></td><td class='tg-us36'>"+intervalDates[i]+"<br></td><td 'class='tg-us36'>"+status+"</td></tr>";
+			$('#paymentTable').append(appendExpense);
+		}	
+	}<!--End of paymentInterval == 'Every 6 Months' if else statement-->
+	//if expense was every 12 months intervals, show how payments from start to end date
+	else if(paymentInterval == 'Every 12 Months'){
+		instalments = ((days(paymentDate, paymentEndDate)) / 365)+1;
+		var intervalDates = new Array(Math.round(instalments)-1);
+		intervalDates[0] = intervalDates[Math.round(instalments)-1];
+		intervalDates[Math.round(instalments)-1] = '';
+		
+		for(var i = 0; i < intervalDates.length; i++){
+			var holdDate;
+			if(i != Math.round(instalments)){
+				var currentDate = new Date (paymentDate); 
+				currentDate.setFullYear(currentDate.getFullYear() + i);
+				var date = new Date(currentDate);
+				day = date.getDate();
+				month = date.getMonth()+1;										
+				year = date.getFullYear();
+				weekDay = weekday[date.getDay()];
+				var ePDate = [day,month,year].join('-');
+				holdDate = [year,month,day].join('-');
+				
+				intervalDates[i+1] = weekDay + "  " +ePDate + " ";
+			}
+			var today = new Date();
+			if(today > passToday(holdDate)){
+				var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+				status = 'Due '+Math.round(daysLeft)+ " days ago";
+			}
+			else if (today < passToday(holdDate)){
+			  var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+			  status = "Due in " + Math.round(daysLeft) + " day(s)";
+			}
+			else{
+				status = 'Due Today';
+			}
+			var appendExpense = "<tr class='paymentList'><td class='tg-us36'>"+(i+1)+"<br></td><td class='tg-us36'>£"+totalAmount+"<br></td><td class='tg-us36'>"+intervalDates[i]+"<br></td><td 'class='tg-us36'>"+status+"</td></tr>";
+			$('#paymentTable').append(appendExpense);
+		}<!--End of paymentInterval == 'Every 12 Months' if else statement-->		
+	}
+	else{
+		//if expense has no intervals, show single payment date
+		instalment = 1;
+		var intervalDates = new Array(Math.round(instalments)-1);
+		intervalDates.push(paymentDate);
+		intervalDates[0] = intervalDates[Math.round(instalments)-1];
+		intervalDates[Math.round(instalments)-1] = '';
+		
+		for(var i = 0; i < intervalDates.length; i++){
+			if(i != Math.round(instalments)){
+				intervalDates[i+1] = addDaysPt2(intervalDates[i],7);
+			}
+			if(today > passToday(intervalDates[i]) != 0){
+				var daysLeft = (passToday(intervalDates[i]) - today)/ 1000 /60 / 60 / 24;
+				status = 'Due '+Math.round(daysLeft)+ " days ago";
+			}
+			else if (today < passToday(intervalDates[i])){
+			  var daysLeft = (passToday(intervalDates[i]) - today)/ 1000 /60 / 60 / 24;
+			  status = "Due in " + Math.round(daysLeft) + " day(s)";
+			}
+			else{
+				status = 'Due Today';
+			}
+			var appendExpense = "<tr class='paymentList'><td class='tg-us36'>"+(i+1)+"<br></td><td class='tg-us36'>£"+totalAmount+"<br></td><td class='tg-us36'>"+intervalDates[i]+"<br></td><td 'class='tg-us36'>"+status+"</td></tr>";
+			$('#paymentTable').append(appendExpense);
+		}	
+	}<!--end of else statement-->
+}
+
+function viewExpense(ele){
+	show(viewExpenseD);
+	var desc = ele.getAttribute('value');
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	
+	db.ref('/addresses/'+currentProperty+'/expenses').orderByChild("description").equalTo(desc).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		var key = child.key;
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/paymentDate').on('value', function(data){
+			document.getElementById("viewPaymentDate").innerHTML = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/paymentInterval').on('value', function(data){
+			document.getElementById("viewPaymentInterval").innerHTML = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/paymentRepeatEndDate').on('value', function(data){
+			document.getElementById("viewPaymentEndDate").innerHTML = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/totalAmount').on('value', function(data){
+			document.getElementById("viewAmount").innerHTML = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/category').on('value', function(data){
+			document.getElementById("viewCat").innerHTML = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/description').on('value', function(data){
+			document.getElementById("viewDesc").innerHTML = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/notes').on('value', function(data){
+			document.getElementById("viewNotes").innerHTML = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/paid').on('value', function(data){
+			document.getElementById("viewPaid").innerHTML = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/payableByTenant').on('value', function(data){
+			document.getElementById("viewPayable").innerHTML = data.val();
+		});
+	  });
+	});
+}
+
+function editExpense(ele){
+	hide(viewExpenseD);
+	show(editExpenseD);
+	var desc = document.getElementById("viewDesc").innerHTML;
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	
+	db.ref('/addresses/'+currentProperty+'/expenses').orderByChild("description").equalTo(desc).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		var key = child.key;
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/notes').on('value', function(data){
+			document.getElementById("editExpenseNotes").value = data.val();
+		});
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key+'/description').on('value', function(data){
+			document.getElementById("editExpenseTitle").innerHTML = data.val();
+		});
+	  });
+	});
+}
+
+function saveExpense(){
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	var title = document.getElementById("editExpenseTitle").innerHTML;
+	var notes = document.getElementById("editExpenseNotes").value;
+	var paid = document.getElementById("editSelectMenuPaid");
+	if(paid.options[paid.selectedIndex].value == 'Yes'){
+		paid = 'True';
+	}
+	else{
+		paid = 'False';
+	}
+	var update = {
+		"notes": notes,
+		"paid": paid
+		};
+		
+	db.ref('/addresses/'+currentProperty+'/expenses').orderByChild("description").equalTo(title).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		var key = child.key;
+		db.ref('/addresses/'+currentProperty+'/expenses/'+key).update(update).then(function(){
+			hide(editExpenseD);
+			var errorAlert = document.getElementById("alertMessage");
+			errorAlert.innerHTML = 'Expense has been updated successfully';
+			document.body.scrollTop = document.documentElement.scrollTop = 0;
+			show(alertMessage);
+			setTimeout(function(){
+				hide(alertMessage);
+				location.reload();
+			},3000);
+		});
+	  });
+	});	
+}
+
+function closeEditExpense(){
+	if (confirm('Are you sure you want to exit? Data will not be saved.')) {
+		// Save it!
+		hide(editExpenseD);
+	} else {
+		// Do nothing!
+	}
+}
+
+function closeExpenseForm(){
+	if (confirm('Are you sure you want to exit? Data will not be saved.')) {
+		// Save it!
+		hide(expenseForm);
+	} else {
+		// Do nothing!
+	}
+}
+
+function showExpenseForm(){
+	show(expenseForm);
+	var paymentDate = document.getElementById("expensePaymentDate").value = '';
+	var repeatEndDate = document.getElementById("expenseRepeatEndDate").value = '';
+	var amount = document.getElementById("expenseAmount").value = '';
+	var desc = document.getElementById("expenseDesc").value = '';
+	var notes = document.getElementById("expenseNotes").value = '';
+}
+</script>
+</body>
+</html>

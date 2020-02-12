@@ -1,0 +1,1058 @@
+/*----------------------------------------------------
+
+					HOMEP PAGE STYLES
+
+----------------------------------------------------*/
+
+.hide-menu {
+  margin-left:-100vw;
+}
+
+#sidebar {
+	padding:10px 20px 10px 10px;
+  position:absolute;
+  overflow:hidden;
+  min-height:100%;
+  background-color:rgba(112, 112, 112, 0.9);
+  opacity:0.9;
+  transition:all 0.3s ease-in-out;
+  width:100vw;
+}
+
+#sidebar .toggle-btn span {
+  display:block;
+  width:30px;
+  height:5px;
+  background:#151719;
+  margin:5px 0px;
+}
+
+#sidebar.active {
+  left:0px;
+}
+
+.toggle-btn {
+  cursor:pointer;
+  padding:5px 10px;
+  background-color:#5d6f56;
+}
+
+.social {
+  padding:0;
+}
+
+.header-logo-img {
+  width:10%;
+}
+
+.header-logo-text {
+  width:35%;
+}
+
+#toggleMenu {
+	width:52px;
+  background-color:#5d6f56;
+  padding:1px 10px;
+  cursor:pointer;
+  z-index:100000;
+	float:left;
+}
+
+#toggleMenu span {
+  display:block;
+  width:30px;
+  height:5px;
+  background-color:white;
+  margin:5px 0px;
+}
+
+.fa-times {
+  right:10px;
+  top:10px;
+  opacity:0.7;
+  cursor:pointer;
+  position:absolute;
+  color:white;
+  transition:all 0.3s ease-in-out;
+}
+
+.fa-times:hover {
+  opacity:1;
+}
+
+.nav-selection {
+  margin:20px 0px;
+  display:block;
+  width:200px;
+  list-style-type:none;
+}
+
+.nav-item {
+  font-weight:200;
+  color:white;
+  padding:12px 0px;
+  box-sizing:border-box;
+  font-size:17px;
+  color:#d8d8d8;
+  border-bottom:solid 1px #d8d8d8;
+  transition:all 0.3s ease-in-out;
+  cursor:pointer;
+  width:100vw;
+
+}
+
+.nav-item a{
+	margin-left:25px;
+}
+
+.boxed-item {
+  font-weight:200;
+  padding:10px 20px;
+  border:solid 2px white;
+  box-sizing:border-box;
+  font-size:22px;
+  color:white;
+  text-align:center;
+  /*width:95%;*/
+  margin-left:5px;
+}
+
+.sign-out-btn:hover {
+  text-decoration:none;
+}
+
+.sign-out-btn {
+  color:#d8d8d8;
+  margin-left:10px;
+  font-weight:800;
+  font-size:12px;
+}
+
+.boxed-item-smaller {
+  font-size:12px;
+  color:#d8d8d8;
+  width:80%;
+  transition:all 0.3s ease-in-out;
+  cursor:pointer;
+  border-width:1px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.boxed-item-smaller:hover {
+  background-color:white;
+  color:#111;
+  transition:all 0.3s ease-in-out;
+}
+
+/*CHAT CSS*/
+
+.boxOther {
+  margin: 25px 0;
+  background:#86BB71;
+  padding: 18px 20px;
+  font-weight: 900;
+  color: #fff;
+  font-family: arial;
+  position: relative;
+  border-radius: 15px;
+  font:14px/20px "Lato", Arial, sans-serif;
+}
+
+.otherUser:before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-bottom: 10px solid #86BB71;
+  border-top: 10px solid transparent;
+  border-left: 10px solid #86BB71;
+  border-right: 10px solid transparent;
+  left: 19px;
+  top: -19px;
+  
+}
+
+.boxCurrent {
+  width: 70%;
+  height:100%;
+  margin: 25px 0;
+  background: #94C2ED;
+  padding: 18px 20px;
+  font-weight: 900;
+  color: #fff;
+  font-family: arial;
+  position: relative;
+  text-align:right;
+  border-radius: 15px;
+  font:14px/20px "Lato", Arial, sans-serif;
+  left:30%;
+}
+
+.currentUser:before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid #94C2ED;
+  border-right: 10px solid #94C2ED;
+  border-left: 10px solid transparent;
+  right: 19px;
+  top: -19px;
+}
+
+#messageInput{
+	float:left;
+	width:65%;
+	height:100%;
+	resize:none;
+	margin-right:10px;
+	padding: .375rem .75rem;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: .25rem;
+	transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.message-data-time {
+  color:#a8aac3;
+  opacity: 70%;
+  font:14px/20px "Lato", Arial, sans-serif;
+}
+.message-name{
+	font:14px/20px "Lato", Arial, sans-serif;
+}
+
+#messengerGroupChat{
+	width:100%;
+	height:100%;
+	background-color:#f2f5f8;
+}
+
+#messengerGroupPeople{
+	display:none;
+}
+
+#messengerGroupChatHeader{
+	height:10%;
+	background-color:#f2f5f8;
+	border-bottom:3px solid #fefefe;
+	padding:5px
+}
+
+#chatTitle{
+	font-size:4vw;
+}
+
+#displayBox{
+	height:70%;
+	background-color:#f2f5f8;
+	padding:10px;
+	overflow-y:scroll;
+	border-bottom:3px solid #fefefe
+}
+
+#messengerGroup{
+	width:100vw; 
+	height:90vh;
+	font:14px/20px "Lato", Arial, sans-serif;
+}
+
+#messageBox{
+	height:20%;
+	background-color:#f2f5f8;
+	padding:15px;
+}
+
+#sendMessageBtn{
+	background-color:#5d6f56;
+	border-color:#5d6f56;
+	float:right;
+	height:100%;
+	width:30%;
+}
+
+
+
+
+
+
+
+
+#notificaionContainer h2{
+	padding: 10px;
+	background-color:#444753;
+	color: #FFFFFF;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	}
+	#notificaionContainer{
+	display: block;
+	width: 96%;
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color:#f2f5f8;
+	border-radius: 10px;
+	}
+	#notifications{
+	overflow: auto;
+	height: 400px;
+	height: 0;
+	transition: all 0.5s ease-in-out;
+	}
+	#seeMore{
+	color:#f2f5f8 /*#212529*/
+	}
+	
+	#cashFlowContainer h2{
+	padding: 10px;
+	background-color:#444753;
+	color: #FFFFFF;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	}
+	#cashFlowContainer{
+	display: block;
+	width: 96%;
+	margin-bottom: 10px;
+	background-color:#f2f5f8;
+	border-radius: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	}
+	#cashFlow{
+	overflow: auto;
+	height: 0;
+	text-align: center;
+	transition: all 0.5s ease-in-out;
+	}
+	
+	#homePageInfo{
+		max-width:750px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+/*----------------------------------------------------
+
+			END OF HOME PAGE STYLES
+
+----------------------------------------------------*/
+
+
+
+
+/*----------------------------------------------------
+
+		    NOTIFICATION PAGE STYLES
+
+----------------------------------------------------*/
+
+#notif{
+	width:100%%;
+	margin-left:auto;
+	margin-right:auto;
+	background-color: #f2f5f8;
+	border-radius: 10px;
+}
+
+#notifContent{
+	padding: 0.1% 1%;
+}
+
+#notifHeading {
+	padding: 10px;
+	background-color:#444753;
+	color: #FFFFFF;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#notifList{
+	list-style:none;
+}
+
+
+/*----------------------------------------------------
+
+			END OF NOTIFICATION PAGE STYLES
+
+----------------------------------------------------*/
+
+
+
+
+
+/*----------------------------------------------------
+
+			OTHER STYLES
+
+----------------------------------------------------*/
+.subSettingsContainer{
+	border: 1px solid #cccccc;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	margin-bottom:10px;
+}
+.subSettingsContainer h3{
+	padding: 10px;
+	background-color:#f6f7f9;
+	color: #1d2129;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	border: 1px solid #cccccc;
+}
+.settings{
+  padding: 10px;
+  width:100%;
+  border-bottom: 1px solid #cccccc;
+}
+.view{
+	float:right;
+	display:none;
+}
+
+#menuList{
+	list-style:none;
+	text-align:center;
+}
+#menuList li{
+	display:inline;
+	padding: 5px 10px;
+	cursor:pointer;
+	border: 1px solid #cccccc;
+}
+
+#menuList li:hover{
+	background-color: #5d6f56;
+	color:#fff;
+	border-color: #5d6f56;
+}
+#menuList a{
+	text-decoration:none;
+	color:#212529;
+}
+
+
+
+
+
+textarea {
+	padding:5px;
+}
+ul{
+	list-style: none;
+}
+
+* {
+  margin:0px;
+  padding:0px;
+}
+
+:root {
+  font-family:'Marcellus';
+}
+
+body {
+  font-family:'Marcellus';
+}
+
+.footer-basic {
+  padding:40px 0;
+  background-color:#fff;
+  color:#4b4c4d;
+  width:100%;
+  min-height:20vh;
+}
+.center {
+  text-align:center;
+}
+
+.warn{
+	color: red;
+	font-weight: bold;
+	float:right;
+}
+
+.hidden{
+	display:none;
+}
+
+.personal-details{
+	background-color: #5d6f56;
+	padding: 15px;
+}
+
+.details-container{
+	background-color: white;
+	padding: 15px 20px;
+	margin-left:auto;
+	margin-right:auto;
+	display:table;
+	min-width: 350px;
+}
+
+.pop-up-box{
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0,0,0,0.4);
+	
+}
+
+.pop-up-content{
+	width:100vw;
+	height:100vh;
+	background-color: white;
+	margin: 40px auto 0 auto;
+	display: table;
+	padding: 10px 20px;
+	/*this to solve "the content will not be cut when the window is smaller than the content": */
+	max-width:100%;
+	max-height:100%;
+	overflow:auto;
+}
+
+.pop-up-content h2{
+	text-align:center;
+	padding-bottom: 15px;
+}
+
+.pop-up-content select, textarea, input{
+	width:100%;
+}
+
+.pop-up-content .form-control{
+	margin-bottom: 15px;
+}
+
+.tg  {border-collapse:collapse;border-spacing:0;width: 100%;padding:10px;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
+.tg .tg-us36{border-color:inherit;vertical-align:top;cursor:pointer;}
+.tg .tg-h28u{background-color:#5d6f56;border-color:inherit;vertical-align:top;color:#fff}
+.tg .tg-xxzo{background-color:#5d6f56;border-color:inherit;vertical-align:top;color:#fff}
+.tg .tg-yw4l{vertical-align:top}
+
+.alert{
+	text-align:center;
+	padding: 10px;
+	background:#79c879;
+	color:#fff;
+	margin:0;
+}
+
+.alertError{
+	text-align:center;
+	padding: 10px;
+	background:#b72c2c;
+	color:#fff;
+	margin:0;
+}
+
+.menu-item{
+	color:white;
+}
+.menu-item:hover{
+	color:white;
+	text-decoration:none;
+}
+
+.fa-trash-alt{
+	float:right; 
+	color:#ff0000;
+}
+.fa-trash-alt:hover{
+	color:#b72c2c;
+	cursor:pointer;
+}
+#pageTitle{
+	font-size:4.5vw;
+}
+
+
+.address-title-property{
+	font-size: 4vw;
+}
+
+.logo-img{
+	width:20%;
+}
+.logo-text{
+	width:45%;
+}
+
+/*----------------------------------------------------
+
+			END OF OTHER
+
+----------------------------------------------------*/
+
+
+
+
+/*----------------------------------------------------
+
+			PROPERTY PAGE STYLES
+
+----------------------------------------------------*/
+
+
+/*Property Page - appened address title*/
+.info-title{
+	border-bottom: 2px solid #d8d8d8;
+	font-size:2.5vh;
+}
+
+
+/*----------------------------------------------------
+
+			END OF PROPERTY PAGE STYLES
+
+----------------------------------------------------*/
+
+
+
+#profile-name-title{
+	font-size:6vw;
+}
+
+.fa-user {
+	float:left;
+  font-size:8vw;
+  color:#5d6f56;
+}
+
+#profile-img-name{
+	max-width: 65vw;
+	margin: 2.5vh auto;
+}
+
+.fa-edit:hover{
+	color:#5d6f56;
+	cursor:pointer;
+}
+
+.fa-envelope:hover{
+	color:#5d6f56;
+	cursor:pointer;
+}
+
+#page-content{
+	min-height: 70vh;
+	background-color: #5d6f56;
+}
+
+.table-hidden{
+	display:none;
+}
+
+.fa-plus-square{
+	color:#fff;
+	cursor:pointer;
+}
+
+
+
+.html{
+	background-color: #5d6f56;
+}
+
+#signUpDiv{
+	border-radius:2.5%;
+	width:100%
+}
+#iphoneContentLeft{
+	float:left;
+		 width:50%;
+		 background-color:#fff;
+		 text-align:justify;
+		 min-height:100px;
+	}
+	#iphoneContentRight{
+		float:right;
+		text-align:justify;
+		min-height:100px;
+		float:right;
+		 width:50%;
+		 background-color:#fff;
+	}
+	#iphoneAndText{
+		width:100%;
+		height:550px;
+		box-shadow: 0 8px 6px -6px rgba(0,0,0,0.14);
+		margin-bottom:100px;
+	}
+	
+	#iphone{
+		display:none;
+	}
+	
+	#iphone img{
+		width: 80%;
+		margin: 20% 10.7%
+	}
+	#iphoneAndText{
+		padding:0 10px 0 40px;
+	}
+	#iphoneContentLeft .leftContent{
+		width:100%;
+	}
+	#iphoneContentRight .rightContent{
+		width:100%;
+		padding-left:5px;
+	}
+	#iphoneContentLeft .leftContent h3{
+		color:#353535;
+	}
+	#iphoneContentRight .rightContent h3{
+		color:#353535;
+	}
+	#iphoneContentLeft .leftContent p{
+		color:#7e7e7e;
+	}
+	#iphoneContentRight .rightContent p{
+		color:#7e7e7e;
+	}
+	#regBox{
+		padding: 40px;
+	}
+/* Small Devices, Tablets */ 
+@media only screen and (min-width : 480px) {
+	.settings{
+		text-align:start;
+	}
+	
+	#signUpDiv{
+		width:70%
+	}
+		
+	
+	#sidebar{
+		width:30%;
+	}
+	#chatTitle{
+		font-size:20px;
+	}
+	#messengerGroup{
+		width:100%;
+	}
+	#messageBox{
+	height:20%;
+	background-color:#f2f5f8;
+	padding:30px;
+	}
+	#messengerGroupChat{
+	  width:70%;
+	  float:right;
+	}
+	#messengerGroupPeople{
+		display:block;
+		width:30%;
+		height:100%;
+		float:left;
+		background-color:#444753;
+		padding:0px;
+	}
+	#peopleList{
+		list-style:none;
+	}
+	#landlordList{
+		list-style: none;
+	}
+
+	.pop-up-content{
+	width:60vw;
+	height:auto;
+	}
+	.info-title{
+	font-size:2.5vh;
+	}
+	
+	.logo-img{
+		width:10%;
+	}
+	.logo-text{
+		width:35%;
+	}
+	#pageTitle{
+	font-size:3.5vw;
+	float:right; 
+	padding:15px 15px 0 0;
+	}
+	
+	
+	#created{
+		float:left;
+	}
+	
+	#completed{
+		float:right;
+	}
+	
+	.details-container{
+		width: 100%;
+		text-align:center;
+	}
+	
+	.fa-user {
+  	font-size:6vw;
+	margin-right:5vw;;
+	}
+	#profile-name-title{
+	font-size:4vw;
+	}
+	#profile-img-name{
+		margin: 2.5vh auto;
+		max-width:55vw;
+	}
+
+	.table-hidden{
+		display: table-cell;
+	}
+	
+	.tenantBtn{
+		width:50%;
+		margin-left:auto;
+		margin-right:auto;
+	}
+
+
+}
+
+
+@media only screen and (min-width : 880px) {
+	#regBox{
+		padding: 40px 200px;
+	}
+	#land{
+		padding:70px 30px;
+	}
+	#iphoneContentLeft{
+		 float:left; 
+		 height:700px;
+		 width:33.3%;
+		 text-align:end;
+		 padding-top:5%;
+	}
+	#iphoneAndText{
+		height: 700px;
+	}
+	#iphoneContentRight{
+		 float:right;
+		 height:700px;
+		 width: 33.3%;
+		 padding-top:5%;
+		 text-align:start;
+	}
+	#iphoneAndText{
+		padding:0;
+		width: 90%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	#iphone{
+		display:block;
+		background-image:url(../../images/smartphone.png);
+		background-size:100%;
+		height:700px;
+		width:26%;
+		background-repeat:no-repeat;
+		margin-left:auto;
+		margin-right:auto;
+	}
+	#iphoneContentLeft .leftContent{
+		padding:10px; 
+		width:60%;
+		float:right;
+	}
+	#iphoneContentRight .rightContent{
+		padding:10px;
+		width:60%;
+	}
+	#settingContainer{
+		width:960px;
+		margin-left:auto;
+		margin-right:auto;
+	}
+	.subSettingsContainer h3{
+		text-align:start;
+		padding-left: 40px;
+	}
+	.view{
+		display:block;
+	}
+	#signUpDiv{
+		border-radius:2.5%;
+		width:40%
+	}
+
+	.fa-angle-down{
+	display: none;
+	}
+	#notificaionContainer h2{
+	padding: 10px;
+	background-color:#444753;
+	color: #FFFFFF;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	}
+	#notificaionContainer{
+	display: block;
+	width: 350px;
+	float: left;
+	margin-bottom: 10px;
+	margin-left: 15px;
+	background-color:#f2f5f8;
+	border-radius: 10px;
+	}
+	#notifications{
+	overflow: auto;
+	height: 400px;
+	}
+	
+	#homePageInfo{
+		height: 500px;
+	}
+	
+	#cashFlowContainer h2{
+	padding: 10px;
+	background-color:#444753;
+	color: #FFFFFF;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	}
+	#cashFlowContainer{
+	display: block;
+	width: 350px;
+	float: right;
+	margin-bottom: 10px;
+	background-color:#f2f5f8;
+	border-radius: 10px;
+	margin-right: 15px;
+	}
+	#cashFlow{
+	overflow: auto;
+	height: 400px;
+	}
+	
+	#homePageInfo{
+		max-width:750px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	#seeMore{
+	color:#212529
+	}
+	
+	#notif{
+		width:60%;
+		margin-left:120px;
+		margin-right:0;
+	}
+	
+	#notifContent{
+	}
+	.leftInfo{
+		float:left;
+		width:46%;
+		height:100%;
+	}
+	.rightInfo{
+		float:right;
+		width:46%;
+		height:100%;
+	}
+	#infoOne{
+		min-height: 300px;
+		width:80%;
+		margin-left:auto;
+		margin-right:auto;
+	}
+
+}
+
+
+
+/* /* Large Devices, Wide Screens */
+@media only screen and (min-width : 1240px) {
+	.info-title{
+	font-size:3.5vh;
+	}
+	
+	
+
+}
+@media only screen and (min-width : 1512px) {
+	
+	#iphone{
+		width: 20%;
+	}
+	
+	#notificaionContainer h2{
+	padding: 10px;
+	background-color:#444753;
+	color: #FFFFFF;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	}
+	#notificaionContainer{
+	display: block;
+	width: 350px;
+	float:right; 
+	background-color:#f2f5f8;
+	border-radius: 10px;
+	margin: 1%;
+	}
+	#notifications{
+	overflow: auto;
+	max-height: 400px;
+	}
+	
+	#cashFlowContainer h2{
+	padding: 10px;
+	background-color:#444753;
+	color: #FFFFFF;
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	}
+	#cashFlowContainer{
+	display: block;
+	width: 350px; 
+		float: left;
+	background-color:#f2f5f8;
+	border-radius: 10px;
+	margin: 1%;
+	}
+	#cashFlow{
+	overflow: auto;
+	height: 400px;
+	}
+	
+	#homePageInfo{
+		max-width:100%;
+		margin-left: auto;
+		margin-right: auto;
+		height: 0;
+	}
+	
+	#pageBody{
+		margin-top: 1%;
+	}
+}
+
+@media only screen and (min-width : 1882px) {
+	#sidebar{
+		width:24.5%;
+	}
+}

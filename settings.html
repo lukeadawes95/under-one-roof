@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Settings</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+
+<body>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a>
+  <h1 id="pageTitle">Settings</h1>
+</header>
+<div id ="alertMessage" class="alert hidden"></div>
+<div id="page-content">
+<div id="settingContainer" class="personal-details">
+  <div class="details-container">
+    <div id="settingsMenu">
+      <ul id="menuList">
+        <a href='settings.html#profileSettings'>
+        <li id="profileItem" class="settingsListItem" value="profileSettings">Pofile</li>
+        </a> <a href='settings.html#notificationSettings'>
+        <li id="notificationItem" class="settingsListItem" >Notifications</li>
+        </a> <a href='settings.html#accountSettings'>
+        <li id="accountItem" class="settingsListItem" value="accountSettings">Account</li>
+      </ul>
+    </div>
+    <div id="profileSettings"><a name="profileSettings"></a>
+      <h2>Profile Setting</h2>
+      <div class="subSettingsContainer">
+        <h3>Basic Information <i id="editBasicIcon" class="fas fa-edit" style="float:right;margin-right:3px;" onclick="editPSettings()"></i></h3>
+        <div class="profile-group settings">
+          <label>Username: </label>
+          <span id="profileUsername"></span> <span id="profileUsernameView" class="view"></span> </div>
+        <div class="profile-group settings">
+          <label>First Name: </label>
+          <span id="profileFirstName"></span> <span id="profileFirstNameView" class="view"></span> </div>
+        <div class="profile-group settings">
+          <label>Last Name: </label>
+          <span id="profileLastName"></span> <span id="profileLastNameView" class="view"></span> </div>
+      </div>
+      <div class="subSettingsContainer">
+        <h3>Contact Information <i id="editContactIcon" class="fas fa-edit" style="float:right;margin-right:3px;" onclick="editContact()"></i></h3>
+        <div class="profile-group settings">
+          <label>Mobile: </label>
+          <span id="contactMob"></span> <span id="contactMobView" class="view"></span> </div>
+        <div class="profile-group settings">
+          <label>Email: </label>
+          <span id="contactEmail"></span> <span id="contactEmailView" class="view"></span> </div>
+        <div class="profile-group settings">
+          <label>Address: </label>
+          <span id="contactAddress"></span> <span id="contactAddressView" class="view"></span> </div>
+      </div>
+      <div id="emContainer" class="subSettingsContainer em hidden">
+        <h3>Emergency Contant Information <i id="editEmContactIcon" class="fas fa-edit" style="float:right;margin-right:3px;" onclick="editEmContact()"></i></h3>
+        <div class="profile-group settings">
+          <label>Full Name: </label>
+          <span id="emName"></span> <span id="emNameView" class="view">Viewable by: </span> </div>
+        <div class="profile-group settings">
+          <label>Mobile: </label>
+          <span id="emMob"></span> <span id="emMobView" class="view">Viewable by: </span> </div>
+        <div class="profile-group settings">
+          <label>Email: </label>
+          <span id="emEmail"></span> <span id="emEmailView" class="view">Viewable by: </span> </div>
+        <div class="profile-group settings">
+          <label>Address: </label>
+          <span id="emAddress"></span> <span id="emAddressView" class="view">Viewable by: </span> </div>
+      </div>
+    </div>
+    <div id="notificationSettings"><a name="notificationSettings"></a>
+      <h2>Notification Settings</h2>
+      <div class="subSettingsContainer">
+        <h3>Email <i class="fas fa-edit" style="float:right;margin-right:3px;" onclick="show(editNotifSettings)"></i></h3>
+        <div id="rrE" class="profile-group settings">
+          <label>Rent reminders: </label>
+          <span id="emailRentR" class="view"></span> </div>
+        <div class="profile-group settings">
+          <label>Reminders: </label>
+          <span id="emailR" class="view"></span> </div>
+        <div class="profile-group settings">
+          <label>Rent Overdue Reminder: </label>
+          <span class="view" id="emailRentOverR"></span> </div>
+        <div class="profile-group settings">
+          <label>Maintenance Issues: </label>
+          <span class="view" id="emailMaintenance"></span> </div>
+        <div class="profile-group settings">
+          <label>New Message (Chat): </label>
+          <span class="view" id="emailMessage"></span> </div>
+        <div id="ntE" class="profile-group settings">
+          <label>New Tenant Request: </label>
+          <span class="view" id="emailNewTenant"></span> </div>
+      </div>
+      <div class="subSettingsContainer">
+        <h3>SMS <i class="fas fa-edit" style="float:right;margin-right:3px;" onclick="show(editNotifSettings)"></i></h3>
+        <div id="rrS" class="profile-group settings">
+          <label>Rent reminders: </label>
+          <span id="smsRentR" class="view"></span> </div>
+        <div class="profile-group settings">
+          <label>Reminders: </label>
+          <span id="smsR" class="view"></span> </div>
+        <div class="profile-group settings">
+          <label>Rent Overdue Reminder: </label>
+          <span class="view" id="smsRentOverR"></span> </div>
+        <div class="profile-group settings">
+          <label>Maintenance Issues: </label>
+          <span class="view" id="smsMaintenance"></span> </div>
+        <div class="profile-group settings">
+          <label>New Message (Chat): </label>
+          <span class="view" id="smsMessage"></span> </div>
+        <div id="ntS" class="profile-group settings">
+          <label>New Tenant Request: </label>
+          <span class="view" id="smsNewTenant"></span> </div>
+      </div>
+    </div>
+    <div id="accountSettings"><a name="accountSettings"></a>
+      <h2>Account Settings</h2>
+      <div class="subSettingsContainer">
+        <h3>Security &amp; Login <i class="fas fa-edit" style="float:right;margin-right:3px;" onclick="openSecurityInfo()"></i></h3>
+        <div class="profile-group settings">
+          <label>Email: </label>
+          <span id="emailSecurity"></span> </div>
+        <div class="profile-group settings">
+          <label >Password: </label>
+          <span id="passwordSecurity"></span> </div>
+        <div class="profile-group settings">
+          <label>Non-User Maintenance Page Password: </label>
+          <span id="maintenanceSecurity"></span> </div>
+      </div>
+      <div class="subSettingsContainer">
+        <h3>Delete Account</h3>
+        <div class="profile-group settings"> <span onClick="deleteAccount()" style="cursor:pointer;">Delete Account</span> </div>
+      </div>
+      <div id="leave" class="subSettingsContainer">
+        <h3>Leave Property Group</h3>
+        <div class="profile-group settings"> <span onClick="leaveGroup()" style="cursor:pointer;">Leave Group</span> </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="editProfileSettings" class="pop-up-box hidden">
+  <div class="pop-up-content"> <i class="fa fa-times" onClick="closeProfileSettings()"></i>
+    <h2 class="center" style="padding-bottom: 20px;">Edit Profile Settings</h2>
+    <div id="alertErrorMessage" class="alertError hidden"></div>
+    <div class="subSettingsContainer">
+      <h3>Basic Information</h3>
+      <div class="profile-group settings">
+        <label>Username: </label>
+        <div id="editEveryoneUsername" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeUN" class="form-check-input" type="radio" style="width:0;">
+          <label class="form-check-label">Everyone</label>
+        </div>
+        <div id="editLandlordUsername" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeUN" class="form-check-input" type="radio" style="width:0;">
+          <label class="form-check-label">Just Landlord</label>
+        </div>
+      </div>
+      <div class="profile-group settings">
+        <label>First Name: </label>
+        <span id="editFirstName"> Can't be edited.</span> </div>
+      <div class="profile-group settings">
+        <label>Last Name: </label>
+        <div id="editEveryoneLN" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeLN" class="form-check-input" type="radio" style="width:0;">
+          <label class="form-check-label">Everyone</label>
+        </div>
+        <div id="editLandlordLN" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeLN" class="form-check-input" type="radio" style="width:0;">
+          <label class="form-check-label">Just Landlord</label>
+        </div>
+      </div>
+    </div>
+    <div class="subSettingsContainer">
+      <h3>Contact Information</h3>
+      <div class="profile-group settings">
+        <label>Mobile: </label>
+        <div id="editEveryoneMob" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeM" class="form-check-input" type="radio" style="width:0;">
+          <label class="form-check-label">Everyone</label>
+        </div>
+        <div id="editLandlordMob" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeM" class="form-check-input" type="radio" style="width:0;">
+          <label class="form-check-label">Just Landlord</label>
+        </div>
+      </div>
+      <div class="profile-group settings">
+        <label>Email: </label>
+        <div id="editEveryoneEmail" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeE" class="form-check-input" type="radio" style="width:0;">
+          <label class="form-check-label">Everyone</label>
+        </div>
+        <div id="editLandlordEmail" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeE" class="form-check-input" type="radio" style="width:0;">
+          <label class="form-check-label">Just Landlord</label>
+        </div>
+      </div>
+      <div class="profile-group settings">
+        <label>Address: </label>
+        <span id="contactAddress">Can't be edited.</span> </div>
+    </div>
+    <div id="emContainer" class="subSettingsContainer em hidden">
+      <h3>Emergency Contant Information</h3>
+      <div id="editEveryoneEm" class="form-check">
+        <input id="everyoneCheckBox" value="everyone" name="typeEm" class="form-check-input" type="radio" style="width:0;">
+        <label class="form-check-label">Everyone</label>
+      </div>
+      <div id="editLandlordEm" class="form-check">
+        <input id="landlordCheckBox" value="landlord" name="typeEM" class="form-check-input" type="radio" style="width:0;">
+        <label class="form-check-label">Just Landlord</label>
+      </div>
+    </div>
+    <div id="emContainer" class="subSettingsContainer em hidden">
+      <h3>Emergency Contant Information</h3>
+      <div id="editEveryoneEm" class="form-check">
+        <input id="everyoneCheckBox" value="everyone" name="typeEm" class="form-check-input" type="radio" style="width:0;">
+        <label class="form-check-label">Everyone</label>
+      </div>
+      <div id="editLandlordEm" class="form-check">
+        <input id="landlordCheckBox" value="landlord" name="typeEM" class="form-check-input" type="radio" style="width:0;">
+        <label class="form-check-label">Just Landlord</label>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="saveProfileSettings()"><i class="fas fa-save" style="color:#fff;"></i></button>
+  </div>
+</div>
+<div id="editNotifSettings" class="pop-up-box hidden">
+  <div class="pop-up-content"> <i class="fa fa-times" onClick="closeNotifSettings()"></i>
+    <h2 class="center" style="padding-bottom: 20px;">Edit Profile Settings</h2>
+    <div id="alertErrorMessage" class="alertError hidden"></div>
+    <div class="subSettingsContainer">
+      <h3>Email/SMS</h3>
+      <div id="rrE" class="profile-group settings">
+        <label>Rent reminders: </label>
+        <div id="editEveryoneRR" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">SMS</label>
+        </div>
+        <div id="editLandlordRR" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">Email</label>
+        </div>
+      </div>
+      <div class="profile-group settings">
+        <label>Reminders: </label>
+        <div id="editEveryoneR" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">SMS</label>
+        </div>
+        <div id="editLandlordR" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">Email</label>
+        </div>
+      </div>
+      <div class="profile-group settings">
+        <label>Rent Overdue Reminder: </label>
+        <div id="editEveryoneROR" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">SMS</label>
+        </div>
+        <div id="editLandlordROR" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">Email</label>
+        </div>
+      </div>
+      <div class="profile-group settings">
+        <label>Maintenance Issues: </label>
+        <div id="editEveryoneMI" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">SMS</label>
+        </div>
+        <div id="editLandlordMI" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">Email</label>
+        </div>
+      </div>
+      <div class="profile-group settings">
+        <label>New Message (Chat): </label>
+        <div id="editEveryoneNM" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">SMS</label>
+        </div>
+        <div id="editLandlordNM" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">Email</label>
+        </div>
+      </div>
+      <div id="ntE" class="profile-group settings">
+        <label>New Tenant Request: </label>
+        <div id="editEveryoneNT" class="form-check">
+          <input id="everyoneCheckBox" value="everyone" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">SMS</label>
+        </div>
+        <div id="editLandlordNT" class="form-check">
+          <input id="landlordCheckBox" value="landlord" name="typeE" class="form-check-input" type="checkbox" style="width:0;">
+          <label class="form-check-label">Email</label>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="hide(editNotifSettings)"><i class="fas fa-save" style="color:#fff;"></i></button>
+    </div>
+  </div>
+  </div>
+  <div id="editSecuritySettings" class="pop-up-box hidden">
+    <div class="pop-up-content"> <i class="fa fa-times" onClick="hide(editSecuritySettings)"></i>
+      <h2 style="padding-bottom: 20px;">Edit Security Settings</h2>
+      <div class="subSettingsContainer">
+        <h3>Security &amp; Login <i class="fas fa-edit" style="float:right;margin-right:3px;" onclick="editSecLog()"></i></h3>
+        <div class="profile-group settings">
+          <label>Email: </label>
+          <input id="editSecEm" class="form-control" type="email" placeholder="Email">
+        </div>
+        <div class="profile-group settings">
+          <label >Password: </label>
+          <input id="editSecPass" class="form-control" type="text" placeholder="Password">
+        </div>
+        <div class="profile-group settings">
+          <label>Non-User Maintenance Page Password: </label>
+          <input id="editSecMainPass" class="form-control" type="text" placeholder="Email">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSubIssue" onclick="submitSecurityInfo()" style="background-color:#5d6f56;border-color:#5d6f56;"><i class="fas fa-save" style="color:#fff;"></i></button>
+    </div>
+  </div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script> 
+<script>
+//Configure firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+firebase.initializeApp(config);
+
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database();
+	
+	db.ref('users/'+user.uid+'/userType').on('value', function(data){
+		var address = document.getElementById("contactAddress");
+		var fullAddress;
+		var userType = data.val();
+		if(userType == 'Tenant'){
+			show(emContainer);
+			hide(ntE);
+			hide(ntS);
+			hide(maintenanceSecurity);
+			db.ref('users/'+user.uid).on('value', function(data){
+				fullAddress = data.val().firstLine;
+				if(data.val().secondLine != ''){
+					fullAddress += ', ' + data.val().secondLine
+				}
+				if(data.val().thirdLine != ''){
+					fullAddress += ', ' + data.val().thirdLine
+				}
+				if(data.val().town != ''){
+					fullAddress += ', ' + data.val().town;
+				}
+				if(data.val().city != ''){
+					fullAddress += ', ' + data.val().city;
+				}
+				if(data.val().county != ''){
+					fullAddress += ', ' + data.val().county;
+				}
+				fullAddress += ', ' + data.val().postcode.toUpperCase();
+				address.innerHTML = fullAddress;
+			});
+			db.ref('users/'+user.uid+'/settings/notifications').on('value', function(data){
+				if(data.val().maintenanceIssues == 'off'){
+					document.getElementById("emailMaintenance").innerHTML = 'Off'
+					document.getElementById("smsMaintenance").innerHTML = 'Off'
+				}
+				else if(data.val().maintenanceIssues == 'both'){
+					document.getElementById("emailMaintenance").innerHTML = 'On'
+					document.getElementById("smsMaintenance").innerHTML = 'On'
+				}
+				else{
+					if(data.val().maintenanceIssues == 'email'){
+						document.getElementById("emailMaintenance").innerHTML = 'On'
+						document.getElementById("smsMaintenance").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailMaintenance").innerHTML = 'Off'
+						document.getElementById("smsMaintenance").innerHTML = 'On'
+					}
+				}
+				if(data.val().reminders == 'off'){
+					document.getElementById("emailR").innerHTML = 'Off'
+					document.getElementById("smsR").innerHTML = 'Off'
+				}
+				else if(data.val().reminders == 'both'){
+					document.getElementById("emailR").innerHTML = 'On'
+					document.getElementById("smsR").innerHTML = 'On'
+				}
+				else{
+					if(data.val().reminders == 'email'){
+						document.getElementById("emailR").innerHTML = 'On'
+						document.getElementById("smsR").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailR").innerHTML = 'Off'
+						document.getElementById("smsR").innerHTML = 'On'
+					}
+				}
+				if(data.val().rentReminders == 'off'){
+					document.getElementById("emailRentR").innerHTML = 'Off'
+					document.getElementById("smsRentR").innerHTML = 'Off'
+				}
+				else if(data.val().rentReminders == 'both'){
+					document.getElementById("emailRentR").innerHTML = 'On'
+					document.getElementById("smsRentR").innerHTML = 'On'
+				}
+				else{
+					if(data.val().rentReminders == 'email'){
+						document.getElementById("emailRentR").innerHTML = 'On'
+						document.getElementById("smsRentR").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailRentR").innerHTML = 'Off'
+						document.getElementById("smsRentR").innerHTML = 'On'
+					}
+				}
+				if(data.val().rentOverdue == 'off'){
+					document.getElementById("emailRentOverR").innerHTML = 'Off'
+					document.getElementById("smsRentOverR").innerHTML = 'Off'
+				}
+				else if(data.val().rentOverdue == 'both'){
+					document.getElementById("emailRentOverR").innerHTML = 'On'
+					document.getElementById("smsRentOverR").innerHTML = 'On'
+				}
+				else{
+					if(data.val().rentOverdue == 'email'){
+						document.getElementById("emailRentOverR").innerHTML = 'On'
+						document.getElementById("smsRentOverR").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailRentOverR").innerHTML = 'Off'
+						document.getElementById("smsRentOverR").innerHTML = 'On'
+					}
+				}
+				if(data.val().newMessage == 'off'){
+					document.getElementById("emailMessage").innerHTML = 'Off'
+					document.getElementById("smsMessage").innerHTML = 'Off'
+				}
+				else if(data.val().newMessage == 'both'){
+					document.getElementById("emailMessage").innerHTML = 'On'
+					document.getElementById("smsMessage").innerHTML = 'On'
+				}
+				else{
+					if(data.val().newMessage == 'email'){
+						document.getElementById("emailMessage").innerHTML = 'On'
+						document.getElementById("smsMessage").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailMessage").innerHTML = 'Off'
+						document.getElementById("smsMessage").innerHTML = 'On'
+					}
+				}
+			});
+		}
+		else{
+			hide(rrE);
+			hide(rrS);
+			hide(editBasicIcon);
+			hide(leave);
+			hide(editContactIcon);
+			db.ref('users/'+user.uid+'/homeAddress').on('value', function(data){
+				fullAddress = data.val().firstLine;
+				if(data.val().secondLine != ''){
+					fullAddress += ', ' + data.val().secondLine
+				}
+				if(data.val().thirdLine != ''){
+					fullAddress += ', ' + data.val().thirdLine
+				}
+				if(data.val().town != ''){
+					fullAddress += ', ' + data.val().town;
+				}
+				if(data.val().city != ''){
+					fullAddress += ', ' + data.val().city;
+				}
+				if(data.val().county != ''){
+					fullAddress += ', ' + data.val().county;
+				}
+				fullAddress += ', ' + data.val().postcode.toUpperCase();
+				address.innerHTML = fullAddress;
+			});
+			db.ref('users/'+user.uid+'/settings/notifications').on('value', function(data){
+				if(data.val().maintenanceIssues == 'off'){
+					document.getElementById("emailMaintenance").innerHTML = 'Off'
+					document.getElementById("smsMaintenance").innerHTML = 'Off'
+				}
+				else if(data.val().maintenanceIssues == 'both'){
+					document.getElementById("emailMaintenance").innerHTML = 'On'
+					document.getElementById("smsMaintenance").innerHTML = 'On'
+				}
+				else{
+					if(data.val().maintenanceIssues == 'email'){
+						document.getElementById("emailMaintenance").innerHTML = 'On'
+						document.getElementById("smsMaintenance").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailMaintenance").innerHTML = 'Off'
+						document.getElementById("smsMaintenance").innerHTML = 'On'
+					}
+				}
+				if(data.val().reminders == 'off'){
+					document.getElementById("emailR").innerHTML = 'Off'
+					document.getElementById("smsR").innerHTML = 'Off'
+				}
+				else if(data.val().reminders == 'both'){
+					document.getElementById("emailR").innerHTML = 'On'
+					document.getElementById("smsR").innerHTML = 'On'
+				}
+				else{
+					if(data.val().reminders == 'email'){
+						document.getElementById("emailR").innerHTML = 'On'
+						document.getElementById("smsR").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailMaintenance").innerHTML = 'Off'
+						document.getElementById("smsR").innerHTML = 'On'
+					}
+				}
+				if(data.val().newTenant == 'off'){
+					document.getElementById("emailNewTenant").innerHTML = 'Off'
+					document.getElementById("smsNewTenant").innerHTML = 'Off'
+				}
+				else if(data.val().newTenant == 'both'){
+					document.getElementById("emailNewTenant").innerHTML = 'On'
+					document.getElementById("smsNewTenant").innerHTML = 'On'
+				}
+				else{
+					if(data.val().newTenant == 'email'){
+						document.getElementById("emailNewTenant").innerHTML = 'On'
+						document.getElementById("smsNewTenant").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailNewTenant").innerHTML = 'Off'
+						document.getElementById("smsNewTenant").innerHTML = 'On'
+					}
+				}
+				if(data.val().rentOverdue == 'off'){
+					document.getElementById("emailRentOverR").innerHTML = 'Off'
+					document.getElementById("smsRentOverR").innerHTML = 'Off'
+				}
+				else if(data.val().rentOverdue == 'both'){
+					document.getElementById("emailRentOverR").innerHTML = 'On'
+					document.getElementById("smsRentOverR").innerHTML = 'On'
+				}
+				else{
+					if(data.val().rentOverdue == 'email'){
+						document.getElementById("emailRentOverR").innerHTML = 'On'
+						document.getElementById("smsRentOverR").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailMaintenance").innerHTML = 'Off'
+						document.getElementById("smsMaintenance").innerHTML = 'On'
+					}
+				}
+				if(data.val().newMessage == 'off'){
+					document.getElementById("emailMaintenance").innerHTML = 'Off'
+					document.getElementById("smsMaintenance").innerHTML = 'Off'
+				}
+				else if(data.val().newMessage == 'both'){
+					document.getElementById("emailMaintenance").innerHTML = 'On'
+					document.getElementById("smsMaintenance").innerHTML = 'On'
+				}
+				else{
+					if(data.val().newMessage == 'email'){
+						document.getElementById("emailMessage").innerHTML = 'On'
+						document.getElementById("smsMessage").innerHTML = 'Off'
+					}
+					else{
+						document.getElementById("emailMessage").innerHTML = 'Off'
+						document.getElementById("smsMessage").innerHTML = 'On'
+					}
+				}
+			});
+		}
+	});
+	db.ref('users/'+user.uid).on('value', function(data){
+		if(data.val()){
+			var username = document.getElementById("profileUsername");
+			var firstName = document.getElementById("profileFirstName");
+			var lastName = document.getElementById("profileLastName");
+			var mobile = document.getElementById("contactMob");
+			var email = document.getElementById("contactEmail");
+			var emailSecurity = document.getElementById("emailSecurity");
+			var	passwordSecurity = document.getElementById("passwordSecurity");
+			var maintenancePassword = document.getElementById("maintenanceSecurity");
+			var fullAddress;
+			
+			username.innerHTML = data.val().username;
+			firstName.innerHTML = capitalLetter(data.val().firstName);
+			lastName.innerHTML = capitalLetter(data.val().lastName);
+			
+			mobile.innerHTML = data.val().mobile;
+			email.innerHTML = data.val().email;
+			
+			emailSecurity.innerHTML = user.email;
+			passwordSecurity.innerHTML = '*************';
+			maintenancePassword.innerHTML = '*************';
+		}
+	});
+	
+	db.ref('users/'+user.uid+'/settings/profile').on('value', function(data){
+		if(data.val()){
+			var usernameView = document.getElementById("profileUsernameView");
+			var firstNameView = document.getElementById("profileFirstNameView");
+			var lastNameView = document.getElementById("profileLastNameView");
+			var mobileView = document.getElementById("contactMobView");
+			var emailView = document.getElementById("contactEmailView");
+			var addressView = document.getElementById("contactAddressView");
+			usernameView.innerHTML = 'Viewable By: ' + capitalLetter(data.val().username);
+			firstNameView.innerHTML = 'Viewable By: ' + capitalLetter(data.val().firstName);
+			lastNameView.innerHTML = 'Viewable By: ' + capitalLetter(data.val().lastName);
+			
+			mobileView.innerHTML = 'Viewable By: ' + capitalLetter(data.val().mobile);
+			emailView.innerHTML ='Viewable By: ' + capitalLetter(data.val().email);
+			addressView.innerHTML ='Viewable By: ' + capitalLetter(data.val().address);
+		}
+	});
+  }
+  else {
+    // No user is signed in.
+	location = 'index.html';
+  }
+});
+
+function deleteAccount(){
+	window.alert("clicked");
+	var r = confirm("Are you sure you want to delete your account?");
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	
+	if (r == true) {
+		db.ref('users/'+user.uid+'/userType/').on('value', function(data){
+			var type = data.val()
+			if(type == 'Tenant'){
+				db.ref('addresses'+currentProperty+'/chat').orderByKey().equalTo(user.uid).remove().then(function(){
+					db.ref('addresses'+currentProperty+'/tenant').orderByKey().equalTo(user.uid).remove().then(function(){
+						user.delete().then(function() {
+						  // User deleted
+						}).catch(function(error) {
+						  // An error happened.
+						});
+					});
+				});
+			}
+			else{
+				db.ref('addresses').orderByChild('landlord').equalTo(user.uid).on('value',function(snapshot){
+					snapshot.forEach(function(data){
+						db.ref('addresses/'+key).remove().then(function(){
+							user.delete().then(function() {
+							  // User deleted
+							}).catch(function(error) {
+							  // An error happened.
+							});
+						});
+					});
+				});
+			}
+		});
+			
+	} 
+	else {
+	}
+}
+
+function leaveProperty(){
+	var r = confirm("Are you sure you want to leave property group?");
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	
+	if (r == true) {
+		db.ref('addresses'+currentProperty+'/tenant').orderByKey().equalTo(user.uid).remove().then(function(){
+			var update = {
+				"registeredProperty":""
+				}
+			db.ref('users'+user.uid).update(update).then(function(){
+			});
+		});
+	}
+	else{
+	}
+}
+
+function editPSettings(){
+	show(editProfileSettings);
+	$('input[name=type]').attr('checked',false);
+	$('input[name=typeLN]').attr('checked',false);
+	$('input[name=typeE]').attr('checked',false);
+	$('input[name=typeM]').attr('checked',false);
+}
+
+function saveProfileSettings(){
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	var username;
+	var lastName;
+	var email;
+	var mobile;
+	var radios = document.getElementsByName('typeUN');
+
+	for (var i = 0, length = radios.length; i < length; i++) {
+		if (radios[i].checked) {
+			// do whatever you want with the checked radio
+			console.log(radios[i].value);
+			username = radios[i].value;
+			break;
+		}
+	}
+	var radiosLN = document.getElementsByName('typeLN');
+
+	for (var i = 0, length = radiosLN.length; i < length; i++) {
+		if (radiosLN[i].checked) {
+			// do whatever you want with the checked radio
+			console.log(radiosLN[i].value)
+			lastName = radiosLN[i].value;
+			break;
+		}
+	}
+	var radiosE = document.getElementsByName('typeE');
+
+	for (var i = 0, length = radiosE.length; i < length; i++) {
+		if (radiosE[i].checked) {
+			// do whatever you want with the checked radio
+			console.log(radiosE[i].value)
+			email = radiosE[i].value;
+			break;
+		}
+	}
+	var radiosM = document.getElementsByName('typeM');
+
+	for (var i = 0, length = radiosM.length; i < length; i++) {
+		if (radiosM[i].checked) {
+			// do whatever you want with the checked radio
+			console.log(radiosM[i].value)
+			mobile = radiosM[i].value;
+			break;
+		}
+	}
+	console.log(username+lastName+email+mobile)
+	var update = {
+		"username": username,
+		"lastName": lastName,
+		"email": email,
+		"mobile": mobile
+		}
+	
+	db.ref('users/'+user.uid+'/settings/profile').update(update).then(function(){
+		console.log('updated');
+		hide(editProfileSettings);
+		var errorAlert = document.getElementById("alertMessage");
+		errorAlert.innerHTML = "Profile settings updated.";
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		show(alertMessage);
+		setTimeout(function(){
+			//location.reload();
+			hide(alertMessage);
+		},3000);
+	});
+}
+
+function openSecurityInfo(){
+	show(editSecuritySettings)
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	var email = document.getElementById("editSecEm");
+	var password = document.getElementById("editSecPass");
+	var mPassword = document.getElementById("editSecMainPass");
+	
+	db.ref('users/'+user.uid).on('value', function(data){
+		console.log(data.val().email)
+		$("#editSecEm").val(data.val().email);
+		db.ref('addresses/'+currentProperty+'/maintenanceIssues/password').on('value', function(data){
+			console.log(data.val());
+			$("#editSecMainPass").val(data.val());
+		});
+	});
+}
+
+function submitSecurityInfo(){
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	var email = document.getElementById("editSecEm");
+	var password = document.getElementById("editSecPass");
+	var mPassword = document.getElementById("editSecMainPass");
+	console.log(email.value);
+	if(email.value != ''){
+		user.updateEmail('"'+email.value+'"').then(function() {
+		  // Update successful.
+		  console.log('email upadted')
+		}).catch(function(error) {
+		  // An error happened.
+		  console.log(error.message)
+		});
+
+	}
+	if(password.value != ''){
+		user.updatePassword(password.value).then(function() {
+		  // Update successful.
+		}).catch(function(error) {
+		  // An error happened.
+		});
+
+	}
+	
+	db.ref('users/'+user.uid+'/userType').on('value', function(data){
+		if(data.val() != 'Tenant'){
+			if(mPassword.value != ''){
+				var update = {
+					"password": mPassword.value
+					};
+				db.ref('addresses/'+currentProperty+'/maintenanceIssues').update(update).then(function(){
+					console.log('all done');
+					hide(editSecuritySettings)
+					console.log(user)
+				});
+			}
+		}
+	});
+}
+</script>
+</body>
+</html>

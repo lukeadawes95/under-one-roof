@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Profile</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+
+<body>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a><h1 id="pageTitle">Profile</h1></header>
+<div id="profile-img-name">
+<em class="fa fa-user"></em>
+<h1 id="profile-name-title"></h1>
+</div>
+<div id="page-content">
+<div id ="alertMessage" class="alert hidden"></div>
+<div class="personal-details">
+  <div class="details-container">
+  <i id="editDetailsIcon" class='fas fa-edit' style='float:left;margin-right:3px;' onclick="editName()"></i>
+    <h2 class="info-title"><strong style="color:#5d6f56;">Basic Information</strong></h2>
+    <div class="profile-group">
+      <p id="first-name-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="last-name-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="user-type-profile"></p>
+    </div>
+  </div>
+</div>
+<div class="personal-details">
+  <div class="details-container">
+  <i id="editContactIcon" class='fas fa-edit' style='float:left;margin-right:3px;' onclick="editContact()"></i>
+    <h2 class="info-title"><strong style="color:#5d6f56;">Contact Information</strong></h2>
+    <div class="profile-group">
+      <p id="email-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="mobile-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-one-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-two-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-three-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-town-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-city-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-county-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="address-postcode-profile"></p>
+    </div>
+  </div>
+</div>
+<div id="emContactField" class="personal-details">
+  <div class="details-container">
+  <i id="emContactEdit" class='fas fa-edit' style='float:left;margin-right:3px;' onclick="editEmContact()"></i>
+    <h2 class="info-title"><strong style="color:#5d6f56;">Emergency Contact</strong></h2>
+    <div id="alertErrorMessage" class="alertError hidden">Emergency contact wasn't submitted. Please check your connection and try again.</div>
+     <div id="alertMessage" class="alert hidden">Emergency contact successfully submitted.</div>
+    <div class="profile-group">
+      <p id="em-name-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-mobile-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-email-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-one-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-two-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-three-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-town-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-city-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-county-profile"></p>
+    </div>
+    <div class="profile-group">
+      <p id="em-address-postcode-profile"></p>
+    </div>
+    <div class="profile-group">
+      <button class="btn btn-primary btn-block" type="submit" id="bntAddEmContact" style="background-color:#5d6f56; border-color:#5d6f56" onclick="show(emContactForm)">Add Emergency Contact</button>
+    </div>
+  </div>
+  <div id="emContactForm" class="pop-up-box hidden">
+    <div class="pop-up-content">
+    	<i class="fa fa-times" onClick="hide(emContactForm)"></i>
+      <h2 style="padding-bottom: 20px;">Emergency Contact Information</h2>
+
+      <div class="profile-group">
+        <input id="txtEmName" class="form-control" type="text" placeholder="Full Name">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmEmail" class="form-control" type="email" placeholder="Email">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmMobile" class="form-control" type="tel" placeholder="Mobile">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddOne" class="form-control" type="text" placeholder="Line One">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddTwo" class="form-control" type="text" placeholder="Line Two">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddThree" class="form-control" type="text" placeholder="Line Three">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddTown" class="form-control" type="text" placeholder="Town">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddCity" class="form-control" type="text" placeholder="City">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddCounty" class="form-control" type="text" placeholder="County">
+      </div>
+      <div class="profile-group">
+        <input id="txtEmAddPostcode" class="form-control" type="text" placeholder="Postcode">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSubEmContact" style="background-color:#5d6f56; border-color:#5d6f56" onclick="submitEmContact()">Submit Emergency Contact</button>
+    </div>
+  </div>
+</div>
+</div>
+<div id="editBox" class="pop-up-box hidden">
+  <div id="editBoxContent" class="pop-up-content">
+   <i class="fa fa-times" onClick="hide(editBox)"></i>
+    <h2 id="editTitle" style="padding-bottom: 20px;" class="center"></h2>
+  </div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script>
+<script>
+//Configuring firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+  
+
+firebase.auth().onAuthStateChanged(function(firebaseUser) {
+  if (firebaseUser) {
+    // User is signed in.
+	
+	//Check to see if user is visitng another users profile.
+	var user = firebaseUser.uid;
+	var tenantUid = localStorage.getItem("tenantUid");
+	if(tenantUid != ''){
+		user = tenantUid;
+		hide(emContactEdit);
+		hide(editContactIcon);
+		hide(editDetailsIcon);
+		//check to see if user leaves page
+		window.onbeforeunload = function(){
+			//set tenantUid to nothing if user leaves page
+			localStorage.setItem("tenantUid", '');
+		  return 'Are you sure you want to leave?';
+		};
+	}
+	var refUsers = firebase.database().ref().child("users").child(user);
+	//basic info variables
+	var profileName = document.getElementById("profile-name-title");
+	var firstName = document.getElementById("first-name-profile");
+	var lastName = document.getElementById("last-name-profile");
+	var userType = document.getElementById("user-type-profile");
+	
+	//contact variables 
+	var email = document.getElementById("email-profile");
+	var mobile = document.getElementById("mobile-profile");
+	var addressOne = document.getElementById("address-one-profile"); 
+	var addressTwo = document.getElementById("address-two-profile");
+	var addressThree = document.getElementById("address-three-profile");
+	var addressTown = document.getElementById("address-town-profile");
+	var addressCity = document.getElementById("address-city-profile");
+	var addressCounty = document.getElementById("address-county-profile");
+	var addressPostcode = document.getElementById("address-postcode-profile");
+	
+	//Emeregency Contact Variables
+	var emName = document.getElementById('em-name-profile');
+	var emEmail = document.getElementById('em-email-profile');
+	var emMobile = document.getElementById('em-mobile-profile');
+	var emAddOne = document.getElementById('em-address-one-profile');
+	var emAddTwo = document.getElementById('em-address-two-profile');
+	var emAddThree = document.getElementById('em-address-three-profile');
+	var emAddTown = document.getElementById('em-address-town-profile');
+	var emAddCity = document.getElementById('em-address-city-profile');
+	var emAddCounty = document.getElementById('em-address-county-profile');
+	var emAddPostcode = document.getElementById('em-address-postcode-profile');
+	
+	
+	//Get user's profile name from database and append it to html page
+	refUsers.child("username").on('value', function(data){
+		profileName.innerHTML = data.val() + '&#39s Profile';
+	});
+	
+	//Get user's basic information  from database and append it to html page
+	refUsers.child("firstName").on('value', function(data){
+		var dataVal = data.val();
+		firstName.innerHTML = 'First Name: ' + capitalLetter(dataVal);
+	});
+	refUsers.child("lastName").on('value', function(data){
+		var dataVal = data.val();
+		lastName.innerHTML = 'Last Name: ' + capitalLetter(dataVal);
+	});
+	refUsers.child("userType").on('value', function(data){
+		var dataVal = data.val();
+		userType.innerHTML = 'User Type: ' + capitalLetter(dataVal);
+	});
+	
+	
+	<!--Get user's contact information  from database and append it to html page-->
+	refUsers.child("email").on('value', function(data){
+		email.innerHTML = 'Email: ' + data.val();
+	});
+	refUsers.child("mobile").on('value', function(data){
+		mobile.innerHTML = 'Mobile Number: ' + data.val();
+	});
+	
+	refUsers.child("userType").once('value').then(function(snapshot){
+		var value = snapshot.val();
+		if(value == 'Tenant'){
+			//If user is a tenant, load the address they're renting
+			
+			refUsers.child("rentingAddress").child("firstLine").on('value', function(data){
+				var dataVal = data.val();
+				addressOne.innerHTML = 'Address Line One: ' + capitalLetter(dataVal);
+			});
+			refUsers.child("rentingAddress").child("secondLine").on('value', function(data){
+				//if statement checks if field is empty, if so, hides element in html
+				if(data.val() == ''){
+					//if second line in database is empty, hide the html element
+					hide("address-two-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					//if not empty, append the value to html element
+					var dataVal = data.val();
+					addressTwo.innerHTML = 'Address Line Two: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("rentingAddress").child("thirdLine").on('value', function(data){
+				if(data.val() == ''){
+					hide("address-three-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					var dataVal = data.val();
+					addressThree.innerHTML = 'Address Line Three: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("rentingAddress").child("town").on('value', function(data){
+				if(data.val() == ''){
+					hide("address-three-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					var dataVal = data.val();
+					addressTown.innerHTML = 'Town: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("rentingAddress").child("city").on('value', function(data){
+				if(data.val() == ''){
+					hide("address-three-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					var dataVal = data.val();
+					addressCity.innerHTML = 'City: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("rentingAddress").child("county").on('value', function(data){
+				if(data.val() == ''){
+					hide("address-three-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					var dataVal = data.val();
+					addressCounty.innerHTML = 'County: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("rentingAddress").child("postcode").on('value', function(data){
+				addressPostcode.innerHTML = 'Postcode: ' + data.val().toUpperCase();
+			});
+			
+			
+			
+			<!--Get user's emergency contact information  from database and append it to html page -->
+			refUsers.child("emergencyContact").child("fullName").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-name-profile")
+					hide(emContactEdit);
+				}
+				else{
+					hide(bntAddEmContact);
+					var dataVal = data.val();
+					emName.innerHTML = 'Full Name: ' + capitalLetter(dataVal);
+				}
+			});
+			
+			refUsers.child("emergencyContact").child("email").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-name-email")
+				}
+				else{
+					var dataVal = data.val();
+					emEmail.innerHTML = 'Email: ' + dataVal;
+				}
+			});
+			refUsers.child("emergencyContact").child("mobile").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-name-mobile")
+				}
+				else{
+					var dataVal = data.val();
+					emMobile.innerHTML = 'Mobile Number: ' + dataVal;
+				}
+			});
+			refUsers.child("emergencyContact").child("addressLineOne").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-address-one-profile")
+				}
+				else{
+					var dataVal = data.val();
+					emAddOne.innerHTML = 'Address Line One: ' + capitalLetter(dataVal);
+				}
+			});
+			refUsers.child("emergencyContact").child("addressLineTwo").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-address-two-profile")
+				}
+				else{
+					var dataVal = data.val();
+					emAddTwo.innerHTML = 'Address Line Two: ' + capitalLetter(dataVal);
+				}
+			});
+			refUsers.child("emergencyContact").child("addressLineThree").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-address-three-profile")
+				}
+				else{
+					var dataVal = data.val();
+					emAddThree.innerHTML = 'Address Line Three: ' + capitalLetter(dataVal);
+				}
+			});
+			refUsers.child("emergencyContact").child("addressTown").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-address-town-profile")
+				}
+				else{
+					var dataVal = data.val();
+					emAddTown.innerHTML = 'Town: ' + capitalLetter(dataVal);
+				}
+			});
+			refUsers.child("emergencyContact").child("addressCity").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-address-city-profile")
+				}
+				else{
+					var dataVal = data.val();
+					emAddCity.innerHTML = 'City: ' + capitalLetter(dataVal);
+				}
+			});
+			refUsers.child("emergencyContact").child("addressCounty").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-address-county-profile")
+				}
+				else{
+					var dataVal = data.val();
+					emAddCounty.innerHTML = 'County: ' + capitalLetter(dataVal);
+				}
+			});
+			refUsers.child("emergencyContact").child("addressPostcode").on('value', function(data){
+				//if statement checks if field is not empty. If so, print data.val()
+				if(data.val() == null || data.val() == ''){
+					hide("em-address-postcode-profile")
+				}
+				else{
+					var dataVal = data.val();
+					emAddPostcode.innerHTML = 'Postcode: ' + dataVal.toUpperCase();
+				}
+			});
+		}<!--End of (value == 'Tenant') if statement-->
+		else{
+			//If user is landlord
+			hide(emContactField);
+			refUsers.child("homeAddress").child("firstLine").on('value', function(data){
+				var dataVal = data.val();
+				addressOne.innerHTML = 'Address Line One: ' + capitalLetter(dataVal);
+			});
+			refUsers.child("homeAddress").child("secondLine").on('value', function(data){
+				//if statement checks if field is empty, if so, hides element in html
+				if(data.val() == ''){
+					hide("address-two-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					var dataVal = data.val();
+					addressTwo.innerHTML = 'Address Line Two: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("homeAddress").child("thirdLine").on('value', function(data){
+				//if statement checks if field is empty, if so, hides element in html
+				if(data.val() == ''){
+					hide("address-three-profile");
+				}
+				else{
+					var dataVal = data.val();
+					addressTwo.innerHTML = 'Address Line Three: ' + capitalLetter(dataVal);
+				}
+			});
+			refUsers.child("homeAddress").child("town").on('value', function(data){
+				if(data.val() == ''){
+					hide("address-two-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					var dataVal = data.val();
+					addressTown.innerHTML = 'Town: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("homeAddress").child("city").on('value', function(data){
+				if(data.val() == ''){
+					hide("address-two-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					var dataVal = data.val();
+					addressCity.innerHTML = 'City: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("homeAddress").child("county").on('value', function(data){
+				if(data.val() == ''){
+					hide("address-two-profile");
+				}<!--End of empty data val if statement-->
+				else{
+					var dataVal = data.val();
+					addressCounty.innerHTML = 'County: ' + capitalLetter(dataVal);
+				}<!--End of empty data val else statement-->
+			});
+			refUsers.child("homeAddress").child("postcode").on('value', function(data){
+				addressPostcode.innerHTML = 'Postcode: ' + data.val().toUpperCase();
+			});
+		}<!--End of (value == 'Tenant') else statement-->
+	});
+  }<!--End of user if statment-->
+  else {
+    // No user is signed in.
+	location = 'index.html';
+  }<!--End of user else statement-->
+});
+
+function submitEmContact(){
+	//Set Variables
+	var ecName = document.getElementById("txtEmName");
+	var ecEmail = document.getElementById("txtEmEmail");
+	var ecNumber = document.getElementById("txtEmMobile");
+	var ecAddOne = document.getElementById("txtEmAddOne");
+	var ecAddTwo = document.getElementById("txtEmAddTwo");
+	var ecAddThree = document.getElementById("txtEmAddThree");
+	var ecAddTown = document.getElementById("txtEmAddTown");
+	var ecAddCity = document.getElementById("txtEmAddCity");
+	var ecAddCounty = document.getElementById("txtEmAddCounty");
+	var ecAddPostcode = document.getElementById("txtEmAddPostcode");
+	var users = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child("users").child(users.uid);
+			
+	var emDetails = {
+		"fullName": ecName.value,
+		"email": ecEmail.value,
+		"mobile": ecNumber.value,
+		"addressLineOne": ecAddOne.value,
+		"addressLineTwo": ecAddTwo.value,
+		"addressLineThree": ecAddThree.value,
+		"addressTown": ecAddTown.value,
+		"addressCity": ecAddCity.value,
+		"addressCounty": ecAddCounty.value,
+		"addressPostcode": ecAddPostcode.value
+		};
+	
+	//Submit emergency contact details to database
+	ref.child("emergencyContact").set(emDetails).then(function(user) {
+		//clear input fields of pop up box and alert success message for 3 seconds
+		ecName.value = '';
+		ecEmail.value = '';
+		ecNumber.value = '';
+		ecAddOne.value = '';
+		ecAddTwo.value = '';
+		ecAddThree.value = '';
+		ecAddTown.value = '';
+		ecAddCity.value = '';
+		ecAddCounty.value = '';
+		ecAddPostcode.value = '';
+		hide(emContactForm);
+		show(alertMessage);
+		var errorAlert = document.getElementById("alertMessage");
+		errorAlert.innerHTML = 'Emergency contact succesfully created';
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		show(alertMessage);
+		setTimeout(function(){
+			hide(alertMessage);
+		},3000);
+	}, function(error){
+		var errorMessage = error.message;
+		var errorAlert = document.getElementById("alertErrorMessage");
+		errorAlert.innerHTML = errorMessage;
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		show(alertErrorMessage);
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	});
+	
+}
+
+
+function editName(){
+	document.getElementById("editBox").innerHTML = "<div id='editBoxContent' class='pop-up-content'><i class='fa fa-times' onClick='hideEditName()'></i><h2 id='editTitle' style='padding-bottom: 20px;' class='center'></h2></div>";
+	show(editBox);
+	var title = document.getElementById("editTitle");
+	title.innerHTML = '<strong>Edit</strong> Basic Information'
+	var username = document.getElementById("profile-name-title");
+	var firstName = document.getElementById("first-name-profile");
+	var lastName = document.getElementById("last-name-profile");
+	var ref = firebase.database().ref();
+	var user = firebase.auth().currentUser;
+	
+	var editDetails = "<div class='profile-group'><label>Username</label><input id='editUsername' class='form-control' type='text' placeholder='Username'></div><div class='profile-group'><label>First Name</label><input id='editFirstName' class='form-control' type='text' placeholder='First Name'></div><div class='profile-group'><label>Last Name</label><input id='editLastName' class='form-control' type='tel' placeholder='Mobile'></div><button class='btn btn-primary btn-block' type='submit' id='saveName' style='background-color:#5d6f56; border-color:#5d6f56' onclick='save()'>Save</button>";
+	
+	$('#editBoxContent').append(editDetails);
+	
+	ref.child('users').child(user.uid).child("username").on('value', function(data){
+		$("#editUsername").val(data.val());
+	});
+	ref.child('users').child(user.uid).child("firstName").on('value', function(data){
+		$("#editFirstName").val(capitalLetter(data.val()));
+	});
+	ref.child('users').child(user.uid).child("lastName").on('value', function(data){
+		if(data.val() != ''){
+			$("#editLastName").val(capitalLetter(data.val()));
+		}
+	});
+}
+
+function hideEditName(){
+	if (confirm("Are you sure you want to exit. Your data will not be saved.")) {
+        hide(editBox);
+    } else {
+        txt = "You pressed Cancel!";
+    }
+}
+
+function editEmContact(){
+	document.getElementById("editBox").innerHTML = "<div id='editBoxContent' class='pop-up-content'><i class='fa fa-times' onClick='hideEditName()'></i><h2 id='editTitle' style='padding-bottom: 20px;' class='center'></h2></div>";
+	show(editBox);
+	var title = document.getElementById("editTitle");
+	var db = firebase.database();
+	var user = firebase.auth().currentUser;
+	title.innerHTML = '<strong>Edit</strong> Emergency Contact Information'
+	
+	var editDetails = "<div class='profile-group'><input id='editEmName' class='form-control' type='text' placeholder='Full Name'></div><div class='profile-group'><input id='editEmMobile' class='form-control' type='text' placeholder='Mobile'></div><div class='profile-group'><input id='editEmEmail' class='form-control' type='text' placeholder='Email'></div><div class='profile-group'><input id='editAddOne' class='form-control' type='tel' placeholder='Address Line One'></div><div class='profile-group'><input id='editAddTwo' class='form-control' type='tel' placeholder='Address Line Two'><div class='profile-group'><input id='editAddThree' class='form-control' type='tel' placeholder='Address Line Three'></div></div><div class='profile-group'><input id='editAddTown' class='form-control' type='tel' placeholder='Town'></div><div class='profile-group'><input id='editAddCity' class='form-control' type='tel' placeholder='City'></div><div class='profile-group'><input id='editAddCounty' class='form-control' type='tel' placeholder='County'></div><div class='profile-group'><input id='editAddPostcode' class='form-control' type='tel' placeholder='County'></div><div class='profile-group'><input id='editAddPostcode' class='form-control' type='tel' placeholder='Postcode'></div><button class='btn btn-primary btn-block' type='submit' id='saveName' style='background-color:#5d6f56; border-color:#5d6f56' onclick='saveEmContact()'>Save</button>";
+	
+	$('#editBoxContent').append(editDetails);
+	db.ref('users/'+user.uid+'/emergencyContact/fullName').on('value', function(data){
+		$("#editEmName").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/mobile').on('value', function(data){
+		$("#editEmMobile").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/email').on('value', function(data){
+		$("#editEmEmail").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/addressLineOne').on('value', function(data){
+		$("#editAddOne").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/addressLineTwo').on('value', function(data){
+		$("#editAddTwo").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/addressLineThree').on('value', function(data){
+		$("#editAddThree").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/addressTown').on('value', function(data){
+		$("#editAddTown").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/addressCity').on('value', function(data){
+		$("#editAddCity").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/addressCounty').on('value', function(data){
+		$("#editAddCounty").val(capitalLetter(data.val()));
+	});
+	db.ref('users/'+user.uid+'/emergencyContact/addressPostcode').on('value', function(data){
+		$("#editAddPostcode").val(data.val().toUpperCase());
+	});
+	
+}
+
+function editContact(){
+	document.getElementById("editBox").innerHTML = "<div id='editBoxContent' class='pop-up-content'><i class='fa fa-times' onClick='hideEditName()'></i><h2 id='editTitle' style='padding-bottom: 20px;' class='center'></h2></div>";
+	show(editBox);
+	var title = document.getElementById("editTitle");
+	title.innerHTML = '<strong>Edit</strong> Basic Information'
+	var ref = firebase.database();
+	var user = firebase.auth().currentUser;
+	
+	ref.ref('users/'+user.uid+'/userType').on('value', function(data){
+		var userType = data.val()
+		if(userType == 'Landlord'){
+			var editDetails = "<div class='profile-group'><label>Email</label><input id='editEmail' class='form-control' type='text' placeholder='Email'></div><div class='profile-group'><label>Mobile</label><input id='editMobile' class='form-control' type='text' placeholder='Mobile'></div><div class='profile-group'><label>Address Line One</label><input id='editAddLineOne' class='form-control' type='tel' placeholder='Address Line One'><div class='profile-group'><label>Address Line Two</label><input id='editAddLineTwo' class='form-control' type='tel' placeholder='Address Line Two'></div><div class='profile-group'><label>Address Line Three</label><input id='editAddLineThree' class='form-control' type='tel' placeholder='Address Line Three'><div class='profile-group'><label>Town</label><input id='editAddTown' class='form-control' type='tel' placeholder='Town'><div class='profile-group'><label>City</label><input id='editAddCity' class='form-control' type='tel' placeholder='City'><div class='profile-group'><label>County</label><input id='editAddCounty' class='form-control' type='tel' placeholder='County'><div class='profile-group'><label>Postcode</label><input id='editAddPostcode' class='form-control' type='tel' placeholder='Postcode'><button class='btn btn-primary btn-block' type='submit' id='saveName' style='background-color:#5d6f56; border-color:#5d6f56' onclick='saveContact()'>Save</button>";
+			$('#editBoxContent').append(editDetails);
+			ref.ref('users/'+user.uid+'/email').on('value', function(data){
+				$("#editEmail").val(data.val());
+			});
+			ref.ref('users/'+user.uid+'/mobile').on('value', function(data){
+				$("#editMobile").val(capitalLetter(data.val()));
+			});
+			ref.ref('users/'+user.uid+'/homeAddress/firstLine').on('value', function(data){
+				$("#editAddLineOne").val(capitalLetter(data.val()));
+			});
+			ref.ref('users/'+user.uid+'/homeAddress/secondLine').on('value', function(data){
+				if(data.val() != ''){
+					$("#editAddLineTwo").val(capitalLetter(data.val()));
+				}
+			});
+			ref.ref('users/'+user.uid+'/homeAddress/thirdLine').on('value', function(data){
+				if(data.val() != ''){
+					$("#editAddLineThree").val(capitalLetter(data.val()));
+				}
+			});
+			ref.ref('users/'+user.uid+'/homeAddress/town').on('value', function(data){
+				if(data.val() != ''){
+					$("#editAddTown").val(capitalLetter(data.val()));
+				}
+			});
+			ref.ref('users/'+user.uid+'/homeAddress/city').on('value', function(data){
+				$("#editAddCity").val(capitalLetter(data.val()));
+			});
+			ref.ref('users/'+user.uid+'/homeAddress/county').on('value', function(data){
+				if(data.val() != ''){
+					$("#editAddCounty").val(capitalLetter(data.val()));
+				}
+			});
+			ref.ref('users/'+user.uid+'/homeAddress/postcode').on('value', function(data){
+				$("#editAddPostcode").val(data.val().toUpperCase());
+			});
+		}
+		else{
+			var editDetails = "<div class='profile-group'><label>Email</label><input id='editEmail' class='form-control' type='text' placeholder='Email'></div><div class='profile-group'><label>Mobile</label><input id='editMobile' class='form-control' type='text' placeholder='Mobile'></div><div class='profile-group'><p>Only your landlord can change your renting address.</p></div><button class='btn btn-primary btn-block' type='submit' id='saveName' style='background-color:#5d6f56; border-color:#5d6f56' onclick='saveContact()'><i class='fas fa-save' style='color:#fff;'></i></button>";
+			$('#editBoxContent').append(editDetails);
+			ref.ref('users/'+user.uid+'email').on('value', function(data){
+				$("#editEmail").val(data.val());
+			});
+			ref.ref('users/'+user.uid+'mobile').on('value', function(data){
+				$("#editMobile").val(data.val());
+			});
+		}
+	});
+}
+
+function save(){
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref('users/'+user.uid);
+	var username = document.getElementById("editUsername");
+	var firstName = document.getElementById("editFirstName");
+	var lastName = document.getElementById("editLastName");
+	var update ={
+		"username": username.value,
+		"firstName": firstName.value,
+		"lastName": lastName.value
+	}
+	console.log(username.value + " b " + firstName.value + " " + lastName.value);
+	ref.update(update).then(function(){
+		console.log(username.value + " " + firstName.value + " " + lastName.value);
+		hide(editBox);
+		var errorAlert = document.getElementById("alertMessage");
+		errorAlert.innerHTML = 'Basic infromation updated';
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		show(alertMessage);
+		setTimeout(function(){
+			hide(alertMessage);
+		},3000); 
+	});
+}
+
+function saveContact(){
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var email = document.getElementById("editEmail");
+	var mobile = document.getElementById("editMobile");
+	var address1 = document.getElementById("editAddLineOne");
+	var address2 = document.getElementById("editAddLineTwo");
+	var address3 = document.getElementById("editAddLineThree");
+	var town = document.getElementById("editAddTown");
+	var city = document.getElementById("editAddCity");
+	var postcode = document.getElementById("editAddPostcode");
+	var county = document.getElementById("editAddCounty");
+	var updateContact = {
+		"email": email.value,
+		"mobile": mobile.value
+	}
+	console.log(address1.value);
+	var updateAddress = {
+		"firstLine": address1.value.toLowerCase(),
+		"secondLine": address2.value.toLowerCase(),
+		"thirdLine": address3.value.toLowerCase(),
+		"town": town.value.toLowerCase(),
+		"city": city.value.toLowerCase(),
+		"county": county.value.toLowerCase(),
+		"postcode": postcode.value.toUpperCase()
+	}
+	
+	db.ref('users/'+user.uid).update(updateContact).then(function(){
+		db.ref('users/'+user.uid+'/userType').on('value', function(data){
+		var userType = data.val()
+		if(userType == 'Landlord'){
+			db.ref('users/'+user.uid+'/homeAddress').update(updateAddress).then(function(){
+				hide(editBox);
+				var errorAlert = document.getElementById("alertMessage");
+				errorAlert.innerHTML = 'Contact infromation updated';
+				document.body.scrollTop = document.documentElement.scrollTop = 0;
+				show(alertMessage);
+				setTimeout(function(){
+					hide(alertMessage);
+					location.reload();
+				},3000); 
+			});
+		}
+		else{
+			hide(editBox);
+			var errorAlert = document.getElementById("alertMessage");
+			errorAlert.innerHTML = 'Contact infromation updated';
+			document.body.scrollTop = document.documentElement.scrollTop = 0;
+			show(alertMessage);
+			setTimeout(function(){
+				hide(alertMessage);
+				location.reload();
+			},3000); 
+		}
+	});
+	});
+}
+
+function saveEmContact(){
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var name = document.getElementById("editEmName");
+	var mobile = document.getElementById("editEmMobile");
+	var email = document.getElementById("editEmEmail");
+	var addOne = document.getElementById("editAddOne");
+	var addTwo = document.getElementById("editAddTwo");
+	var addThree = document.getElementById("editAddThree");
+	var town = document.getElementById("editAddTown");
+	var city = document.getElementById("editAddCity");
+	var county = document.getElementById("editAddCounty");
+	var postcode = document.getElementById("editAddPostcode");
+	var update = {
+		"fullName": name.value,
+		"mobile": mobile.value,
+		"email": email.value,
+		"addressLineOne": addOne.value,
+		"addressLineTwo": addTwo.value,
+		"addressLineThree": addThree.value,
+		"addressTown": town.value,
+		"addressCity": city.value,
+		"addressCounty": county.value,
+		"addPostcode": postcode.value,
+	}
+	
+	db.ref('users/'+user.uid+'/emergencyContact').update(update).then(function(){
+		hide(editBox);
+		show(emContactEdit);
+		var errorAlert = document.getElementById("alertMessage");
+		errorAlert.innerHTML = 'Emergency contact infromation updated';
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		show(alertMessage);
+		setTimeout(function(){
+			hide(alertMessage);
+		},3000); 
+	});
+}
+
+</script>
+</body>
+</html>

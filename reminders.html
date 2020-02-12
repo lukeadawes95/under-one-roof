@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Reminders</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+
+<body>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a><h1 id="pageTitle">Profile</h1></header>
+<div id="page-content" style="background-color:#fff;">
+<div id ="alertMessage" class="alert hidden"></div>
+<button class="btn btn-primary btn-block" type="submit" id="createReminder" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="show(reminderForm)"><i class="far fa-plus-square" style="margin-right:5px;"></i>Create Reminder</button>
+<table id="remindersTable" class="tg">
+  <tr>
+    <th class="tg-h28u" colspan="4"> <h4 class="float-left" style="margin:0;padding:5px; float:right;">Sort by</h4>
+      <select id="selectMenuSort" class="form-control float-right" style="width:40%;">
+        <option selected="" value="Date: Most Recent">Date: Most Recent</option>
+        <option value="Severity: Low - High">Severity: Low - High</option>
+        <option value="Severity: High - Low">Severity: High - Low</option>
+        <option value="Completed">Completed</option>
+        <option value="Not Completed">Not Completed</option>
+      </select>
+    </th>
+  </tr>
+  <tr>
+    <td class="tg-xxzo">Title<br></td>
+    <td class="tg-xxzo">Date<br></td>
+    <td class="tg-xxzo">Frequency<br></td>
+  </tr>
+</table>
+<div id="reminderForm" class="pop-up-box hidden">
+    <div class="pop-up-content"> <i class="fa fa-times" onClick="closeReminderForm()"></i>
+      <h2 style="padding-bottom: 20px;">Create Reminder</h2>
+      <div id ="alertErrorMessage" class="alertError hidden" style="margin:20px 0;"></div>
+      <div class="profile-group">
+        <input id="reminderTitle" class="form-control" type="text" placeholder="Title" onclick="style.border = '1px solid #ced4da'">
+      </div>
+      <div class="profile-group">
+        <input id="reminderDate" class="form-control" type="date" onclick="style.border = '1px solid #ced4da'">
+      </div>
+      <div class="profile-group">
+      	<label>Frequency</label>
+        <select id="selectFrequency" class="form-control float-right">
+          <option selected="" value="One Time">One Time</option>
+          <option value="Daily">Daily</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Fortnightly">Fortnightly</option>
+          <option value="Monthly">Monthly</option>
+        </select>
+      </div>
+      <div class="profile-group" style="margin-bottom:20px;">
+        <textarea id="reminderNotes" rows="4" cols="45" placeholder="Notes for reminder..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSubReminder" onclick="submitReminder()" style="background-color:#5d6f56;border-color:#5d6f56;">Finished</button>
+    </div>
+  </div>
+  <div id="reminderDetails" class="pop-up-box hidden">
+    <div class="pop-up-content"> <i class="fa fa-times" onClick="hide(reminderDetails)"></i><i id="editReminderIcon" class="fas fa-edit" style="float:left;margin-right:3px;" onclick="editReminder()"></i><i id='deleteReminderIcon' class='far fa-trash-alt' onclick='deleteReminder()'></i>
+      <h2 id="reminderTitleView" style="padding-bottom: 20px;"></h2>
+      <div class="profile-group">
+      	<label><strong>Reminder Date: </strong></label>
+        <span id="viewDate"></span>
+      </div>
+      <div class="profile-group">
+      	<label><strong>Frequency: </strong></label>
+        <span id="viewFrequency"></span>
+      </div>
+      <div class="profile-group">
+      	<label><strong>Notes: </strong></label>
+        <span id="viewNotes"></span>
+      </div>
+    </div>
+  </div>
+  <div id="editReminderDiv" class="pop-up-box hidden">
+    <div class="pop-up-content"> <i class="fa fa-times" onClick="hideEditRem()"></i>
+      <h2 id="editReminderTitleView" style="padding-bottom: 20px;"></h2>
+      <div class="profile-group">
+      	<label><strong>Title</strong></label>
+        <input id="editReminderTitle" class="form-control" type="text" placeholder="Title" >
+      </div>
+      <div class="profile-group">
+      	<label><strong>Reminder Date: </strong></label>
+        <input id="editReminderDate" class="form-control" type="date">
+      </div>
+      <div class="profile-group">
+      	<label><strong>Frequency: </strong></label>
+        <select id="editSelectFrequency" class="form-control float-right">
+          <option selected="" value="One Time">One Time</option>
+          <option value="Daily">Daily</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Fortnightly">Fortnightly</option>
+          <option value="Monthly">Monthly</option>
+        </select>
+      </div>
+      <div class="profile-group" style="margin-bottom:10px;">
+      <label><strong>Notes:</strong></label>
+      	<textarea id="editReminderNotes"></textarea>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSaveReminder" onclick="saveReminder()" style="background-color:#5d6f56;border-color:#5d6f56;"><i class="fas fa-save" style="color:#fff;"></i></button>
+    </div>
+  </div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script>
+<script>
+//Configuring firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+  
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	
+	db.ref('users/'+user.uid+'/reminders').on("child_added", function(data){
+		  var title = data.child("title").val();
+		  var date = data.child("date").val();
+		  var frequency = data.child("frequency").val();
+		  var notes = data.child("notes").val();
+		  var dismissed = data.child("dismissed").val();
+		  var key = data.key;
+		  
+		  var appendReminder = "<tr><td class='tg-us36' value='" + key + "' onclick='getReminderDetails(this)'>" + title + "<br></td><td class='tg-us36'>" + date + "</td><td class='tg-us36'>" + frequency + "</td></tr>";
+			$("#remindersTable").append(appendReminder);
+	});
+
+  }<!--End of user if statment-->
+  else {
+    // No user is signed in.
+	location = 'index.html';
+  }<!--End of user else statement-->
+});
+
+function closeReminderForm(){
+	if (confirm('Are you sure you want to exit? Data will not be saved.')) {
+		// Save it!
+		hide(reminderForm);
+	} else {
+		// Do nothing!
+	}
+}
+function hideEditRem(){
+	if (confirm('Are you sure you want to exit? Data will not be saved.')) {
+		// Save it!
+		hide(editReminderDiv);
+		show(reminderDetails);
+	} else {
+		// Do nothing!
+	}
+}
+
+function submitReminder(){
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var title = document.getElementById("reminderTitle").value;
+	var date = new Date($('#reminderDate').val());
+	day = date.getDate();	
+	if(day<10){
+		day = '0'+day;
+	}		
+	month = date.getMonth() + 1;
+	if(month<10){
+		month = '0'+month;
+	}							
+	year = date.getFullYear();
+	var reminderDate = [year,month,day].join('-');
+	var frequency = document.getElementById("selectFrequency");
+	var notes = document.getElementById("reminderNotes").value;
+	
+	if(!title){
+		show(alertErrorMessage);
+		var alertErrorM = document.getElementById("alertErrorMessage");
+		alertErrorM.innerHTML = 'Please enter title.';
+		document.getElementById("reminderTitle").style.border = 'solid';
+		document.getElementById("reminderTitle").style.borderColor = "#b72c2c";
+		document.getElementById("reminderTitle").style.borderRadius = ".25rem";
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else if(!document.getElementById("reminderDate").value){
+		show(alertErrorMessage);
+		var alertErrorM = document.getElementById("alertErrorMessage");
+		alertErrorM.innerHTML = 'Please enter title.';
+		document.getElementById("reminderDate").style.border = 'solid';
+		document.getElementById("reminderDate").style.borderColor = "#b72c2c";
+		document.getElementById("reminderDate").style.borderRadius = ".25rem";
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else{
+		var reminderDetails = {
+			"title": title,
+			"date": reminderDate,
+			"frequency": frequency.options[frequency.selectedIndex].value,
+			"notes": notes,
+			"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+			"dismissed": "false"
+			};
+		
+		db.ref('users/'+user.uid+'/reminders').push(reminderDetails).then(function(){
+			hide(reminderForm);
+			var alertM = document.getElementById("alertMessage");
+			alertM.innerHTML = 'Reminder created';
+			show(alertMessage);
+			document.body.scrollTop = document.documentElement.scrollTop = 0;
+			setTimeout(function(){
+				hide(alertMessage);
+			},3000);
+		});
+	}
+}
+
+function getReminderDetails(ele){
+	show(reminderDetails);
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var heading = document.getElementById("reminderTitleView");
+	var date = document.getElementById("viewDate");
+	var freq = document.getElementById("viewFrequency");
+	var notes = document.getElementById("viewNotes");
+	var key = ele.getAttribute("value");
+
+	db.ref('users/'+user.uid+'/reminders/'+key).on('value', function(data){
+		if(data.val()){
+			heading.innerHTML = data.val().title;
+			date.innerHTML = data.val().date;
+			freq.innerHTML = data.val().frequency;
+			notes.innerHTML = data.val().notes;
+		}
+	});
+}
+
+
+function editReminder(){
+	hide(reminderDetails);
+	show(editReminderDiv);
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var heading = document.getElementById("reminderTitleView");
+	var title = document.getElementById("editReminderTitle");
+	var date = document.getElementById("editReminderDate");
+	var freq = document.getElementById("editSelectFrequency");
+	var notes = document.getElementById("editReminderNotes");
+	
+	db.ref('users/'+user.uid+'/reminders').orderByChild('title').equalTo(heading.innerHTML).on('value', function(data){
+		data.forEach(function(child) {
+			var key = child.key;
+			console.log(key)
+			db.ref('users/'+user.uid+'/reminders/'+key).on('value', function(data){
+				if(data.val()){
+					title.value = data.val().title;
+					notes.innerHTML = data.val().notes;
+					$('#editReminderDate').val(data.val().date);
+				}
+			});
+		});
+	});
+}
+
+function saveReminder(){
+	hide(reminderDetails);
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var heading = document.getElementById("reminderTitleView");
+	var title = document.getElementById("editReminderTitle").value;
+	var date = document.getElementById("editReminderDate").value;
+	var freq = document.getElementById("editSelectFrequency");
+	var notes = document.getElementById("editReminderNotes").innerHTML;
+	
+	db.ref('users/'+user.uid+'/reminders').orderByChild('title').equalTo(heading.innerHTML).on('value', function(data){
+		data.forEach(function(child) {
+			var key = child.key;
+			var updateReminder = {
+				"title": title,
+				"date": date,
+				"frequency": freq.options[freq.selectedIndex].value,
+				"notes": notes
+				}
+			db.ref('users/'+user.uid+'/reminders/'+key).update(updateReminder).then(function(){
+				var alertM = document.getElementById("alertMessage");
+				alertM.innerHTML = 'Reminder updated';
+				hide(editReminderDiv);
+				show(alertMessage);
+				document.body.scrollTop = document.documentElement.scrollTop = 0;
+				setTimeout(function(){
+					hide(alertMessage);
+					location.reload();
+				},3000);
+			});
+		});
+	});
+}
+
+
+function deleteReminder(ele){
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var heading = document.getElementById("reminderTitleView").innerHTML;
+	var box = confirm("Are you sure you want to delete this reminder?");
+    if (box == true) {
+        db.ref('users/'+user.uid+'/reminders').orderByChild('title').equalTo(heading).on('value', function(data){
+			data.forEach(function(child) {
+				var key = child.key;
+				console.log(key)
+				db.ref('users/'+user.uid+'/reminders/'+key).remove().then(function(){
+					var alertM = document.getElementById("alertMessage");
+					alertM.innerHTML = 'Reminder deleted';
+					hide(reminderDetails);
+					show(alertMessage);
+					document.body.scrollTop = document.documentElement.scrollTop = 0;
+					setTimeout(function(){
+						hide(alertMessage);
+					},3000);
+				});
+			});
+		});
+    } 
+	else {
+    }
+	
+}
+</script>
+</body>
+</html>

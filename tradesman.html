@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Tradesman</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+
+<body>
+<!--Header-->
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a><h1 id="pageTitle">Tradesmen</h1>
+</header>
+
+<!--Page Content-->
+<div id="page-content">
+  <button class="btn btn-primary btn-block" type="submit" id="addTradesman" onclick="show(tradesmanForm)" style="background-color:#5d6f56;border-color:#5d6f56;"><i class="far fa-plus-square" style="margin-right:5px;"></i>Add Tradesman</button>
+  <div id ="alertMessage" class="alert hidden">Tradesman successfully submitted.</div>
+  <div id ="alertErrorMessageLoad" class="alert hidden"></div>
+  
+  <!--Tradesmen Form (hidden)-->
+  <div id="tradesmanForm" class="pop-up-box hidden">
+    <div class="pop-up-content"> <i class="fa fa-times" onClick="hide(tradesmanForm)"></i>
+      <h2 style="padding-bottom: 20px;">Tradesman Details</h2>
+      <div id ="alertErrorMessage" class="alert hidden"></div>
+      <div class="profile-group">
+        <input id="tradeName" class="form-control" type="text" placeholder="Company and/or Individual Name">
+      </div>
+      <div class="profile-group">
+        <input id="tradeWork" class="form-control" type="text" placeholder="Field of Work">
+      </div>
+      <div class="profile-group">
+        <input id="tradeEmail" class="form-control" type="text" placeholder="Email Address">
+      </div>
+      <div class="profile-group">
+        <input id="tradeNumber" class="form-control" type="text" placeholder="Contact Number">
+      </div>
+      <div class="profile-group">
+        <input id="tradeEmNumber" class="form-control" type="text" placeholder="Emergency Contact Number">
+      </div>
+      <div class="profile-group">
+        <input id="tradeWebsite" class="form-control" type="text" placeholder="Website (Optional)">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSubTradesman" onclick="submitTradesman()" style="background-color:#5d6f56;border-color:#5d6f56;">Submit Tradesman</button>
+    </div>
+  </div>
+  <div id="editTradeD" class="pop-up-box hidden">
+      <div id="editTrade" class="pop-up-content"> <i class="fa fa-times" onClick="closeEditTrade()"></i> <i id='editTradeIcon' class='fas fa-edit hidden' style='float:left;margin-right:3px;' onclick="editTradesman()"></i>
+        <h2 id="editTradeTitle" class="center" style="padding-bottom: 20px;"></h2>
+        <div id="alertMessage" class="alert hidden"></div>
+        <div class='profile-group'>
+          <input id='editName' class='form-control' type='text' placeholder='Name'>
+        </div>
+        <div class='profile-group'>
+          <input id='editProfession' class='form-control' type='text' placeholder='Profession'>
+        </div>
+        <div class='profile-group'>
+          <input id='editEmail' class='form-control' type='text' placeholder='Email'>
+        </div>
+        <div class='profile-group'>
+          <input id='editContact' class='form-control' type='text' placeholder='Contact Number'>
+        </div>
+        <div class='profile-group'>
+          <input id='editEmContact' class='form-control' type='text' placeholder='Emergency Contact Number'>
+        </div>
+        <div class='profile-group'>
+          <input id='editWebsite' class='form-control' type='text' placeholder='Website'>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" id="saveIssue" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="saveTradeDetails()"><i class="fas fa-save" style="color:#fff;"></i></button>
+      </div>
+    </div>
+</div>
+
+<!--Footer-->
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script> 
+<script>
+//Configuring firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    //User is signed in.
+	
+	//Set Variables
+	var ref = firebase.database().ref().child("users").child(user.uid);
+	
+	<!--Pulling all details from the database for registered Tradesmen-->
+	ref.child("tradesman").on("child_added", function(data){
+		//Set Local Variables
+		var tradeName = data.child("tradeName").val();
+		var tradeWork = data.child("tradeWork").val();
+		var tradeEmail = data.child("tradeEmail").val();
+		var tradeNumber = data.child("tradeNumber").val();
+		var tradeEmNumber = data.child("tradeEmNumber").val();
+		var tradeWebsite = data.child("tradeWebsiteURL").val();
+		var i;
+		var title = '';
+		var tradeDetails = [tradeName, tradeWork, tradeEmail, tradeNumber, tradeEmNumber, tradeWebsite];
+
+		//for loop to loop through array
+		for(i = 0; i < tradeDetails.length; i++){
+			//if array value is empty move to the next value
+			if(tradeDetails[i] == '' || tradeDetails[i] == null){
+				i++;
+			}
+			else{
+				//if at the end of the array
+				if(i == tradeDetails.length - 1){
+					title += tradeDetails[i];
+				}
+				else{
+					title += tradeDetails[i] + ", ";
+				} 
+			}	
+		}
+		if(title != ''){
+			//add values of array to (address) to title heading if it's not empty
+			var appendAddress = "<div class='personal-details'><div class='details-container'><h2 id='tradeTitle' class='info-title center'><i class='fas fa-edit' value='"+tradeName+"' onclick='editTradeDetails(this)' style='float:left;'></i>" + tradeName + "<i class='far fa-trash-alt' value='"+data.key+"' onClick='removeTradeMan(this)'></i></h2><div class='profile-group'><p>Profession: " + tradeWork + "</p><p>Email: " + tradeEmail + "</p><p>Contact Number: " + tradeNumber + "</p><p>Emergency Contact Number: " + tradeEmNumber + "</p><p>Website: <a href='" + tradeWebsite + "'>" + tradeWebsite + "</a></p></div></div></div>";
+			$('#page-content').append(appendAddress);
+		}
+		
+		
+	}, function(error){
+		//error message
+		console.log("Tradesmen details not loaded.");
+		var errorMessage = error.message;
+		var errorAlert = document.getElementById("alertErrorMessageLoad");
+		errorAlert.innerHTML = errorMessage;
+		show(alertErrorMessageLoad);
+		setTimeout(function(){
+			hide(alertErrorMessageLoad);
+		},3000);
+		
+	});
+
+  } else {
+    // No user is signed in.
+	location = 'index.html'
+  }
+});
+
+<!--If the 'Submit Tradesmen button is clicked, run the following function-->	
+function submitTradesman(){
+	//Setting variables
+	var tradeName = document.getElementById("tradeName");
+	var tradeWork = document.getElementById("tradeWork");
+	var tradeEmail = document.getElementById("tradeEmail");
+	var tradeNumber = document.getElementById("tradeNumber");
+	var tradeEmNumber = document.getElementById("tradeEmNumber");
+	var tradeWebsite = document.getElementById("tradeWebsite");
+	var users = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child("users").child(users.uid);
+			
+	var tradesmanDetails = {
+		"tradeName": tradeName.value,
+		"tradeWork": tradeWork.value,
+		"tradeEmail": tradeEmail.value,
+		"tradeNumber": tradeNumber.value,
+		"tradeEmNumber": tradeEmNumber.value,
+		"tradeWebsiteURL": tradeWebsite.value
+		};
+	
+	//sending entered tradesmen details to database
+	ref.child("tradesman").push(tradesmanDetails).then(function(user) {
+		show(alertMessage); //if successful, show message to inform user tradesmen has been added.
+		//hide message after 3 seconds.
+		setTimeout(function(){
+					hide(alertMessage);
+		},3000);
+		//set input values to empty.
+		tradeName.value = '';
+		tradeWork.value = '';
+		tradeEmail.value = '';
+		tradeNumber.value = '';
+		tradeEmNumber.value = '';
+		tradeWebsite.value = '';
+		hide(tradesmanForm); //hide form if tradesmen details were successfully submited to database.
+	}, function(error){
+		//show error message if details not submitted for 3 seconds.
+		var errorMessage = error.message;
+		var errorAlert = document.getElementById("alertErrorMessage");
+		errorAlert.innerHTML = errorMessage;
+		show(alertErrorMessage);
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	});
+	
+}
+
+function editTradeDetails(ele){
+	show(editTradeD);
+	var currentProperty = localStorage.getItem("prop");
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var title = ele.getAttribute('value');
+	
+	document.getElementById("editTradeTitle").innerHTML = title;
+
+	db.ref('users/'+user.uid+'/tradesman').orderByChild('tradeName').equalTo(title).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		var key = child.key;
+		console.log(key);
+		
+		db.ref('users/'+user.uid+'/tradesman/'+key+'/tradeName').on('value', function(data){
+			console.log(data.val());
+			$('#editName').val(data.val());
+		});
+		db.ref('users/'+user.uid+'/tradesman/'+key+'/tradeWork').on('value', function(data){
+			console.log(data.val());
+			$('#editProfession').val(data.val());
+		});
+		db.ref('users/'+user.uid+'/tradesman/'+key+'/tradeEmail').on('value', function(data){
+			console.log(data.val());
+			$('#editEmail').val(data.val());
+		});
+		db.ref('users/'+user.uid+'/tradesman/'+key+'/tradeNumber').on('value', function(data){
+			console.log(data.val());
+			$('#editContact').val(data.val());
+		});
+		db.ref('users/'+user.uid+'/tradesman/'+key+'/tradeEmNumber').on('value', function(data){
+			console.log(data.val());
+			$('#editEmContact').val(data.val());
+		});
+		db.ref('users/'+user.uid+'/tradesman/'+key+'/tradeWebsiteURL').on('value', function(data){
+			console.log(data.val());
+			$('#editWebsite').val(data.val());
+		});
+	  });
+	});
+}
+
+function removeTradeMan(ele){
+	var db = firebase.database();
+	var key = ele.getAttribute('value');
+	var user = firebase.auth().currentUser;
+	if (confirm("Are you sure you want to exit. Your data will not be saved.")) {
+        db.ref('users/'+user.uid+'/tradesman/'+key).remove().then(function(){
+			var errorAlert = document.getElementById("alertMessage");
+			errorAlert.innerHTML = 'Tradesman Removed';
+			document.body.scrollTop = document.documentElement.scrollTop = 0;
+			show(alertMessage);
+			setTimeout(function(){
+				hide(alertMessage);
+				location.reload();
+			},3000);
+		});
+    }
+	
+}
+
+function saveTradeDetails(){
+	var currentProperty = localStorage.getItem("prop");
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var title = document.getElementById("editTradeTitle").innerHTML
+	var name = document.getElementById("editName").value;
+	var profession = document.getElementById("editProfession").value;
+	var email = document.getElementById("editEmail").value;
+	var contact = document.getElementById("editContact").value;
+	var emContact = document.getElementById("editEmContact").value;
+	var website = document.getElementById("editWebsite").value;
+	var update = {
+		"tradeName": name,
+		"tradeWork": profession,
+		"tradeEmail": email,
+		"tradeNumber": contact,
+		"tradeEmNumber": emContact,
+		"tradeWebsite": website
+		}
+	
+	db.ref('users/'+user.uid+'/tradesman').orderByChild('tradeName').equalTo(title).once("value", function(snapshot) {
+	  snapshot.forEach(function(child) {
+		var key = child.key;
+		db.ref('users/'+user.uid+'/tradesman/'+key).update(update).then(function(){
+			hide(editTradeD);
+			var errorAlert = document.getElementById("alertMessage");
+			errorAlert.innerHTML = 'Tradesman Updated';
+			document.body.scrollTop = document.documentElement.scrollTop = 0;
+			show(alertMessage);
+			setTimeout(function(){
+				hide(alertMessage);
+				location.reload();
+			},3000); 
+		});
+	  });
+	});
+
+}
+function closeEditTrade(){
+	if (confirm('Are you sure you want to exit? Data will not be saved.')) {
+		// Save it!
+		hide(editTradeD);
+	} else {
+		// Do nothing!
+	}
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Tenant Signup</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+
+<body>
+<header><a href="index.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a></header>
+<h2 id="tenant-title" class="text-center"><strong>Creating </strong>Tenant Account</h2>
+<div id="regBox" class="register-photo" style="background-color:#5d6f56;">
+  <div id="land" class="form-container">
+    <h2>Personal Details</h2>
+    <div id ="alertErrorMessage" class="alertError hidden" style="margin-bottom: 10px;"></div>
+    <div class="form-group">
+      <input id="username" class="form-control" type="text" name="username-tenant" onclick="style.color = 'inherit'" placeholder="Username">
+    </div>
+    <div class="form-group">
+      <input id="fname" class="form-control" type="text" name="first-name-tenant" onclick="style.border = '1px solid #ced4da'" placeholder="First Name">
+    </div>
+    <div class="form-group">
+      <input id="lname" class="form-control" type="text" name="surname-tenant" placeholder="Surname">
+    </div>
+    <div class="form-group">
+      <input id="mobile" class="form-control" type="tel" name="phone-tenant" onclick="style.border = '1px solid #ced4da'" placeholder="Mobile Number">
+    </div>
+    <div class="form-group">
+      <input id="dob" class="form-control float-right" type="date" style="width:80%;">
+      <h5 class="float-left" style="padding:5px;">D.O.B</h5>
+    </div>
+  </div>
+  <div class="form-container">
+    <h2>Your Home Address (Renting)</h2>
+    <div class="form-group">
+      <input id="homeaddress-line-one" class="form-control" type="text" name="addess-one-tenant" onclick="style.border = '1px solid #ced4da'" placeholder="First Line of Address">
+    </div>
+    <div class="form-group">
+      <input id="homeaddress-line-two" class="form-control" type="text" name="address-two-tenant" placeholder="Second Line of Address">
+    </div>
+    <div class="form-group">
+      <input id="homeaddress-line-three" class="form-control" type="text" name="address-three-landlord" placeholder="Third Line of Address">
+    </div>
+    <div class="form-group">
+      <input id="homeaddress-town" class="form-control" type="text" name="address-town-tenant" placeholder="Town">
+    </div>
+    <div class="form-group">
+      <input id="homeaddress-city" class="form-control" type="text" name="address-city-tenant" onclick="style.border = '1px solid #ced4da'" placeholder="City">
+    </div>
+    <div class="form-group">
+      <input id="homeaddress-county" class="form-control" type="text" name="address-county-tenant" placeholder="Country">
+    </div>
+    <div class="form-group">
+      <input id="homeaddress-postcode" class="form-control" type="text" name="address-postcode-tenant" onclick="style.border = '1px solid #ced4da'" placeholder="Postcode">
+    </div>
+    <div id="alertErrorMessageProp" class="alertError hidden">Property doesnt't exisit on system. Please ensure you've typed in the address correctly or advise your landlord to register property.</div>
+    <button class="btn btn-primary" type="button" id="add" onclick="finished()" style="margin:0;width:100%;background-color:#707070;">Finsihed&nbsp;</button>
+  </div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script>
+<script>
+var config = {
+apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+authDomain: "under-one-roof.firebaseapp.com",
+databaseURL: "https://under-one-roof.firebaseio.com",
+projectId: "under-one-roof",
+storageBucket: "under-one-roof.appspot.com",
+messagingSenderId: "842485534285"
+};
+firebase.initializeApp(config);
+
+function finished(){
+	<!--Local Variables-->
+	var uname = document.getElementById("username").value; 						
+	var fname = document.getElementById("fname").value;							
+	var sname = document.getElementById("lname").value;					
+	var mob = document.getElementById("mobile").value;						
+	var LineOne = document.getElementById("homeaddress-line-one").value;		
+	var LineTwo = document.getElementById("homeaddress-line-two").value;
+	var LineThree = document.getElementById("homeaddress-line-three").value;
+	var Town = document.getElementById("homeaddress-town").value;
+	var County = document.getElementById("homeaddress-county").value;
+	var Postcode	= document.getElementById("homeaddress-postcode").value;
+	var City = document.getElementById("homeaddress-city").value;
+	
+	var user = firebase.auth().currentUser;	//Get current user					
+	var ref = firebase.database().ref(); 	//database ref
+	
+	<!--Getting Data of Birth value-->
+	var date = new Date($('#dob').val());
+	day = date.getDate();
+	month = date.getMonth() + 1;										
+	year = date.getFullYear();
+	var dob = [day, month, year].join('/');
+	
+	<!--users data to be sent to database-->
+	var userDetails = {
+		"userUid": user.uid,
+		"email": user.email,
+		"username": uname.toLowerCase(),
+		"firstName": fname,
+		"lastName": sname,
+		"mobile": mob,
+		"dob": dob,
+		"userType": "Tenant",
+		"onlineStatus": "",
+		"registeredProperty": "",
+		/*
+		TODO: stop renting address from being sent to database here, only add it when landlord accepts request
+		*/
+		"rentingAddress": {
+			"firstLine": LineOne.toLowerCase().replace(/ +/g, ' ').trim(),
+			"secondLine": LineTwo.toLowerCase().replace(/ +/g, ' ').trim(),
+			"thirdLine": LineThree.toLowerCase().replace(/ +/g, ' ').trim(),
+			"town": Town.toLowerCase().replace(/ +/g, ' ').trim(),
+			"county": County.toLowerCase().replace(/ +/g, ' ').trim(),
+			"postcode": Postcode.toUpperCase(),
+			"city": City.toLowerCase().replace(/ +/g, ' ').trim()
+			},
+		};
+		
+
+	ref.child('users').orderByChild('username').equalTo(username.value.toLowerCase()).once("value", function(snapshot) {
+		var username = snapshot.val();
+		var alertM = document.getElementById("alertErrorMessage");
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		if(username){
+			show(alertErrorMessage);
+			alertM.innerHTML = 'Username already exists.';
+			document.getElementById("username").style.color = "#b72c2c";
+			  setTimeout(function(){
+				hide(alertErrorMessage);
+			},3000);
+		}
+		else if(fname == ''){	
+			show(alertErrorMessage);
+			alertM.innerHTML = 'Please enter a first name.';
+			document.getElementById("fname").style.border = 'solid';
+			document.getElementById("fname").style.borderColor = "#b72c2c";
+			document.getElementById("fname").style.borderRadius = ".25rem";
+			  setTimeout(function(){
+				hide(alertErrorMessage);
+			},3000);
+		}
+		else if(mob == ''){
+			show(alertErrorMessage);
+			alertM.innerHTML = 'Please enter a mobile number';
+			document.getElementById("mobile").style.border = 'solid';
+			document.getElementById("mobile").style.borderColor = "#b72c2c";
+			document.getElementById("mobile").style.borderRadius = ".25rem";
+			  setTimeout(function(){
+				hide(alertErrorMessage);
+			},3000);
+		}
+		else if(LineOne == ''){
+			show(alertErrorMessage);
+			alertM.innerHTML = 'Please enter a first line of address.';
+			document.getElementById("homeaddress-line-one").style.border = 'solid';
+			document.getElementById("homeaddress-line-one").style.borderColor = "#b72c2c";
+			document.getElementById("homeaddress-line-one").style.borderRadius = ".25rem";
+			  setTimeout(function(){
+				hide(alertErrorMessage);
+			},3000);
+		}
+		else if(City == ''){
+			show(alertErrorMessage);
+			alertM.innerHTML = 'Please enter a city for address.';
+			document.getElementById("homeaddress-city").style.border = 'solid';
+			document.getElementById("homeaddress-city").style.borderColor = "#b72c2c";
+			document.getElementById("homeaddress-city").style.borderRadius = ".25rem";
+			  setTimeout(function(){
+				hide(alertErrorMessage);
+			},3000);
+		}
+		else if(Postcode == ''){
+			show(alertErrorMessage);
+			alertM.innerHTML = 'Please enter a postcode.';
+			document.getElementById("homeaddress-postcode").style.border = 'solid';
+			document.getElementById("homeaddress-postcode").style.borderColor = "#b72c2c";
+			document.getElementById("homeaddress-postcode").style.borderRadius = ".25rem";
+			  setTimeout(function(){
+				hide(alertErrorMessage);
+			},3000);
+		}
+		else{
+			ref.child("addresses").orderByChild("firstLine").equalTo(LineOne.toLowerCase()).once("value").then(function(snapshot){
+				console.log
+				if(snapshot.val() == null){
+					ref.child('users').child(user.uid).set(userDetails).then(function(user) {
+						location = 'home.html';
+					});
+				}
+				else{
+					<!--Check to see if the proeprty the user is renting has been registered in the database-->
+					//check to see if address already exists in database 'addresses'
+					console.log(LineOne);
+					ref.child("addresses").orderByChild("firstLine").equalTo(LineOne.toLowerCase()).once("value").then(function(snapshot){
+						console.log(snapshot.val())
+						if(snapshot.val()){
+							snapshot.forEach(function(childSnapshot) {
+						  var fL = childSnapshot.child('firstLine').val();
+						  ref.child("addresses").orderByChild("postcode").equalTo(Postcode.toUpperCase()).once("value").then(function(snapshot){
+							  if(snapshot.val()){
+								  snapshot.forEach(function(childSnapshot) {
+								  var fL1 = childSnapshot.child('firstLine').val();
+								  if(fL1 == fL){
+									  <!--Setting users data to the database-->
+									  ref.child('users').child(user.uid).set(userDetails).then(function(user) {
+										  location = 'home.html';
+									  }, function(error){
+										  var errorMessage = error.message;
+										  var errorAlert = document.getElementById("alertErrorMessage");
+										  errorAlert.innerHTML = errorMessage;
+										  show(alertErrorMessage);
+										  setTimeout(function(){
+											  hide(alertErrorMessage);
+										  },3000);
+									  });
+								  }
+								  else{
+									  show(alertErrorMessage);
+									  alertM.innerHTML = 'The address you have entered has not be registered. Please check the address and/or make sure your landlord has signed up and registered your address.';
+										setTimeout(function(){
+										  hide(alertErrorMessage);
+									  },8000);						 
+								  }<!--End of fL1 == fL else statement-->
+								  });
+								  
+							  }else{
+								  //if data is not found, push address details to database (addresses)
+								  show(alertErrorMessage);
+								  alertM.innerHTML = 'The address you have entered has not be registered. Please check the address and/or make sure your landlord has signed up and registered your address.';
+									setTimeout(function(){
+									  hide(alertErrorMessage);
+								  },8000); 
+							  }
+							});
+						});
+					}
+					else{
+						//if data is not found, push address details to database (addresses)
+						show(alertErrorMessage);
+						alertM.innerHTML = 'The address you have entered has not be registered. Please check the address and/or make sure your landlord has signed up and registered your address.';
+						  setTimeout(function(){
+							hide(alertErrorMessage);
+						},8000); 
+					}
+				});
+				}
+			});
+		}<!--End of else-->
+	});
+}
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+	// User is signed in.
+	var ref = firebase.database().ref().child('users');
+	var username = document.getElementById("username");
+	
+	//Disables white spaces in user input but enables backspace
+	$("input#username").on({
+	  keydown: function(e) {
+		if (e.which === 32)
+		  return false;
+	  },
+	  change: function() {
+		this.value = this.value.replace(/\s/g, "");
+	  }
+	});
+	
+	//when users loses focus, check to see if username is already taken
+	$('#username').blur(function(){
+		ref.orderByChild('username').equalTo(username.value.toLowerCase()).once("value", function(snapshot) {
+			const username = snapshot.val();
+			if(username){
+				var alertM = document.getElementById("alertErrorMessage");
+				document.body.scrollTop = document.documentElement.scrollTop = 0;
+				show(alertErrorMessage);
+				alertM.innerHTML = 'Username already exists.';
+				setTimeout(function(){
+					hide(alertErrorMessage);
+				},3000);
+			}
+			else{
+			}
+		});
+	});
+  } else {
+	// No user is signed in.
+	location = 'index.html';
+  }
+});
+
+</script>
+</body>
+</html>

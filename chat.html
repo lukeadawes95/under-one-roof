@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html style="background-color:#5d6f56;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Under One Roof - Messenger</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a><h1 id="pageTitle">Instant 1-1 Chat</h1></header>
+<body>
+<div id="messengerGroup" class="">
+	<div id="messengerGroupPeople">
+      <ul id="peopleList">
+      </ul>
+    </div>
+    <div id="messengerGroupChat">
+        <div id="messengerGroupChatHeader">
+        </div>
+    	<div id="displayBox">
+        </div>
+        <div id="messageBox">
+          <textarea id="messageInput" style="background-color:#fff; border:none; padding:10px 20px;" placeholder="Write message..." onclick="style='border:none;'"></textarea>
+          <button id="sendMessageBtn" name="sendBtn" class="btn btn-primary btn-block" type="submit" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/js/webjs.js"></script>
+<script>
+var config = {
+  apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+  authDomain: "under-one-roof.firebaseapp.com",
+  databaseURL: "https://under-one-roof.firebaseio.com",
+  projectId: "under-one-roof",
+  storageBucket: "under-one-roof.appspot.com",
+  messagingSenderId: "842485534285"
+};
+firebase.initializeApp(config);
+	
+function newChat(ele){
+	var key = ele.getAttribute("value");
+	localStorage.setItem("1-1-key", key);
+	location.reload();
+}
+	
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	var uKey = localStorage.getItem("1-1-key");
+	var title = document.getElementById("chatTitle");
+	
+	db.ref('addresses/'+currentProperty+'/chat/'+uKey+user.uid).orderByChild('timeStamp').on("child_added", function(data){
+		//Set Local Variables
+		var message = data.child("message").val();
+		var date = data.child("date").val();
+		var sender = data.child("uid").val();
+		var time = data.child("time").val();
+		var username = data.child("username").val();
+		var who;
+		var getCurrentDate = new Date;
+		day = getCurrentDate.getDate();
+		month = getCurrentDate.getMonth() + 1;										
+		year = getCurrentDate.getFullYear();
+		var newDate = [day, month, year].join('/');
+		console.log(data.child("timeStamp").val());
+		
+		if(date == newDate){date = 'Today'}
+		if(sender == user.uid){
+			db
+			who = 'boxCurrent currentUser';
+			var messageD = "<div id='userMessageDisplay' style='width:100%;text-align:end;'><span class='message-data-time'>"+time+",  "+date+"    </span><span id='userName'>"+username+"</span><div id='hello' class='"+who+"' style= height:100%;'>"+message+"</div></div>";
+			$('#displayBox').append(messageD);
+		}
+		else{
+			who = 'boxOther otherUser';
+			var messageDP = "<div id='userMessageDisplay' style='width:100%;'><span class='message-name'>"+username+"</span><span class='message-data-time'>    "+time+",  "+date+"</span><div id='hello' class='"+who+"' style='width:70%; height:100%;'>"+message+"</div></div>";
+			$('#displayBox').append(messageDP);
+		}
+	});
+	
+	  //People side bar
+	db.ref('addresses/'+currentProperty+'/tenant').orderByKey().once("value", function(snapshot){
+		snapshot.forEach(function(child){
+		  var key = child.key;
+			if(key != user.uid){
+		  db.ref('users/'+key+'/firstName').once("value", function(data){
+			  var first = data.val();
+			  var appendFirst = "<li style='padding: 5px 10px 0 10px; height:75px;'><i class='fas fa-user-circle' style='font-size:400%; float:left;color:#6a6c75;'></i><div class='about' style='height:100%;padding: 10px 0 0 70px;'><div id='append2"+key+"' value='"+key+"' class='profileName' style='color:#fff;cursor:pointer;' onclick='newChat(this)'>"+first;
+			  $('#peopleList').append(appendFirst);
+			  if(key == uKey){
+				  appendFirst = "<i class='fas fa-user-circle' style='font-size:400%; float:left;color:#6a6c75; margin-left:8%;margin-right:15px'></i><div class='about' style='height:100%;padding: 10px 0 0 70px;'><div id='appendH"+key+"' class='profileName' style='color:#000;'>"+first;
+			  $('#messengerGroupChatHeader').append(appendFirst);
+			  }
+		  });
+		  db.ref('users/'+key+'/lastName').once("value", function(data){
+			  var last = data.val();
+			  var appendLast = " "+last+"</div>"
+			  $('#append2'+key).append(appendLast);
+			  if(key == uKey){
+				  appendLast = " "+last+"</div>";
+				  $('#appendH'+key).append(appendLast);
+			  }
+		  });
+		  db.ref('users/'+key+'/onlineStatus').once("value", function(data){
+			  var onlineStatus = data.val();
+			  console.log(onlineStatus);
+			  if(onlineStatus == 'Online'){
+			  var appendStatus = "<div class='status' style='color:#a8aac3;'><i class='fa fa-circle' online style='color:#86BB71; margin-right:10px;font-size:80%;border:1px solid #fff;border-radius:50%;'></i>Online</div></div></li>"
+			  $('#append2'+key).append(appendStatus);
+				  if(key == uKey){
+					  appendStatus = "<div class='status' style='color:#a8aac3;'><i class='fa fa-circle' online style='color:#86BB71; margin-right:10px;font-size:80%;border:1px solid #fff;border-radius:50%;'></i>Online</div></div>"
+					  $('#appendH'+key).append(appendStatus);
+			  	  }
+			  }
+			  else{
+				  appendStatus = "<div class='status' style='color:#a8aac3;'><i class='fa fa-circle offline' style='color:#E38968;margin-right:10px;font-size:80%;border:1px solid #fff;border-radius:50%;'></i>Offline</div></div></li>"
+				  $('#append2'+key).append(appendStatus);
+				  if(key == uKey){
+					  appendStatus = "<div class='status' style='color:#a8aac3;'><i class='fa fa-circle offline' style='color:#E38968;margin-right:10px;font-size:80%;border:1px solid #fff;border-radius:50%;'></i>Offline</div></div>"
+					  $('#appendH'+key).append(appendStatus);
+			  	  }
+			  }
+		  });
+			}
+		});
+	});
+	
+  } else {
+    // No user is signed in.
+	location = 'index.html'
+  }
+});
+
+function sendMessage(){
+	var theDiv = document.getElementById('displayBox');
+	var message = document.getElementById("messageInput").value;
+	var currentProperty = localStorage.getItem("prop");
+	var userKey = localStorage.getItem("1-1-key");
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	//date
+	var date = new Date;
+	day = date.getDate();
+	month = date.getMonth() + 1;										
+	year = date.getFullYear();
+	var newDate = [day, month, year].join('/');
+	var db = firebase.database();
+	//time
+	hours = date.getHours(); // => 9
+	mins = date.getMinutes(); // =>  30
+	var time = [hours, mins].join(':');
+	
+	db.ref('users/'+user.uid+'/username').once("value", function(snapshot){
+		var username = snapshot.val();
+		var messageDetails = {
+		"uid": user.uid,
+		"message": message,
+		"date": newDate,
+		"time": time,
+		"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+		"username": username
+		}
+		
+		if(message == ''){
+			document.getElementById("messageInput").style.border = '1px solid red';
+		}
+		else{
+			db.ref('addresses/'+currentProperty+'/chat/'+userKey+user.uid).push(messageDetails).then(function(){
+				document.getElementById("messageInput").value = '';
+				theDiv.scrollTop = '99999';
+			});
+		}
+	});
+	
+	
+}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	show(pageTitle);
+	hide(signUpDiv)
+	var title = document.getElementById("pageTitle");
+	var db = firebase.database();
+	
+	db.ref('users/'+user.uid+'/username').on('value', function(data){
+		console.log(data.val());
+		title.innerHTML = "<i class='far fa-user-circle'></i> "+data.val()
+	});
+  } else {
+    // No user is signed in.
+  }
+});
+
+</script>
+</head>
+
+<body>
+<header><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%">
+  <h1 id="pageTitle" class="hidden" onClick="location = 'home.html'" style="cursor:pointer;"></h1>
+</header>
+<div class="register-photo" style="background-image:url(images/home-page-laptop-image.JPG); background-color:#fff;background-size:cover; background-repeat:no-repeat;">
+  <div style="min-height:80vh;">
+    <div id="signUpDiv" class="form-container" style="opacity: 0.97;">
+      <h2 class="text-center"><strong>Create</strong> an account.</h2>
+      <div style="height:50px;">
+        <h4 class="float-left" style="margin:0;padding:5px;"> As </h4>
+        <select id="selectMenu" class="form-control float-right" style="width:80%;">
+          <option value="landlord-sign-up.html" selected=""> Landlord </option>
+          <option value="tenant-sign-up.html"> Tenant </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input id="txtEmail" class="form-control" type="email" name="email" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <input id="txtPassword" class="form-control" type="password" name="password" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <input id="txtPasswordR" class="form-control" type="password" name="password-repeat" placeholder="Confirm Password">
+        <span id="verifynote" class="warn hidden">Passwords don't match</span> </div>
+      <div class="form-group">
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" style="width:0;">
+            I agree to the license terms. </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary btn-block" type="submit" id="bntSignUp" name="btnSignUp" onclick="signup()" style="background-color:#5d6f56;"> Sign Up </button>
+      </div>
+      <a href="index-login.html" class="already">Do you already have an account? <u>Login here.</u></a> </div>
+  </div>
+</div>
+<div id="aboutContent" style="margin-left:auto; margin-right:auto; width:90%; text-align:center;color:#7e7e7e; margin-top:3%; box-shadow: 0px 8px 6px -6px rgba(0,0,0,0.14);margin-bottom:100px;">
+  	<p style="padding:10px;font-size: 25px; line-height: 37px; border-bottom: 1px solid #dedede;">Under One Roof provides the simplest way for Landlords to manage their properties and and Tenants to connect with thier Landlord on all levels.</p>
+    <div id="infoOne" style="font-size:110%;margin-top:50px;">
+    	<div class="leftInfo">
+        	<i class="fas fa-info" style="color:#5d6f56;font-size:170%;"></i>
+            <h2 style="color:#353535;font-size:120%;">Keep everyone informed</h2>
+            <p>Total transparency in all rental communication. Maintenance requests are submitted and tracked easily, and tradesmen visits are effortlessly arranged and recorded.</p>
+        </div>
+        <div class="rightInfo">
+        	<i class="fas fa-mobile-alt" style="color:#5d6f56;font-size:170%;"></i>
+            <i class="fas fa-tablet-alt" style="color:#5d6f56;font-size:170%;"></i>
+            <i class="fas fa-desktop" style="color:#5d6f56;font-size:170%;"></i>
+            <h2 style="color:#353535; font-size:120%;">Access anywhere, anytime</h2>
+            <p>From your desktop computer to mobile device.<br> <span style="color:#5d6f56"><strong>Under One Roof</strong></span> is accessible across all your devices to ensure that requests can be sorted as swiftly as possible.</p>
+        </div>
+    </div>
+</div>
+<div id="iphoneAndText">
+	<div id="iphoneContentLeft">
+    	<div class="leftContent">
+        	<h3>Direct Chat <i class="far fa-comment" style="color:#036;"></i></h3>
+            <p>Say farewell to the stress of managing emails, text messages, web documents and phone calls!</p>
+        </div>
+        <div class="leftContent">
+        	<h3>Expenses <i class="far fa-money-bill-alt" style="color:#fed45b"></i></h3>
+            <p>Lanlords can keep track of thier expenses, log rental payments and send receipts to Tenants!</p>
+        </div>
+        <div class="leftContent">
+        	<h3>Property Management <i class="fas fa-home" style="color:#900"></i></h3>
+            <p>Manage multipe properties in one environment and switch between properties with a click of a button!</p>
+        </div>
+    </div>
+    <div id="iphoneContentRight">
+    	<div class="rightContent">
+        	<h3>Reminders <i class="far fa-bell" ></i></h3>
+            <p>Create reminders and recieved late and rent payment reminders and alerts!</p>
+        </div>
+    	<div class="rightContent">
+        	<h3>Maintenance Issues <i class="fas fa-wrench" style="color:#CCC;"></i></h3>
+            <p>Tenants can report issues and recieve update notifications! Landlords can send issues strsight to Tradesmen!</p>
+        </div>
+        <div class="rightContent">
+        	<h3>Mass Emailing <i class="far fa-envelope" style="color:#663;"></i></h3>
+            <p>Send emails to all your tenants at once or to individual house groups!</p>
+        </div>
+    </div>
+	<div id="iphone">
+		<img src="images/screenshot-gif.gif">
+	</div>
+</div>
+<div class="footer-basic">
+  <footer>
+    <div id="icons" style="text-align:center;">
+      <h2>Under One Roof</h2>
+      <a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a> <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a> <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a> </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script>
+</body>
+</html>

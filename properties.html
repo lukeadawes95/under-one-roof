@@ -1,0 +1,256 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Under One Roof - Properties</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+  
+firebase.auth().onAuthStateChanged(function(user) {
+if (user) {
+// User is signed in.
+//Set Variables
+var ref = firebase.database().ref().child("users").child(user.uid);
+
+//Fetch the users registered properties they're renting
+ref.child("rentingAddress").on("child_added", function(data){
+    //Set Local Variables
+    var firstLine = data.child("firstLine").val();
+    var secondLine = data.child("secondLine").val();
+    var thirdLine = data.child("thirdLine").val();
+    var town = data.child("town").val();
+    var city = data.child("city").val();
+    var county = data.child("county").val();
+    var postcode = data.child("postcode").val();
+    var status = data.child("propertyStatus").val();
+    var i;
+    var address = [firstLine, secondLine, thirdLine, town, city, postcode];
+	var title = '';
+	
+    //for loop to loop through array
+    for(i = 0; i < address.length; i++){
+        //if array value is empty move to the next value
+        if(address[i] == '' || address[i] == null){
+            i++;
+        }
+        else{
+            //if at the end of the array
+            if(i == address.length - 1){
+                title += address[i];
+            }
+            else{
+                title += address[i] + ", ";
+            } 
+        }   
+    }
+    if(title != ''){
+			//add values of array to (address) to title heading
+			var appendAddress = "<div class='personal-details'><div class='details-container' style='margin-left:20px; display:block; max-width:60vw; margin-left:auto; margin-right:auto;'><h2 class='info-title center'>" + capitalLetter(title) + "<i class='far fa-trash-alt' value='"+firstLine+"' onclick='removeProperty(this)'></i></h2><div class='profile-group'><button class='btn btn-primary btn-block' type='submit' value='"+firstLine+"' onclick='goTo(this)' style='max-width: 45vw; margin-right:auto; margin-left:auto; background-color:#5d6f56; border-color: #5d6f56;'>Go To Property</button></div></div></div>";
+			$('#page-content').append(appendAddress);
+		}
+}, function(error){
+    //error message
+    console.log("Error: Couldnt Load Address");
+	show(alertErrorMessage);
+});
+} else {
+	// No user is signed in.
+	location = 'index.html';
+}
+});
+
+function removeProperty(ele){
+	//Set Variables
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child("users").child(user.uid);
+	var refAdd = firebase.database().ref().child("addresses");
+	var currentProperty = localStorage.getItem("prop");
+	var firstLine = ele.getAttribute('value');
+	
+	//Diaolog box
+	if (confirm("Are you sure you want to exit. Your data will not be saved.")) {
+        hide(editBox);
+		//If 'yes' is selected
+		//Get uid of property user wished to delete
+		refAdd.orderByChild("firstLine").equalTo(firstLine).once("value", function(snapshot){
+			snapshot.forEach(function(child) {
+				var key = child.key;
+				//Remove addres from 'addresses' 
+				refAdd.child(key).remove().then(function(user){
+				}, function(error){
+				});<!--End of remove-->
+			});<!--End of snapshot-->
+		});<!--End of firstLine query-->
+		
+		//Get uid of property user wished to delete
+		ref.child("rentingAddress").orderByChild("firstLine").equalTo(firstLine).once("value", function(snapshot){
+			snapshot.forEach(function(child) {
+				var key = child.key;
+				//Remove addres from 'users/rentingAddresses'
+				ref.child("rentingAddress").child(key).remove().then(function(user){
+					//If successful show successful message for 3 seconds and reload page
+					var alertM = document.getElementById("alertErrorMessage");
+					document.body.scrollTop = document.documentElement.scrollTop = 0;
+					show(alertErrorMessage);
+					alertM.innerHTML = 'Property Successfully Removed';
+					setTimeout(function(){
+						hide(alertErrorMessage);
+						location.reload();
+					},3000);
+				}, function(error){
+					//If failed show error message for 3 seconds
+					var alertM = document.getElementById("alertMessage");
+					document.body.scrollTop = document.documentElement.scrollTop = 0;
+					show(alertErrorMessage);
+					alertM.innerHTML = 'Property wasn&rsquo;t removed. Please check connection and try again.';
+					setTimeout(function(){
+						hide(alertErrorMessage);
+						location.reload();
+					},3000);
+				});
+			});
+		});
+	}
+}
+
+function submitProperty(){
+	//Set variables
+	var addOne = document.getElementById("propertyAddOne");
+	var addTwo = document.getElementById("propertyAddTwo");
+	var addThree = document.getElementById("propertyAddThree");
+	var addTown = document.getElementById("propertyAddTown");
+	var addCity = document.getElementById("propertyAddCity");
+	var addCounty = document.getElementById("propertyAddCounty");
+	var addPostcode = document.getElementById("propertyAddPostcode");
+	var users = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child("users").child(users.uid);
+	var refAdd = firebase.database().ref().child("addresses");
+			
+	var propertyDetails = {
+		"firstLine": addOne.value.toLowerCase(),
+		"secondLine": addTwo.value.toLowerCase(),
+		"thirdLine": addThree.value.toLowerCase(),
+		"town": addTown.value.toLowerCase(),
+		"city": addCity.value.toLowerCase(),
+		"county": addCounty.value.toLowerCase(),
+		"postcode": addPostcode.value.toUpperCase(),
+		"landlord": users.uid,
+		"propertyStatus": ""
+		};
+	var propertyDetailsAdd = {
+		"firstLine": addOne.value.toLowerCase(),
+		"secondLine": addTwo.value.toLowerCase(),
+		"thirdLine": addThree.value.toLowerCase(),
+		"town": addTown.value.toLowerCase(),
+		"city": addCity.value.toLowerCase(),
+		"county": addCounty.value.toLowerCase(),
+		"postcode": addPostcode.value.toUpperCase(),
+		"landlord": users.uid.toLowerCase(),
+		"landlord": users.uid,
+		"propertyStatus": ""
+		};
+		
+	//Push property details to 'addresses'
+	refAdd.push(propertyDetailsAdd).then(function(user) {
+	}, function(error){
+	});
+	
+	//Push property details to 'users/rentingAddress'
+	ref.child("rentingAddress").push(propertyDetails).then(function(user) {
+		//If successful show successful message for 3 seconds, set input field to empty and close pop up
+		var alertM = document.getElementById("alertMessage");
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		show(alertMessage);
+		alertM.innerHTML = 'Property Successfully Submitted';
+		setTimeout(function(){
+			hide(alertMessage);
+		},3000);
+		addOne.value = '';
+		addTwo.value = '';
+		addThree.value = '';
+		addTown.value = '';
+		addCity.value = '';
+		addCounty.value = '';
+		addPostcode.value = '';
+		hide(propertyForm);
+	}, function(error){
+		var errorMessage = error.message;
+		var alertM = document.getElementById("alertMessage");
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+		show(alertErrorMessage);
+		alertM.innerHTML = errorMessage;
+		setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	});
+}
+</script>
+</head>
+<body>
+<header><a href="home.html"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%"></a><h1 id="pageTitle">Properties</h1></header>
+<div id="page-content" style="min-height:80vh; background-color:#5d6f56;">
+<button class="btn btn-primary btn-block" type="submit" id="createProperty" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="show(propertyForm)"><i class="far fa-plus-square" style="margin-right:5px;"></i>Add Property</button>
+  <div id="alertMessage" class="alert hidden"></div>
+  <div id="alertErrorMessage" class="alertError hidden">Property wasn't submitted. Please check your connection and try again.</div>
+  <div id ="alertMessageRemoved" class="alert hidden">Property successfully removed.</div>
+  <div id="propertyForm" class="pop-up-box hidden">
+    <div class="pop-up-content">
+      <i class="fa fa-times" onClick="hide(propertyForm)"></i>
+      <h2 class="center">Add Property</h2>
+      <div class="profile-group">
+        <input id="propertyAddOne" class="form-control" type="text" placeholder="Line One">
+      </div>
+      <div class="profile-group">
+        <input id="propertyAddTwo" class="form-control" type="text" placeholder="Line Two">
+      </div>
+      <div class="profile-group">
+        <input id="propertyAddThree" class="form-control" type="text" placeholder="Line Three">
+      </div>
+      <div class="profile-group">
+        <input id="propertyAddTown" class="form-control" type="text" placeholder="Town">
+      </div>
+      <div class="profile-group">
+        <input id="propertyAddCity" class="form-control" type="text" placeholder="City">
+      </div>
+      <div class="profile-group">
+        <input id="propertyAddCounty" class="form-control" type="text" placeholder="County">
+      </div>
+      <div class="profile-group">
+        <input id="propertyAddPostcode" class="form-control" type="text" placeholder="Postcode">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSubEmContact" onclick="submitProperty()" style="background-color:#5d6f56;border-color:#5d6f56;">Submit Property</button>
+    </div>
+  </div>
+</div>
+<div class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script>
+</body>
+</html>

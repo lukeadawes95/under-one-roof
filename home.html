@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under One Roof - Home</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Marcellus">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+<link rel="stylesheet" href="assets/css/Footer-Basic-1.css">
+<link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+<link rel="stylesheet" href="assets/css/Registration-Form-with-Photo-1.css">
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+<body>
+<header style="width: 100%;"><img class="logo-img" src="assets/img/logo-without-text-dark-green.jpg"><img class="logo-text" src="assets/img/logo-text.jpg" width="45%">
+  <h2 id="addressTitleHome" class="center"></h2>
+</header>
+<div id="sidebar" class="hide-menu"><i onclick="closeMenu()" class="fa fa-times"></i>
+  <ul class="nav-selection">
+    <li id="notificaions" class="nav-item"><a class="menu-item" href="notifications.html"><i class="far fa-bell"></i> Notifications</a></li>
+    <li id="profile" class="nav-item"><a class="menu-item" href="profile.html">Profile</a></li>
+    <li id="properties" class="nav-item"><a class="menu-item" href="properties.html">Properties</a></li>
+    <li id="tradesman" class="nav-item"><a class="menu-item" href="tradesman.html">Tradesmen</a></li>
+    <li id="maintenance" class="nav-item"><a class="menu-item" href="maintenance-issues.html">Maintenance Issues</a></li>
+    <li id="tenants" class="nav-item"><a class="menu-item" href="tenants.html">Tenants</a></li>
+    <li id="document" class="nav-item"><a class="menu-item" href="documents.html>">Document</a></li>
+    <li id="expense" class="nav-item"><a class="menu-item" href="expenses.html">Expenses</a></li>
+    <li id="reminders" class="nav-item"><a class="menu-item" href="reminders.html">Reminders</a></li>
+    <li id="landlord" class="nav-item"><a class="menu-item" onclick="landlordLink()">Landlord</a></li>
+    <li id="settings" class="nav-item"><a class="menu-item" href="settings.html">Settings</a></li>
+  </ul>
+  <div id="signOutButtonMenu" class="boxed-item boxed-item-smaller" onClick="signout(this)">Log Out</i></div>
+</div>
+<div id="page-content" style="background-color: #5d6f56">
+  <div id="c" style="width: 100%; display: block;height:40px">
+    <div id="toggleMenu"><span></span><span></span><span></span></div>
+    <button id="switchPropBtn" class="btn btn-primary" type="button" onclick="switchProperty()" style="border-color:#707070;background-color:#707070;float: right">Switch Property</button>
+  </div>
+  <div id="createLease" class="pop-up-box hidden">
+    <div id="createLeaseContent" class="pop-up-content">
+      <h2 class="center" style="padding-bottom: 20px;">Create New Lease</h2>
+      <div id="alertErrorMessage" class="alertError hidden"></div>
+      <div class="profile-group">
+        <h3><strong>Commencement Date* </strong></h3>
+        <br>
+        <input id="leaseComDate" class="form-control" type="date" onclick="style.border = '1px solid #ced4da'; style.borderRadius = '.25rem'">
+      </div>
+      <div class="profile-group">
+        <h3><strong>Rent Amount (per instalment)* </strong></h3>
+        <br>
+        <input id="leaseRent" class="form-control" type="text" placeholder="Rent Amount" onclick="style.border = '1px solid #ced4da'; style.borderRadius = '.25rem'">
+      </div>
+      <div class="profile-group">
+        <h3><strong>Rent Frequency* </strong></h3>
+        <br>
+        <select id="selectLeaseRentFreq" class="form-control float-right">
+          <option selected="" value="Monthly">Monthly (Calender Month)</option>
+          <option value="One Time">One-Time(AirBnB)</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Fortnightly">Fortnightly</option>
+          <option value="Two Months">2 Months</option>
+          <option value="Quarterly">Quarterly</option>
+          <option value="Four Months">4 Months</option>
+          <option value="Bi Anually">Bi-Anually</option>
+          <option value="Twelve Months">12 Months</option>
+        </select>
+      </div>
+      <div class="profile-group">
+        <h3><strong>Payment Due Date* </strong></h3>
+        <br>
+        <input id="leasePaymentDueDate" class="form-control" type="date" onclick="style.border = '1px solid #ced4da'; style.borderRadius = '.25rem'">
+      </div>
+      <div class="profile-group">
+        <h3><strong>End Date </strong></h3>
+        <br>
+        <input id="leaseEndDate" class="form-control" type="date" placeholder="End Date" onclick="style.border = '1px solid #ced4da'; style.borderRadius = '.25rem'">
+      </div>
+      <div class="profile-group">
+        <h3><strong>Security Deposit GBP(£)</strong></h3>
+        <br>
+        <input id="leaseSecDep" class="form-control" type="number" placeholder="Security Deposit">
+      </div>
+      <div class="profile-group">
+        <h3><strong>Furnishings </strong></h3>
+        <br>
+        <select id="selectLeaseFurn" class="form-control float-right" onclick="style.border = '1px solid #ced4da'; style.borderRadius = '.25rem'">
+          <option selected="" value="Furnished">Furnished</option>
+          <option value="Unfurnished">Unfurnished</option>
+          <option value="Part Furnished">Part Furnished</option>
+        </select>
+      </div>
+      <div class="profile-group">
+        <h3><strong>Deposit Scheme </strong></h3>
+        <br>
+        <select id="selectLeaseDepSch" class="form-control float-right" >
+          <option selected="" value="None">None</option>
+          <option value="Deposit Protection Service">Deposit Protection Service</option>
+          <option value="MyDeposit">MyDeposit</option>
+          <option value="Tenancy Deposit Scheme">Tenancy Deposit Scheme</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="profile-group">
+        <h3><strong>Deposit Reference</strong></h3>
+        <br>
+        <input id="leaseDepRef" class="form-control" type="text" placeholder="Deposit Ref">
+      </div>
+      <div class="profile-group" style="width: 100%; height: 10%"> <span style="color: darkred">Late Fees: Receive a propt to add late charge when a tenant doesn't pay within a certain number of days after rent is due. Do you want to incude this?</span><div class="form-check" style="width:150px"><label class="form-check-label"><input class="form-check-input" type="checkbox" id="latePayCheck">Yes</label></div>
+        <div id="created" style="width: 45%" class="hidden">
+          <h3><strong>Days after Rents Due</strong></h3>
+          <input id="leaseLateDays" class="form-control" type="number" placeholder="Days after Rents Due" onclick="style.border = '1px solid #ced4da'; style.borderRadius = '.25rem'">
+        </div>
+        <div id="completed" style="width: 45%" class="hidden">
+          <h3><strong>Amount to Charge</strong></h3>
+          <input id="leaseLateAmount" class="form-control" type="number" placeholder="Amount to Charge" onclick="style.border = '1px solid #ced4da'; style.borderRadius = '.25rem'">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="bntSubLease" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="saveLease()"><i class="fas fa-save" style="color:#fff;"></i> Save Lease</button>
+    </div>
+  </div>
+  <div id="registerProperty" class="pop-up-box hidden">
+    <div id="tenantRequest" class="pop-up-content">
+      <h2 style="padding-bottom: 20px;" class="center">Find Property Group</h2>
+      <p>Thank you for submitting your detials. Please confirm if the address you live at and the name of yor landlord below is correct.</p>
+      <div style="float:left; width:50%;" class="profile-group">
+        <h3>Address</h3>
+        <p id="firstLine"></p>
+        <p id="secondLine"></p>
+        <p id="thirdLine"></p>
+        <p id="town"></p>
+        <p id="city"></p>
+        <p id="county"></p>
+        <p id="postcode"></p>
+      </div>
+      <div style="float:right; width:50%;" class="profile-group">
+        <h3>Landlord</h3>
+        <p id="landlordName"></p>
+      </div>
+      <div style="width:100%" class="profile-group"> </div>
+      <div class="profile-group">
+        <button class="btn btn-primary" type="button" onclick="sendRequest()" style="border-color:#79c879;background-color:#79c879;width:100%;">Yes</button>
+        <button class="btn btn-primary" type="button" onclick="findByUserName()" style="border-color:#b72c2c;background-color:#b72c2c;width:100%;margin-top:10px;">No</button>
+      </div>
+    </div>
+  </div>
+  <div id="selectProperty" class="pop-up-box hidden">
+    <div class="pop-up-content">
+      <h2 style="padding-bottom: 20px;" class="center">Select property to load</h2>
+      <div class="profile-group">
+        <table id="selectPropertyTable" class="tg">
+          <tr>
+            <td class="tg-xxzo">Property</td>
+            <td class="tg-xxzo">Status</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="paymentHistory" class="pop-up-box hidden">
+    <div id="PaymentHistoryContent" class="pop-up-content"><i class="fa fa-times" onClick="hide(paymentHistory)"></i>
+      <h2 class="center" style="padding-bottom: 20px;">Payment History</h2>
+      <div class="profile-group">
+        <table id="PaymentHistoryTable" class="tg">
+          <tr>
+            <td class="tg-xxzo">Date Due</td>
+            <td class="tg-xxzo">Date Paid</td>
+            <td class="tg-xxzo">Amount</td>
+            <td class="tg-xxzo"></td>
+          </tr>
+        </table>
+        <h3 id="noPaymentHistory" class="center">No Payment History Available</h3>
+      </div>
+    </div>
+  </div>
+  <div id="homePageInfo" style="">
+    <div id="notificaionContainer">
+      <h2>Notifications <i id="arrowDown" class="fas fa-angle-down" style="cursor: pointer" onclick="openNotifications()"></i><i id="arrowUp" class="fas fa-angle-up hidden" style="cursor: pointer" onclick="closeNotifications()"></i></h2>
+      <div id="notifications">
+        <ul id="notificationsList">
+        </ul>
+      </div>
+      <span id="seeMore" style="padding: 0 0 10px 10px; cursor: pointer" onclick="location = 'notifications.html'">View All</span> </div>
+    <div id="cashFlowContainer">
+      <h2>Cash Flow <i id="arrowDownC" class="fas fa-angle-down" style="cursor: pointer" onclick="openCashFlow()"></i><i id="arrowUpC" class="fas fa-angle-up hidden" style="cursor: pointer" onclick="closeCashFlow()"></i></h2>
+      <div id="cashFlow"> <i id="redDueIcon" class="fas fa-exclamation-circle fa-5x hidden" style="color:#b72c2c;"></i><br>
+        <i id="greenDueIcon" class="fas fa-check-circle fa-5x hidden" style="color:#79c879;"></i><br>
+        <span id="dueInfo"></span><br>
+        <div id="rentInfo">
+          <div style="float: left; width: 50%;padding:30px 0;"> <strong>
+            <label>Rent Remaining Due</label>
+            </strong><br>
+            <span id="rentDueSpan"></span> </div>
+          <div style="float: right; width: 50%;padding:30px 0;"> <strong>
+            <label>Repeat Interval</label>
+            </strong><br>
+            <span id="rentInterval"></span> </div>
+        </div><br>
+        <div id="leaseInfo">
+          <div style="float: left; width: 50%;padding-bottom:25px;"> <strong>
+            <label>Commencement Date</label>
+            </strong><br>
+            <span id="rentCom"></span> </div>
+          <div style="float: right; width: 50%;padding-bottom:25px;"> <strong>
+            <label>End Date</label>
+            </strong><br>
+            <span id="rentEndDate"></span> </div>
+        </div><br>
+        <div id="buttons" style="width: 100%; padding: 5px ">
+          <div id="btnLeft" style="float: left; width: 45%; margin-left: 2.5%;padding: 5px ">
+            <button class="btn btn-primary btn-block" id="paymentHistoryBtn" style="background-color:#af4900;border-color:#af4900;" onclick="viewPaymentHistory()">Payment History</button>
+          </div>
+          <div id="btnRight" style="float: right; width: 45%; margin-right: 2.5%;padding: 5px ">
+            <button class="btn btn-primary btn-block hidden" id="logPaymentBtn" style="background-color:#5d6f56;border-color:#5d6f56;" onclick="logPayment()">Log Payment</button>
+          </div>
+          <button class="btn btn-primary btn-block hidden" id="latePaymentBtn" style="background-color:#b72c2c;border-color:#b72c2c;" onclick="logLatePayment()"><i class="fas fa-exclamation-triangle" style="color:#fff"></i> Add Late Payment Fee</button>
+        </div>
+      </div>
+      <span style="padding: 0 0 10px 10px; color:#f2f5f8" onclick="location = 'profile.html'">See More</span> </div>
+  </div>
+  <div id="pageBody" style="max-width: 720px;margin-left: auto; margin-right:auto;padding-bottom: 20px;">
+    <div id="messengerGroup">
+      <div id="messengerGroupPeople">
+        <div style="width: 100%; border-bottom: 2px solid #FFFFFF;padding: 10px;"><span style="color: #FFFFFF;font-size:30px;">Landlord</span></div>
+        <ul id="landlordList">
+        </ul>
+        <div style="width: 100%; border-bottom: 2px solid #FFFFFF;padding: 10px;"><span style="color: #FFFFFF; font-size:30px;">Tenants</span></div>
+        <ul id="peopleList">
+        </ul>
+      </div>
+      <div id="messengerGroupChat">
+        <div id="messengerGroupChatHeader">
+          <h2 id="chatTitle" class="center"></h2>
+          <span onClick="document.getElementById('displayBox').scrollTop = '99999'" style="cursor: pointer;">Go To Bottom</span> </div>
+        <div id="displayBox"> </div>
+        <div id="messageBox">
+          <textarea id="messageInput" style="background-color:#fff; border:none; padding:10px 20px;" placeholder="Write message..." onclick="style='border:none;'"></textarea>
+          <button id="sendMessageBtn" name="sendBtn" class="btn btn-primary btn-block" type="submit" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="foot" class="footer-basic">
+  <footer> 
+  <div id="icons" style="text-align:center;">
+  	<h2>Under One Roof</h2>
+  	<a href="https://www.twitter.com"><i class="fab fa-twitter-square" style="font-size:320%;margin:20px;color:#1da1f2;cursor:pointer;"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-square" style="font-size:320%;margin:20px;color:#4867aa;cursor:pointer;"></i></a>
+    <a href="mailto:lukeadawes@yahoo.co.uk"><i class="fas fa-envelope-square" style="font-size:320%;margin:20px;color:#007cb9;cursor:pointer;"></i></a>
+  </div>
+  </footer>
+</div>
+<script src="assets/js/jquery.min.js"></script> 
+<script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+<script src="assets/js/webjs.js"></script> 
+<script>
+function openChat(ele){
+	window.open("chat.html");
+	var key = ele.getAttribute("value");
+	localStorage.setItem("1-1-key", key);
+}
+function openNotifications(){
+	var notifEle = document.getElementById("notifications");
+	var seeMore = document.getElementById("seeMore");
+	seeMore.style.color = '#212529';
+	notifEle.style.height = '400px';
+	hide(arrowDown);
+	show(arrowUp);
+}
+function closeNotifications(){
+	var notifEle = document.getElementById("notifications");
+	var seeMore = document.getElementById("seeMore");
+	seeMore.style.color = '#f2f5f8';
+	notifEle.style.height = '0';
+	hide(arrowUp);
+	show(arrowDown);
+}
+function openCashFlow(){
+	var notifEle = document.getElementById("cashFlow");
+	notifEle.style.height = '400px';
+	hide(arrowDownC);
+	show(arrowUpC);
+}
+function closeCashFlow(){
+	var notifEle = document.getElementById("cashFlow");
+	notifEle.style.height = '0';
+	hide(arrowUpC);
+	show(arrowDownC);
+}
+		
+//Configuring firebase database
+var config = {
+    apiKey: "AIzaSyDWh0MfTtVO8vqhcSNAjKCGZyJptoTUdDE",
+    authDomain: "under-one-roof.firebaseapp.com",
+    databaseURL: "https://under-one-roof.firebaseio.com",
+    projectId: "under-one-roof",
+    storageBucket: "under-one-roof.appspot.com",
+    messagingSenderId: "842485534285"
+  };
+  firebase.initializeApp(config);
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+
+	//Setting variables
+	var ref = firebase.database().ref().child('users').child(user.uid);
+	var refAdd = firebase.database().ref().child('addresses');
+	var reff = firebase.database().ref().child('users');
+	var refAddUid = firebase.database().ref().child('addressByUid');
+	var currentProperty = localStorage.getItem("prop");
+	var addressTitle = document.getElementById("addressTitleHome");
+	var register;
+	var userType;
+	var regFirstLine = document.getElementById("firstLine");
+	var regSecondLine = document.getElementById("secondLine");
+	var regThirdLine = document.getElementById("thirdLine");
+	var town = document.getElementById("town");
+	var city = document.getElementById("city");
+	var county = document.getElementById("county");
+	var postcode = document.getElementById("postcode");
+	var landlordName = document.getElementById("landlordName");
+	var db = firebase.database();
+	var title = document.getElementById("chatTitle");
+	  
+
+	  db.ref('users/'+user.uid+'/reminders').on("child_added", function(data){
+		  var title = data.child("title").val();
+		  var date = data.child("date").val();
+		  var frequency = data.child("frequency").val();
+		  var notes = data.child("notes").val();
+		  var dismissed = data.child("dismissed").val();
+		  var key = data.key;
+		  console.log(key);
+		  var todayF
+		  var today = new Date();
+		  d = today.getDate();
+		  m = today.getMonth()+1;
+		  y = today.getFullYear();
+		  var newToday = [y,m,d].join('-');
+		  
+		  
+			  
+		  
+		  if(today > passToday(date)){
+			  console.log('overdue...');
+		  }
+		  else if (today < passToday(date)){
+			  console.log('due in');
+		  }
+		  else{
+			  if (frequency == 'Weekly'){
+			  today.setDate(today.getDate()+7)
+			  var today1 = new Date(today);
+			  day = today1.getDate();
+			  month = today1.getMonth()+1;										
+			  year = today1.getFullYear();
+			  todayF = [year,month,day].join('-');
+			  }
+			  else if(frequency == 'Fortnightly'){
+				  today.setDate(today.getDate()+14)
+				  var today1 = new Date(today);
+				  day = tody1.getDate();
+				  month = today1.getMonth()+1;										
+				  year = today1.getFullYear();
+				  todayF = [year,month,day].join('-');
+			  }
+			  else if(frequency == 'Monthly'){
+				  today.setMonth(today.getMonth()+1)
+				  var today1 = new Date(today);
+				  day = today1.getDate();
+				  month = today1.getMonth()+1;										
+				  year = today1.getFullYear();
+				  todayF = [year,month,day].join('-');
+			  }
+			  else{
+				  todayF = newToday;
+			  }
+			  console.log('due');
+			  console.log(key);
+			  console.log(currentProperty);
+			  db.ref('addresses/'+currentProperty+'/notificationUpdates').orderByChild('key').equalTo(key).once('value', function(data){
+				  if(data.val()){
+					  console.log('found');
+					  db.ref('addresses/'+currentProperty+'/notificationUpdates').orderByChild('key').equalTo(key).once('child_added', function(data){
+						  var todayNotif = data.child("today").val();
+						  var freq = data.child("frequency").val();
+						  var date = new Date();
+						  var keyy = data.key;
+
+						  if(frequency != 'One Time'){
+							  if(date < passToday(todayNotif)){
+								  console.log('overdue...');
+									  var updateNotif = {
+										"today": todayF,
+										};
+									  db.ref('addresses/'+currentProperty+'/notificationUpdates/'+keyy).update(updateNotif).then(function(){
+										  console.log('updated');
+									  });
+							  }
+							  else if (date > passToday(todayNotif)){
+								  console.log('due in');
+							  }
+							  else{
+								  console.log('due')
+							  }
+						  }
+					  });
+				  }
+				  else{
+					  console.log('not found');
+					  console.log(today)
+					  var updateNotif = {
+						"key": key,
+						"title":"",
+						"type": "Reminder! "+title,
+						"body": "Notes: "+notes,
+						"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+						"forWho": user.uid,
+						"today": newToday,
+						};
+					  db.ref('addresses/'+currentProperty+'/notificationUpdates').push(updateNotif).then(function(){
+						  console.log('sent to notif');
+					  });
+				  }
+				  
+			  });
+		  }
+		  
+	  });
+	  
+	  firebase.database().ref('addresses/'+currentProperty+'/notificationUpdates').orderByChild('timeStamp').limitToLast(10).on("child_added", function(data){
+		  firebase.database().ref('users/'+user.uid+'/userType').on('value', function(snap){
+			  var userType = snap.val();
+			  console.log(userType);
+			  //Set Local Variables
+			  var type = data.child("type").val();
+			  var updateBody = data.child("body").val();
+			  var title = data.child("title").val();
+			  var forWho = data.child("forWho").val();
+			  console.log(title +' '+ forWho);
+			  if(title == '' && forWho == userType){
+				  console.log('only landlord')
+				  var appendNotif = "<li style='background-color: #94C2ED; color:#444753; padding: 10px;font-size:14px;  border-radius: 10px;margin:5px;'><strong>"+capitalLetter(type)+"</strong><br>"+updateBody+"</li>";
+				  $('#notificationsList').prepend(appendNotif);
+			  }
+			  else if(title != '' && forWho == 'Everyone'){
+				  var appendNotif = "<li style='background-color: #94C2ED; color:#444753; padding: 10px;font-size:14px;  border-radius: 10px;margin:5px;'><strong>"+capitalLetter(type)+"</strong> Update for: <u>"+title+"</u><br>"+updateBody+"</li>";
+				  $('#notificationsList').prepend(appendNotif);
+			  }
+			  else if(title == '' && forWho == 'Everyone'){
+				  var appendNotif = "<li style='background-color: #94C2ED; color:#444753; padding: 10px;font-size:14px;  border-radius: 10px;margin:5px;'><strong>"+capitalLetter(type)+"</strong><br>"+updateBody+"</li>";
+				  $('#notificationsList').prepend(appendNotif);
+			  }
+			  else if(title == '' && forWho == user.uid){
+				  var appendNotif = "<li style='background-color: #94C2ED; color:#444753; padding: 10px;font-size:14px;  border-radius: 10px;margin:5px;'><strong>"+capitalLetter(type)+"</strong><br>"+updateBody+"</li>";
+				  $('#notificationsList').prepend(appendNotif);
+			  }
+		  
+		  });
+	  });
+	  
+	if(currentProperty != ''){
+		console.log(currentProperty)
+		db.ref('addresses/'+currentProperty+'/firstLine').once("value", function(snapshot){
+			title.innerHTML = "<i class='fas fa-home' style='margin-right:20px;'></i>Group chat landlord and tenants of " + capitalLetter(snapshot.val());
+		});
+	}  
+	
+	ref.update({"onlineStatus":"Online"}).then(function(){
+	});
+	
+	document.getElementById("signOutButtonMenu").setAttribute('value', user.uid);
+	
+	//Hide menu links depending on user type
+	ref.child("userType").on('value', function(data){
+		 userType = data.val();
+		 if(userType == 'Tenant'){
+			 //If user is a tenant
+			 hide(document.getElementById("properties"));
+			 hide(document.getElementById("tradesman"));
+			 hide(document.getElementById("expense"));
+			 hide(document.getElementById("switchPropBtn"));
+			 hide(buttons);
+			 //Check to see if user is registered to a property
+			ref.child("registeredProperty").on('value', function(data){
+				 register = data.val();
+				 if(register != ''){
+					  show(c);
+					  show(pageBody);
+					  show(homePageInfo);
+					  localStorage.setItem("prop", register);
+					  firebase.database().ref('addressByUid/'+user.uid).orderByChild("status").on('value', function(snapshot){
+							snapshot.forEach(function(data){
+								if(data.val().status == 'accepted'){
+									console.log("hello")
+									var div = document.getElementById("registerProperty");
+									hide(c);
+									hide(pageBody);
+									hide(homePageInfo);
+									show(div);
+									div.innerHTML = "<i class='fa fa-times' onClick='location.reload()'></i><div class='pop-up-content'><h2 style='padding-bottom: 20px;' class='center'>Your request has been accepted.</h2></div>"
+									firebase.database().ref().child('addressByUid').child(user.uid).remove().then(function(){
+										console.log("removed from addressByUid");
+									});
+								}
+							});
+					  });
+					  var currentProperty = localStorage.getItem("prop");
+					  //get address details of current property and append it to the addressTitle
+					  refAdd.child(currentProperty).child("firstLine").on('value', function(data){
+						  addressTitle.innerHTML = capitalLetter(data.val());
+					  });
+					  refAdd.child(currentProperty).child("secondLine").on('value', function(data){
+						  if(data.val() != ''){
+							  addressTitle.innerHTML += ", " + capitalLetter(data.val());
+						  }
+					  });
+					  refAdd.child(currentProperty).child("thirdLine").on('value', function(data){
+						  if(data.val() != ''){
+							  addressTitle.innerHTML += ", " + capitalLetter(data.val());
+						  }
+					  });
+					  refAdd.child(currentProperty).child("town").on('value', function(data){
+						  if(data.val() != ''){
+							  addressTitle.innerHTML += ", " + capitalLetter(data.val());
+						  }
+					  });
+					  refAdd.child(currentProperty).child("city").on('value', function(data){
+						  if(data.val() != ''){
+							  addressTitle.innerHTML += ", " + capitalLetter(data.val());
+						  }
+					  });
+					  refAdd.child(currentProperty).child("county").on('value', function(data){
+						  if(data.val() != ''){
+							  addressTitle.innerHTML += ", " + capitalLetter(data.val());
+						  }
+					  });
+					  refAdd.child(currentProperty).child("postcode").on('value', function(data){
+						  addressTitle.innerHTML += " " + capitalLetter(data.val());
+					  });
+				  }<!--End of register != '')||(register != null if statement-->
+				 refAddUid.orderByKey().equalTo(user.uid).once("value", function(snapshot) {
+					if((!snapshot.val() && register == '')||(!snapshot.val() && register == null)){
+						hide(c);
+						hide(pageBody);
+						hide(homePageInfo);
+						show(registerProperty);
+						document.getElementById("toggleMenu").style.display = 'none';
+						<!--Creating proeprty registration box>
+				
+						//Getting users firstline of address
+						ref.child('rentingAddress').child('firstLine').once('value').then(function(data) {
+						  var firstLine = data.val();
+						  //Matching users address with registered address on database
+						  refAdd.orderByChild("firstLine").equalTo(firstLine).once("value", function(snapshot) {
+							snapshot.forEach(function(child) {
+								var key = child.key;
+								//Using property key to fill registered box with address found
+								refAdd.child(key).child("firstLine").once('value').then(function(data){
+									regFirstLine.innerHTML = capitalLetter(data.val());
+								});
+								refAdd.child(key).child("secondLine").once('value').then(function(data){
+									if(data.val() != ''){
+										regSecondLine.innerHTML = capitalLetter(data.val());
+									}
+								});
+								refAdd.child(key).child("thirdLine").once('value').then(function(data){
+									if(data.val() != ''){
+										regThirdLine.innerHTML = capitalLetter(data.val());
+									}
+								});
+								refAdd.child(key).child("town").once('value').then(function(data){
+									if(data.val() != ''){
+										town.innerHTML = capitalLetter(data.val());
+									}
+								});
+								refAdd.child(key).child("city").once('value').then(function(data){
+									if(data.val() != ''){
+										city.innerHTML = capitalLetter(data.val());
+									}
+								});
+								refAdd.child(key).child("county").once('value').then(function(data){
+									if(data.val() != ''){
+										county.innerHTML = capitalLetter(data.val());
+									}
+								});
+								refAdd.child(key).child("postcode").once('value').then(function(data){
+									postcode.innerHTML = capitalLetter(data.val());
+								});
+								//using property key to fill register box with landlord's name
+								refAdd.child(key).child("landlord").once('value').then(function(data){
+									var landlord = data.val()
+									reff.child(landlord).child("firstName").once('value').then(function(data){
+										landlordName.innerHTML = capitalLetter(data.val());
+										
+									});
+									var landlord = data.val()
+									reff.child(landlord).child("lastName").once('value').then(function(data){
+										if(data.val() != ''){
+											landlordName.innerHTML += " " + capitalLetter(data.val());
+										}
+										
+									});
+								});
+							});
+						  });
+						});
+					}<!--End of (!snapshot.val() && register == '')||(!snapshot.val() && register == null) if statement-->
+					else{
+						//if request found
+					}<!--End of (!snapshot.val() && register == '')||(!snapshot.val() && register == null) else statement-->
+					
+					//if registeredProperty holds a value set the address uid to currentProperty
+					
+					//Check to see if request has been sent and if landlord has accepted request or not
+					if((snapshot.val() && register == '')||(snapshot.val() && register == null)){
+						//if landlord hasn't accpeted request append message.
+						hide(c);
+						hide(pageBody);
+						hide(homePageInfo);
+						firebase.database().ref('addressByUid/'+user.uid).orderByChild("status").on('value', function(snapshot){
+							snapshot.forEach(function(data){
+								if(data.val().status == 'rejected'){
+									var div = document.getElementById("registerProperty");
+									show(div);
+									div.innerHTML = "<div class='pop-up-content'><h2 style='padding-bottom: 20px;' class='center'>Your request has been rejected.</h2><div class='boxed-item boxed-item-smaller' style='background-color:#5d6f56;margin-left:auto;margin-right:auto;'value='"+user.uid+"' onClick='tryAgain()'>Retry</div></div>"
+								}
+								else{
+									var div = document.getElementById("registerProperty");
+									show(div);
+									div.innerHTML = "<div class='pop-up-content'><h2 style='padding-bottom: 20px;' class='center'>Your request has been sent. Waiting for landlord to accept request.</h2><div class='boxed-item boxed-item-smaller' style='background-color:#5d6f56;margin-left:auto;margin-right:auto;'value='"+user.uid+"' onClick='signout(this)'>Sign Out</div></div>" ;
+								}
+							});
+						});
+					}
+				});
+			});
+		}<!--End of userType == 'Tenant' if statement-->
+		else{
+			//If user is a landlord
+			var currentProperty = localStorage.getItem("prop");
+			if(currentProperty == ''|| currentProperty == null){
+				//if currentProperty is empty, show pop up box with all of the current users registered addresses
+				hide(c);
+				hide(pageBody);
+				hide(homePageInfo);
+			  show(selectProperty);
+			  document.getElementById("toggleMenu").style.display = 'none';
+			  
+			  //get all addresses that current user has registered 
+			  refAdd.orderByChild("landlord").equalTo(user.uid).once("value", function(snapshot) {
+				  snapshot.forEach(function(child) {
+					  var key = child.key;
+					  refAdd.child(key).once("value", function(data) {
+						  var address;
+						  var status;
+						  var firstLine = data.child("firstLine").val();
+						  address = firstLine;
+						  var secondLine = data.child("secondLine").val();
+						  if(secondLine != ''){
+							  address += ', ' + secondLine
+						  }
+						  var thirdLine = data.child("thirdLine").val();
+						  if(thirdLine != ''){
+							  address += ', ' + thirdLine;
+						  }
+						  var town = data.child("town").val();
+						  if(town != ''){
+							  address += ', ' + town;
+						  }
+						  var city = data.child("city").val();
+						  if(city != ''){
+							  address += ', ' + city;
+						  }
+						  var county = data.child("county").val();
+						  if(county != ''){
+							  address += ', ' + county;
+						  }
+						  var postcode = data.child("postcode").val();
+						  address += ', ' + postcode.toUpperCase();
+						  if(data.child("propertyStatus").val() == ''){
+							  status = "Vacant";
+						  }
+						  else{
+						  	status = data.child("propertyStatus").val()
+						  }
+						  if(address != ''){
+								address = capitalLetter(address);
+								//append address to table
+								var appendIssue = "<tr><td class='tg-us36' value='"+key+"' onclick='goToProperty(this)'>"+address+"</td><td class='tg-us36'>" + status + "</td></tr>";
+								$('#selectPropertyTable').append(appendIssue);
+							}
+						  
+						  //append addresses pulled from database to pop up box
+					  });
+				  });
+			  });
+			}<!--End of currentProperty == '' if statement-->
+			else{
+				//if currentProperty has been set an address uid, pull the address information and append it to address Title heading.
+				show(c);
+				show(pageBody);
+				show(homePageInfo);
+				hide(landlord);
+				refAdd.child(currentProperty).child("firstLine").on('value', function(data){
+					addressTitle.innerHTML = capitalLetter(data.val());
+				});
+				refAdd.child(currentProperty).child("secondLine").on('value', function(data){
+					if(data.val() != ''){
+						addressTitle.innerHTML += ", " + capitalLetter(data.val());
+					}
+				});
+				refAdd.child(currentProperty).child("thirdLine").on('value', function(data){
+					if(data.val() != ''){
+						addressTitle.innerHTML += ", " + capitalLetter(data.val());
+					}
+				});
+				refAdd.child(currentProperty).child("town").on('value', function(data){
+					if(data.val() != ''){
+						addressTitle.innerHTML += ", " + capitalLetter(data.val());
+					}
+				});
+				refAdd.child(currentProperty).child("city").on('value', function(data){
+					if(data.val() != ''){
+						addressTitle.innerHTML += ", " + capitalLetter(data.val());
+					}
+				});
+				refAdd.child(currentProperty).child("county").on('value', function(data){
+					if(data.val() != ''){
+						addressTitle.innerHTML += ", " + capitalLetter(data.val());
+					}
+				});
+				refAdd.child(currentProperty).child("postcode").on('value', function(data){
+					addressTitle.innerHTML += " " + data.val().toUpperCase();
+				});
+				firebase.database().ref('addresses/'+currentProperty+'/lease').once("value", function(snapshot){
+					var key = snapshot.val();
+					if(key == '' || key == null){
+						hide(c);
+						hide(pageBody);
+						hide(homePageInfo);
+						show(createLease);
+						$("input[type=date]").val("")
+						$("input[type=number]").val("")
+						$("input[type=date]").val("")
+						$('#latePayCheck').prop('checked', false);
+					}
+				});
+			}<!--End of currentProperty == '' else statement-->
+		}<!--End of userType == 'Tenant' else statement-->
+	});
+	
+	
+	///Cash Flow Div		
+	var currentProperty = localStorage.getItem("prop");
+		var weekday = new Array(7);
+		weekday[0] = "Sun ";
+		weekday[1] = "Mon ";
+		weekday[2] = "Tues ";
+		weekday[3] = "Wed ";
+		weekday[4] = "Thurs ";
+		weekday[5] = "Fri ";
+		weekday[6] = "Sat ";
+		db.ref('addresses/'+currentProperty+'/lease/rentFrequency').on("value", function (data){
+			var interval = data.val();
+			db.ref('addresses/'+currentProperty+'/lease/payments').orderByChild('timeStamp').limitToFirst(1).on("child_added", function(data){
+				var paymentDate = data.child("false").val();
+				if(paymentDate != '' || null){
+					var date = new Date(paymentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					var holdDate = [year,month,day].join('-');
+					var today = new Date();
+					db.ref('addresses/'+currentProperty+'/lease/commencementDate').on("value", function(data){
+						var comDate = data.val();
+						var rentCom = document.getElementById("rentCom");
+						rentCom.innerHTML = comDate
+						db.ref('addresses/'+currentProperty+'/lease/endDate').on("value", function(data){
+							var end = document.getElementById("rentEndDate");
+							var endDate = data.val()
+							end.innerHTML = endDate;
+						});
+					});
+					if(today > passToday(holdDate)){
+						var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+						show(redDueIcon);
+						hide(greenDueIcon);
+						show(logPaymentBtn);
+						document.getElementById("btnLeft").style.width = '45%';
+						document.getElementById("btnLeft").style.cssFloat = 'left';
+						document.getElementById("btnLeft").style.marginLeft = '2.5%';
+						var dueInfo = document.getElementById("dueInfo");
+						var span = document.getElementById("rentDueSpan");
+						var spanInterval = document.getElementById("rentInterval");
+						db.ref('addresses/'+currentProperty+'/lease/tempRent').on("value", function (data){
+							var temp = data.val()
+							db.ref('addresses/'+currentProperty+'/lease/rentAmount').on("value", function (data){
+								var rentAmount = parseInt(data.val());
+								if(temp == '0'){
+									span.innerHTML = "<i class='far fa-money-bill-alt'></i> £"+rentAmount;
+									dueInfo.innerHTML = "Due "+(Math.round(daysLeft))*(-1)+ " days ago";
+									spanInterval.innerHTML = "<i class='fas fa-redo-alt'></i> "+interval;
+									db.ref('addresses/'+currentProperty+'/lease/optIn').on("value", function (data){
+										var optIn = data.val();
+										if(optin = 'True'){
+										  db.ref('addresses/'+currentProperty+'/lease/leaseLateDays').on("value", function (data){
+											  var lateDays = data.val()
+											  if((Math.round(daysLeft))*(-1) >= lateDays && temp <= rentAmount){
+												  show(latePaymentBtn)
+											  }
+										  });
+										}
+									});
+								}
+								else{
+									span.innerHTML = "<i class='far fa-money-bill-alt'></i> £"+temp;
+									dueInfo.innerHTML = "Due "+(Math.round(daysLeft))*(-1)+ " days ago";
+									spanInterval.innerHTML = "<i class='fas fa-redo-alt'></i> "+interval;
+								}
+							});
+						});
+					}
+					else if (today < date){
+						var daysLeft = (passToday(holdDate) - today)/ 1000 /60 / 60 / 24;
+						show(greenDueIcon);
+						hide(redDueIcon);
+						document.getElementById("btnLeft").style.width = '100%';
+						document.getElementById("btnLeft").style.cssFloat = 'none';
+						document.getElementById("btnLeft").style.marginLeft = '0';
+						db.ref('addresses/'+currentProperty+'/lease/rentAmount').on("value", function (data){
+							var span = document.getElementById("rentDueSpan")
+							var dueInfo = document.getElementById("dueInfo");
+							var spanInterval = document.getElementById("rentInterval");
+							span.innerHTML = "<i class='far fa-money-bill-alt'></i> £"+data.val();
+							dueInfo.innerHTML = "Due in " + Math.round(daysLeft) + " day(s)"
+							db.ref('addresses/'+currentProperty+'/lease/rentFrequency').on("value", function (data){
+								spanInterval.innerHTML = "<i class='fas fa-redo-alt'></i> "+data.val();
+							});
+						});
+					}
+					else{
+						show(greenDueIcon);
+						hide(redDueIcon);
+						show(logPaymentBtn);
+						document.getElementById("btnLeft").style.width = '45%';
+						document.getElementById("btnLeft").style.cssFloat = 'left';
+						document.getElementById("btnLeft").style.marginLeft = '2.5%';
+						db.ref('addresses/'+currentProperty+'/lease/rentAmount').on("value", function (data){
+							var span = document.getElementById("rentDueSpan")
+							var dueInfo = document.getElementById("dueInfo");
+							var spanInterval = document.getElementById("rentInterval");
+							span.innerHTML = "<i class='far fa-money-bill-alt'></i> £"+data.val();
+							dueInfo.innerHTML = "'Due Today'"
+							db.ref('addresses/'+currentProperty+'/lease/rentFrequency').on("value", function (data){
+								spanInterval.innerHTML = "<i class='fas fa-redo-alt'></i> "+data.val();
+							});
+						});
+					}
+				}
+				else{
+				}
+			
+			});
+		});
+			
+	//INSTANT CHAT MESSENGER
+	db.ref('addresses/'+currentProperty+'/chat/group').orderByChild('timeStamp').on("child_added", function(data){
+		//Set Local Variables
+		var message = data.child("message").val();
+		var date = data.child("date").val();
+		var sender = data.child("uid").val();
+		var time = data.child("time").val();
+		var username = data.child("username").val();
+		var who;
+		var getCurrentDate = new Date;
+		day = getCurrentDate.getDate();
+		month = getCurrentDate.getMonth() + 1;										
+		year = getCurrentDate.getFullYear();
+		var newDate = [day, month, year].join('/');
+		
+		if(date == newDate){date = 'Today'}
+		if(sender == user.uid){
+			db
+			who = 'boxCurrent currentUser';
+			var messageD = "<div id='userMessageDisplay' style='width:100%;text-align:end;'><span class='message-data-time'>"+time+",  "+date+"    </span><span id='userName'>"+username+"</span><div id='hello' class='"+who+"' style= height:100%;'>"+message+"</div></div>";
+			$('#displayBox').append(messageD);
+		}
+		else{
+			who = 'boxOther otherUser';
+			var messageDP = "<div id='userMessageDisplay' style='width:100%;'><span class='message-name'>"+username+"</span><span class='message-data-time'>    "+time+",  "+date+"</span><div id='hello' class='"+who+"' style='width:70%; height:100%;'>"+message+"</div></div>";
+			$('#displayBox').append(messageDP);
+		}
+	});
+	
+	  //People side bar
+	db.ref('addresses/'+currentProperty+'/tenant').orderByKey().once("value", function(snapshot){
+		snapshot.forEach(function(child){
+		  var key = child.key;
+		  db.ref('users/'+key+'/firstName').once("value", function(data){
+			  var first = data.val();
+			  var appendFirst = "<li style='padding: 5px 10px 0 10px; height:75px;'><i class='fas fa-user-circle' style='font-size:400%; float:left;color:#6a6c75;'></i><div class='about' style='height:100%;padding: 10px 0 0 70px;'><div id='append2"+key+"' value="+key+" class='profileName' style='color:#fff;cursor:pointer;' onclick='openChat(this)'>"+first;
+			  $('#peopleList').append(appendFirst);
+			  db.ref('users/'+key+'/lastName').once("value", function(data){
+				  var last = data.val();
+				  var appendLast = " "+last+"</div>"
+				  $('#append2'+key).append(appendLast);
+				  db.ref('users/'+key+'/onlineStatus').once("value", function(data){
+					  var onlineStatus = data.val();
+					  if(onlineStatus == 'Online'){
+					  var appendStatus = "<div class='status' style='color:#a8aac3;'><i class='fa fa-circle' online style='color:#86BB71; margin-right:10px;font-size:80%;border:1px solid #fff;border-radius:50%;'></i>Online</div></div></li>"
+					  $('#append2'+key).append(appendStatus);
+					  }
+					  else{
+						  appendStatus = "<div class='status' style='color:#a8aac3;'><i class='fa fa-circle offline' style='color:#E38968;margin-right:10px;font-size:80%;border:1px solid #fff;border-radius:50%;'></i>Offline</div></div></li>"
+						  $('#append2'+key).append(appendStatus);
+					  }
+				  });
+			  });
+		  });
+		});
+	});
+	db.ref('addresses/'+currentProperty+'/landlord').once("value", function(snapshot){
+		var key = snapshot.val();
+		db.ref('users/'+key+'/firstName').once("value", function(data){
+			var first = data.val();
+			var appendFirst = "<li style='padding: 5px 10px 0 10px; height:75px;'><i class='fas fa-user-circle' style='font-size:400%; float:left;color:#6a6c75;'></i><div class='about' style='height:100%;padding: 10px 0 0 70px;'><div id='append2"+key+"' class='profileName' style='color:#fff;'>"+first;
+		 	$('#landlordList').append(appendFirst);
+			db.ref('users/'+key+'/lastName').once("value", function(data){
+				var last = data.val();
+				var appendLast = " "+last+"</div>"
+				$('#append2'+key).append(appendLast);
+				db.ref('users/'+key+'/onlineStatus').once("value", function(data){
+				  var onlineStatus = data.val();
+				  if(onlineStatus == 'Online'){
+				  var appendStatus = "<div class='status' style='color:#a8aac3;'><i class='fa fa-circle' online style='color:#86BB71; margin-right:10px;font-size:80%;border:1px solid #fff;border-radius:50%;'></i>Online</div></div></li>"
+				  $('#append2'+key).append(appendStatus);
+				  }
+				  else{
+					  appendStatus = "<div class='status' style='color:#a8aac3;'><i class='fa fa-circle offline' style='color:#E38968;margin-right:10px;font-size:80%;border:1px solid #fff;border-radius:50%;'></i>Offline</div></div></li>"
+					  $('#append2'+key).append(appendStatus);
+				  }
+			  });
+			});
+		});
+	});
+  } else {
+    // No user is signed in.
+	location = 'index.html';
+  }
+});
+
+function tryAgain(){
+	var user = firebase.auth().currentUser;
+	firebase.database().ref().child('addressByUid').child(user.uid).remove().then(function(){
+		location.reload();
+	});
+}
+
+
+<!-----------------Landlord functions------------------------>
+
+//When user clicks property form pop up box
+function goToProperty(ele){
+	//get property key and assign it to currentProperty and close pop up box
+	document.getElementById("toggleMenu").style.display = 'block';
+	location.reload();
+	var key = ele.getAttribute('value');
+	var currentProperty = localStorage.setItem("prop", key);
+	hide(selectProperty);
+}
+
+function switchProperty(){
+	var user = firebase.auth().currentUser;
+	var refAdd = firebase.database().ref().child('addresses');
+	show(selectProperty);
+	document.getElementById("toggleMenu").style.display = 'none';
+	
+	//get all addresses that current user has registered 
+	refAdd.orderByChild("landlord").equalTo(user.uid).once("value", function(snapshot) {
+		snapshot.forEach(function(child) {
+			var key = child.key;
+			refAdd.child(key).once("value", function(data) {
+				var address;
+				var status;
+				var firstLine = data.child("firstLine").val();
+				address = firstLine;
+				var secondLine = data.child("secondLine").val();
+				if(secondLine != ''){
+					address += ', ' + secondLine
+				}
+				var thirdLine = data.child("thirdLine").val();
+				if(thirdLine != ''){
+					address += ', ' + thirdLine;
+				}
+				var town = data.child("town").val();
+				if(town != ''){
+					address += ', ' + town;
+				}
+				var city = data.child("city").val();
+				if(city != ''){
+					address += ', ' + city;
+				}
+				var county = data.child("county").val();
+				if(county != ''){
+					address += ', ' + county;
+				}
+				var postcode = data.child("postcode").val();
+				address += ', ' + postcode.toUpperCase();
+				if(data.child("propertyStatus").val() == ''){
+					status = "Vacant";
+				}
+				else{
+				  status = data.child("propertyStatus").val()
+				}
+				if(address != ''){
+					  address = capitalLetter(address);
+					  //append address to table
+					  var appendIssue = "<tr><td class='tg-us36' value='"+key+"' onclick='goToProperty(this)'>"+address+"</td><td class='tg-us36'>" + status + "</td></tr>";
+					  $('#selectPropertyTable').append(appendIssue);
+				  }
+				
+				//append addresses pulled from database to pop up box
+			});
+		});
+	});
+}
+
+function landlordLink(){
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	db.ref('addresses/'+currentProperty+'/landlord').on('value', function(data){
+		var uid = data.val()
+		localStorage.setItem("tenantUid", uid);
+		location = 'profile.html';
+	});
+	
+}
+
+function saveLease(){
+	show(c);
+	show(pageBody);
+	show(homePageInfo);
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	var cd = document.getElementById("leaseComDate");
+	var comDate = changeDate("leaseComDate");
+	var rentAmount = document.getElementById("leaseRent").value;
+	var rentFreq = document.getElementById("selectLeaseRentFreq");
+	var paymentDueDate = changeDate("leasePaymentDueDate");
+	var endDate = changeDate("leaseEndDate");
+	var securityDep = document.getElementById("leaseSecDep").value;
+	var furnished = document.getElementById("selectLeaseFurn");
+	var depScheme = document.getElementById("selectLeaseDepSch");
+	var depRef = document.getElementById("leaseDepRef").value;
+	var leaseLateDays = document.getElementById("leaseLateDays").value;
+	var leaseLateAmount = document.getElementById("leaseLateAmount").value;
+	var alertM = document.getElementById("alertErrorMessage");
+	var latePayCheck = document.getElementById("latePayCheck");
+	var optIn;
+	var payments;
+	if(latePayCheck.checked == true){
+		optIn = 'True';
+	}
+	else{
+		optIn = 'False';
+	}
+	var leaseDetails = {
+		"commencementDate": comDate,
+		"rentAmount":rentAmount,
+		"rentFrequency": rentFreq.options[rentFreq.selectedIndex].value,
+		"paymentDueDate": paymentDueDate,
+		"endDate": endDate,
+		"securityDeposit": securityDep,
+		"furnished": furnished.options[furnished.selectedIndex].value,
+		"depositScheme": depScheme.options[depScheme.selectedIndex].value,
+		"depositRef": depRef,
+		"leaseLateDays": leaseLateDays,
+		"leaseLateAmount": leaseLateAmount,
+		"tempRent": "0",
+		"optIn": optIn
+		}
+	if(cd.value == ''){
+		document.getElementById("createLease").scrollTop = document.documentElement.scrollTop = 0;
+		show(alertErrorMessage);
+		alertM.innerHTML = 'Please enter commencement date of lease.';
+		document.getElementById("leaseComDate").style.border = 'solid';
+		document.getElementById("leaseComDate").style.borderColor = "#b72c2c";
+		document.getElementById("leaseComDate").style.borderRadius = ".25rem";
+		  setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else if(rentAmount == ''){
+		document.getElementById("createLease").scrollTop = document.documentElement.scrollTop = 0;
+		show(alertErrorMessage);
+		alertM.innerHTML = 'Please enter rent amount.';
+		document.getElementById("leaseRent").style.border = 'solid';
+		document.getElementById("leaseRent").style.borderColor = "#b72c2c";
+		document.getElementById("leaseRent").style.borderRadius = ".25rem";
+		  setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else if(document.getElementById("leasePaymentDueDate").value == ''){
+		document.getElementById("createLease").scrollTop = document.documentElement.scrollTop = 0;
+		show(alertErrorMessage);
+		alertM.innerHTML = 'Please enter payment due date.';
+		document.getElementById("leasePaymentDueDate").style.border = 'solid';
+		document.getElementById("leasePaymentDueDate").style.borderColor = "#b72c2c";
+		document.getElementById("leasePaymentDueDate").style.borderRadius = ".25rem";
+		  setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else if(document.getElementById("leaseEndDate").value == ''){
+		document.getElementById("createLease").scrollTop = document.documentElement.scrollTop = 0;
+		show(alertErrorMessage);
+		alertM.innerHTML = 'Please enter payment end date.';
+		document.getElementById("leaseEndDate").style.border = 'solid';
+		document.getElementById("leaseEndDate").style.borderColor = "#b72c2c";
+		document.getElementById("leaseEndDate").style.borderRadius = ".25rem";
+		  setTimeout(function(){
+			hide(alertErrorMessage);
+		},3000);
+	}
+	else if(leaseLateDays == '' && latePayCheck.checked == true){
+		document.getElementById("createLease").scrollTop = document.documentElement.scrollTop = 0;
+		show(alertErrorMessage);
+		alertM.innerHTML = 'Please enter an amount of days.';
+		document.getElementById("leaseLateDays").style.border = 'solid';
+		document.getElementById("leaseLateDays").style.borderColor = "#b72c2c";
+		document.getElementById("leaseLateDays").style.borderRadius = ".25rem";
+		  setTimeout(function(){
+			hide(alertErrorMessage);
+		},4000);
+	}
+	else if(leaseLateAmount == '' && latePayCheck.checked == true){
+		document.getElementById("createLease").scrollTop = document.documentElement.scrollTop = 0;
+		show(alertErrorMessage);
+		alertM.innerHTML = 'Please enter an amount to charge for late payment.';
+		document.getElementById("leaseLateAmount").style.border = 'solid';
+		document.getElementById("leaseLateAmount").style.borderColor = "#b72c2c";
+		document.getElementById("leaseLateAmount").style.borderRadius = ".25rem";
+		  setTimeout(function(){
+			hide(alertErrorMessage);
+		},4000);
+	}
+	else{
+	db.ref('addresses/'+currentProperty+'/lease').set(leaseDetails).then(function(user){
+		hide(createLease);
+		var interval = rentFreq.options[rentFreq.selectedIndex].value;
+		if(interval == 'Weekly'){
+			//descValue = descValue.replace(/\s/g, '');
+			instalments = ((days(paymentDueDate, endDate)) / 7)+1;
+			var intervalDates = new Array(Math.round(instalments)-1);
+			var today = new Date();
+			intervalDates[0] = intervalDates[Math.round(instalments)];
+			intervalDates[Math.round(instalments)-1] = '';
+			var newCount;
+	
+			for(var i = 0; i < intervalDates.length; i++){
+				var holdDate
+				if(i != Math.round(instalments)){
+					var currentDate = new Date (paymentDueDate); 
+					currentDate.setDate(currentDate.getDate() + i*7);
+					var date = new Date(currentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					//var weekDay = weekday[date.getDay()];
+					var ePDate = [day,month,year].join('-');
+					holdDate = [year,month,day].join('-');
+					
+					intervalDates[i] = holdDate;
+				}
+				db.ref('addresses/'+currentProperty+'/lease/payments').push({'true':intervalDates[i],'false':intervalDates[i],'timeStamp':firebase.database.ServerValue.TIMESTAMP}).then(function(user){
+	
+				});
+			}
+		}
+		else if(interval == 'Fortnightly'){
+			//descValue = descValue.replace(/\s/g, '');
+			instalments = ((days(paymentDueDate, endDate)) / 14)+1;
+			var intervalDates = new Array(Math.round(instalments)-1);
+			var today = new Date();
+			intervalDates[0] = intervalDates[Math.round(instalments)];
+			intervalDates[Math.round(instalments)-1] = '';
+			var newCount;
+	
+			for(var i = 0; i < intervalDates.length; i++){
+				var holdDate
+				if(i != Math.round(instalments)){
+					var currentDate = new Date (paymentDueDate); 
+					currentDate.setDate(currentDate.getDate() + i*14);
+					var date = new Date(currentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					//var weekDay = weekday[date.getDay()];
+					var ePDate = [day,month,year].join('-');
+					holdDate = [year,month,day].join('-');
+					
+					intervalDates[i] = holdDate;
+				}
+				db.ref('addresses/'+currentProperty+'/lease/payments').push({'true':intervalDates[i],'false':intervalDates[i],'timeStamp':firebase.database.ServerValue.TIMESTAMP}).then(function(user){
+				});
+			}
+		}
+		else if(interval == 'Monthly'){
+			//descValue = descValue.replace(/\s/g, '');
+			instalments = ((days(paymentDueDate, endDate)) / 30)+1;
+			var intervalDates = new Array(Math.round(instalments)-1);
+			var today = new Date();
+			intervalDates[0] = intervalDates[Math.round(instalments)];
+			intervalDates[Math.round(instalments)-1] = '';
+			var newCount;
+	
+			for(var i = 0; i < intervalDates.length; i++){
+				var holdDate
+				if(i != Math.round(instalments)){
+					var currentDate = new Date (paymentDueDate); 
+					currentDate.setMonth(currentDate.getMonth() + i*1);
+					var date = new Date(currentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					//var weekDay = weekday[date.getDay()];
+					var ePDate = [day,month,year].join('-');
+					holdDate = [year,month,day].join('-');
+					
+					intervalDates[i] = holdDate;
+				}
+				db.ref('addresses/'+currentProperty+'/lease/payments').push({'true':intervalDates[i],'false':intervalDates[i],'timeStamp':firebase.database.ServerValue.TIMESTAMP}).then(function(user){
+	
+				});
+			}
+		}
+		else if(interval == 'Two Months'){
+			//descValue = descValue.replace(/\s/g, '');
+			instalments = ((days(paymentDueDate, endDate)) / 60)+1;
+			var intervalDates = new Array(Math.round(instalments)-1);
+			var today = new Date();
+			intervalDates[0] = intervalDates[Math.round(instalments)];
+			intervalDates[Math.round(instalments)-1] = '';
+			var newCount;
+	
+			for(var i = 0; i < intervalDates.length; i++){
+				var holdDate
+				if(i != Math.round(instalments)){
+					var currentDate = new Date (paymentDueDate); 
+					currentDate.setMonth(currentDate.getMonth() + i*2);
+					var date = new Date(currentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					//var weekDay = weekday[date.getDay()];
+					var ePDate = [day,month,year].join('-');
+					holdDate = [year,month,day].join('-');
+					intervalDates[i] = holdDate;
+				}
+				db.ref('addresses/'+currentProperty+'/lease/payments').push({'true':intervalDates[i],'false':intervalDates[i],'timeStamp':firebase.database.ServerValue.TIMESTAMP}).then(function(user){
+				});
+			}
+		}
+		else if(interval == 'Quarterly'){
+			//descValue = descValue.replace(/\s/g, '');
+			instalments = ((days(paymentDueDate, endDate)) / 90)+1;
+			var intervalDates = new Array(Math.round(instalments)-1);
+			var today = new Date();
+			intervalDates[0] = intervalDates[Math.round(instalments)];
+			intervalDates[Math.round(instalments)-1] = '';
+			var newCount;
+	
+			for(var i = 0; i < intervalDates.length; i++){
+				var holdDate
+				if(i != Math.round(instalments)){
+					var currentDate = new Date (paymentDueDate); 
+					currentDate.setMonth(currentDate.getMonth() + i*3);
+					var date = new Date(currentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					//var weekDay = weekday[date.getDay()];
+					var ePDate = [day,month,year].join('-');
+					holdDate = [year,month,day].join('-');
+					intervalDates[i] = holdDate;
+				}
+				db.ref('addresses/'+currentProperty+'/lease/payments').push({'true':intervalDates[i],'false':intervalDates[i],'timeStamp':firebase.database.ServerValue.TIMESTAMP}).then(function(user){
+				});
+			}
+		}
+		else if(interval == 'Four Months'){
+			//descValue = descValue.replace(/\s/g, '');
+			instalments = ((days(paymentDueDate, endDate)) / 120)+1;
+			var intervalDates = new Array(Math.round(instalments)-1);
+			var today = new Date();
+			intervalDates[0] = intervalDates[Math.round(instalments)];
+			intervalDates[Math.round(instalments)-1] = '';
+			var newCount;
+	
+			for(var i = 0; i < intervalDates.length; i++){
+				var holdDate
+				if(i != Math.round(instalments)){
+					var currentDate = new Date (paymentDueDate); 
+					currentDate.setMonth(currentDate.getMonth() + i*4);
+					var date = new Date(currentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					//var weekDay = weekday[date.getDay()];
+					var ePDate = [day,month,year].join('-');
+					holdDate = [year,month,day].join('-');
+					intervalDates[i] = holdDate;
+				}
+				db.ref('addresses/'+currentProperty+'/lease/payments').push({'true':intervalDates[i],'false':intervalDates[i],'timeStamp':firebase.database.ServerValue.TIMESTAMP}).then(function(user){
+				});
+			}
+		}
+		else if(interval == 'Bi Anually'){
+			//descValue = descValue.replace(/\s/g, '');
+			instalments = ((days(paymentDueDate, endDate)) / 180)+1;
+			var intervalDates = new Array(Math.round(instalments)-1);
+			var today = new Date();
+			intervalDates[0] = intervalDates[Math.round(instalments)];
+			intervalDates[Math.round(instalments)-1] = '';
+			var newCount;
+	
+			for(var i = 0; i < intervalDates.length; i++){
+				var holdDate
+				if(i != Math.round(instalments)){
+					var currentDate = new Date (paymentDueDate); 
+					currentDate.setMonth(currentDate.getMonth() + i*6);
+					var date = new Date(currentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					//var weekDay = weekday[date.getDay()];
+					var ePDate = [day,month,year].join('-');
+					holdDate = [year,month,day].join('-');
+					intervalDates[i] = holdDate;
+				}
+				db.ref('addresses/'+currentProperty+'/lease/payments').push({'true':intervalDates[i],'false':intervalDates[i],'timeStamp':firebase.database.ServerValue.TIMESTAMP}).then(function(user){
+				});
+			}
+		}
+		else if(interval == 'Anually'){
+			//descValue = descValue.replace(/\s/g, '');
+			instalments = ((days(paymentDueDate, endDate)) / 365)+1;
+			var intervalDates = new Array(Math.round(instalments)-1);
+			var today = new Date();
+			intervalDates[0] = intervalDates[Math.round(instalments)];
+			intervalDates[Math.round(instalments)-1] = '';
+			var newCount;
+	
+			for(var i = 0; i < intervalDates.length; i++){
+				var holdDate
+				if(i != Math.round(instalments)){
+					var currentDate = new Date (paymentDueDate); 
+					currentDate.setYear(currentDate.getYear() + i*1);
+					var date = new Date(currentDate);
+					day = date.getDate();
+					month = date.getMonth()+1;										
+					year = date.getFullYear();
+					//var weekDay = weekday[date.getDay()];
+					var ePDate = [day,month,year].join('-');
+					holdDate = [year,month,day].join('-');
+					intervalDates[i] = holdDate;
+				}
+				db.ref('addresses/'+currentProperty+'/lease/payments').push({'true':intervalDates[i],'false':intervalDates[i],'timeStamp':firebase.database.ServerValue.TIMESTAMP}).then(function(user){
+				});
+			}
+		}
+	});
+	}
+
+}
+function logLatePayment(){
+	var rentDue = document.getElementById("rentDueSpan");
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database();
+	
+	db.ref('addresses/'+currentProperty+'/lease/rentAmount').on("value", function(data){
+		var rentAmount = parseInt(data.val());
+		db.ref('addresses/'+currentProperty+'/lease/leaseLateAmount').on("value", function(data){
+			var latePaymentAmount = parseInt(data.val());
+			var total = rentAmount+latePaymentAmount
+			var span = document.getElementById("rentDueSpan");
+			db.ref('addresses/'+currentProperty+'/lease').update({"tempRent":total}).then(function(){
+				db.ref('addresses/'+currentProperty+'/lease/payments').orderByChild('timeStamp').limitToFirst(1).once("child_added", function(data){
+					var paymentDate = data.child("false").val()
+					var updateNotif = {
+						"type": "Late Payment Fee",
+						"body": "Late rental payment fee of £"+latePaymentAmount+" has been added to rental payment due on "+paymentDate,
+						"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+						"title":"",
+						"forWho":"Everyone"
+						}
+					db.ref("addresses/"+currentProperty+"/notificationUpdates").push(updateNotif).then(function(){
+						hide(latePaymentBtn);
+					});
+				});
+			});
+		});
+		
+	});
+}
+
+function logPayment(){
+	var rentDue = document.getElementById("rentDueSpan");
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database();
+	var paymentDate
+	db.ref('addresses/'+currentProperty+'/lease/tempRent').once("value", function(data){
+		var amount = parseInt(data.val());
+		if(amount == 0){
+			db.ref('addresses/'+currentProperty+'/lease/rentAmount').once("value", function(data){
+			amount = parseInt(data.val());
+			});
+		}
+		else{
+			amount = parseInt(data.val())
+		}
+		db.ref('addresses/'+currentProperty+'/lease/payments').orderByChild('timeStamp').limitToFirst(1).once("child_added", function(data){
+			var key = data.key;
+			var paymentDate = data.child("false").val()
+			var date = new Date();
+			day = date.getDate();
+			month = date.getMonth()+1;
+			year = date.getFullYear();
+			var newDate = [year,month,day].join('-');
+			var payment = {
+				"date": paymentDate,
+				"amount": amount,
+				"datePaid": newDate,
+				"timeStamp": firebase.database.ServerValue.TIMESTAMP
+			};
+			db.ref('addresses/'+currentProperty+'/lease/paymentHistory').push(payment).then(function(){
+				db.ref('addresses/'+currentProperty+'/lease/payments/'+key).remove().then(function(){
+					db.ref('addresses/'+currentProperty+'/lease').update({"tempRent":"0"}).then(function(data){
+						location.reload();
+					});
+				});
+			});
+		});
+	});
+}
+
+$(function(){
+	$('#latePayCheck').click(function() {
+		if($(this).is(':checked')){
+			show(created);
+			show(completed);
+		}
+		else{
+			hide(created);
+			hide(completed);
+		}
+	});
+});
+
+function viewPaymentHistory(){
+	show(paymentHistory);
+	document.getElementById("PaymentHistoryTable").innerHTML = "<tr><td class='tg-xxzo'>Date Due</td><td class='tg-xxzo'>Date Paid</td><td class='tg-xxzo'>Amount</td><td class='tg-xxzo'></td></tr>";
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database();
+	
+	db.ref('addresses/'+currentProperty+'/lease/paymentHistory').orderByChild('timeStamp').on("child_added", function(data){
+		hide(noPaymentHistory)
+		var amount = data.child("amount").val();
+		var datePaid = data.child("datePaid").val();
+		var dateDue = data.child("date").val();
+		var appendPayment = "<tr><td class='tg-us36'>"+dateDue+"</td><td class='tg-us36'>"+datePaid+"</td><td class='tg-us36'>£"+amount+"</td><td class='tg-us36'><a id='emailPaymentRef'><i id='emailPaymentIcon' class='far fa-envelope' value='"+data.key+"' onclick='emailPayment(this)'></i></a></td></tr>";
+		$('#PaymentHistoryTable').append(appendPayment);
+	});
+}
+
+function emailPayment(ele){
+	var key = ele.getAttribute('value');
+	var currentProperty = localStorage.getItem("prop");
+	var db = firebase.database();
+	var ref = document.getElementById("emailPaymentRef");
+	var to = [];
+	var subject;
+	var emailBody;
+	
+	db.ref('addresses/'+currentProperty+'/tenant').orderByKey().on('value', function(snapshot){
+		snapshot.forEach(function(child){
+			db.ref('users/'+child.key+'/email').on('value', function(data){
+				to.push(data.val())
+				console.log(data.val())
+			});
+		});
+		to.join(',');
+		db.ref('addresses/'+currentProperty+'/firstLine').on('value', function(data){
+			subject = 'Receipt for rental payment at ' + capitalLetter(data.val());
+			db.ref('addresses/'+currentProperty+'/lease/paymentHistory/'+key).on('value',function(data){
+				emailBody = "Rental Payment Receipt Due on "+data.val().date+"%0D%0A%0D%0A";
+				db.ref('addresses/'+currentProperty+'/lease/rentAmount').on('value',function(data){
+					var originalAmount = parseInt(data.val());
+					emailBody += "Amount: £"+data.val()+"%0D%0A";
+					db.ref('addresses/'+currentProperty+'/lease/paymentHistory/'+key).on('value',function(data){
+						var amount = parseInt(data.val().amount)
+						if(amount > originalAmount){
+							var latePaymentFee = amount-originalAmount
+							emailBody += "Late Payment Fee: £" + (amount-originalAmount) + "%0D%0ASubtotal: £" + (latePaymentFee+originalAmount)+"%0D%0APayment Recieved on: " + data.val().datePaid+"%0D%0A%0D%0A%0D%0ARegards,%0D%0A";
+						}
+						else{
+							emailBody += "Late Payment Fee: £" + originalAmount+"%0D%0ASubtotal: £" + (latePaymentFee+originalAmount)+"%0D%0APayment Recieved on: " + data.val().datePaid+"%0D%0A%0D%0A%0D%0ARegards,%0D%0A";
+						}
+						ref.setAttribute("href","mailto:"+to+"?&subject="+subject+"&body="+emailBody);
+					});
+				});
+			});
+		});
+	});
+	
+	
+}
+
+
+<!-----------------Tenant functions------------------------>
+//If user clicks 'yes' to accept details are correct
+function sendRequest(){
+	//Set variables
+	document.getElementById("toggleMenu").style.display = 'block';
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child('users').child(user.uid);
+	var refAdd = firebase.database().ref().child('addresses');
+	var div = document.getElementById("registerProperty");
+	var db = firebase.database();
+	var currentProperty = localStorage.getItem("prop");
+	var name;
+	var email;
+	
+	//get name and email of current use
+	ref.child('firstName').once('value').then(function(data) {
+		name = data.val();
+	});
+	ref.child('lastName').once('value').then(function(data) {
+		name += " " + data.val();
+	});
+	ref.child('email').once('value').then(function(data) {
+		email = data.val();
+		var r = {
+			"uid": user.uid,
+			"name": name,
+			"email": email
+		};
+		
+	//Getting users firstline of address
+	ref.child('rentingAddress').child('firstLine').once('value').then(function(data) {
+	  var firstLine = data.val();
+	  //Matching users address with registered address on database
+	  refAdd.orderByChild("firstLine").equalTo(firstLine).once("value", function(snapshot) {
+		snapshot.forEach(function(child) {
+			var key = child.key;
+			//push user uid under addressByUid with the address they've sent a request for. This is to check the status of request
+			firebase.database().ref().child('addressByUid').child(user.uid).push({"addressID":key}).then(function(user){
+				var updateNotif = {
+					"type": "Tenant Request",
+					"body": name+" has requested to joing your property group.",
+					"title":"",
+					"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+					"forWho":"Landlord"
+				}
+				db.ref("addresses/"+key+"/notificationUpdates").push(updateNotif).then(function(data){
+					});
+			}, function(error){
+			});
+			//push user details under 'request' in property 
+			refAdd.child(key).child('requests').push(r).then(function(user){
+			}, function(error){
+			});
+		  });
+		});
+	});
+	});
+	
+	//Change pop up box to 'waiting for landlord to accept message
+	div.innerHTML = "<div class='pop-up-content'><h2 style='padding-bottom: 20px;' class='center'>You request has been sent. Waiting for landlord to accept request.</h2><div class='boxed-item boxed-item-smaller' style='background-color:#5d6f56;margin-left:auto;margin-right:auto;' value='"+user.uid+"' onClick='signout(this)'>Sign Out</div></div>";
+}
+
+//send request by searching for landlord by username
+function sendRequestByUsername(ele){
+	//Set variable
+	var line = ele.getAttribute('value');
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child('users').child(user.uid);
+	var refAdd = firebase.database().ref().child('addresses');
+	var div = document.getElementById("registerProperty");
+	var name;
+	var email;
+	
+	ref.child('firstName').once('value').then(function(data) {
+		name = data.val();
+	});
+	ref.child('lastName').once('value').then(function(data) {
+		name += " " + data.val();
+	});
+	ref.child('email').once('value').then(function(data) {
+		email = data.val();
+		var r = {
+			"uid": user.uid,
+			"name": name,
+			"email": email
+		};
+		
+	  refAdd.orderByChild("firstLine").equalTo(line).once("value", function(snapshot) {
+		snapshot.forEach(function(child) {
+			var key = child.key;
+			firebase.database().ref().child('addressByUid').child(user.uid).set({"addressID":key}).then(function(user){
+			}, function(error){
+			});
+			refAdd.child(key).child('requests').push(r).then(function(user){
+			}, function(error){
+			});
+		  });
+		});
+	});
+	div.innerHTML = "<div class='pop-up-content'><h2 style='padding-bottom: 20px;' class='center'>Waiting for landlord to accept request.</h2><div class='boxed-item boxed-item-smaller' style='background-color:#5d6f56;margin-left:auto;margin-right:auto;' value='"+user+"' onClick='signout(this)'>Sign Out</div></div>";
+}
+
+
+//if user clicks the 'no' button if address and landlord name doesn't match
+function findByUserName(){
+	//change the layout of popup box by using innerHTML
+	var div = document.getElementById("tenantRequest");
+	div.innerHTML = "<h2 style='padding-bottom: 20px;' class='center'>Find Property Group by Landlord Username</h2><input id='searchUsername' class='form-control' type='text' placeholder='Enter the username of your landlord'><button class='btn btn-primary' onclick='searchLandlord()' style='border-color:#b72c2c;background-color:#5d6f56;width:100%;margin:10px 0px;'>Search</button><table id='searchResults' class='tg'></table><div id='alertErrorMessage' class='alertError hidden'>Username not found.</div>";
+	
+	$("input#searchUsername").on({
+	  keydown: function(e) {
+		if (e.which === 32)
+		  return false;
+	  },
+	  change: function() {
+		this.value = this.value.replace(/\s/g, "");
+	  }
+	});
+	
+}
+
+//function to run after 'search' button is clicked to search for address by landlord username
+function searchLandlord(){
+	//Set variables
+	var table = document.getElementById("searchResults");
+	var user = firebase.auth().currentUser;
+	var ref = firebase.database().ref().child('users');
+	var refAdd = firebase.database().ref().child('addresses');
+	var username = document.getElementById("searchUsername");
+	
+	if(table.innerHTML == ''){
+		//if table to display addresses of searched landlord is empty
+		//seach for landlord on database by username
+	ref.orderByChild("username").equalTo(username.value.toLowerCase()).once("value", function(snapshot) {
+		if(snapshot.val()){
+			//if snapshot value returns a username
+		  snapshot.forEach(function(child) {
+			  var key = child.key;
+			  //load all address under landlord found
+			  refAdd.orderByChild("landlord").equalTo(key).once("value", function(snapshot) {
+					snapshot.forEach(function(child) {
+						var propKey = child.key;
+						refAdd.child(propKey).once("value", function(data) {
+							var address;
+							var firstLine = data.child("firstLine").val();
+							address = firstLine;
+							var secondLine = data.child("secondLine").val();
+							if(secondLine != ''){
+								address += ', ' + secondLine
+							}
+							var thirdLine = data.child("thirdLine").val();
+							if(thirdLine != ''){
+								address += ', ' + thirdLine;
+							}
+							var town = data.child("town").val();
+							if(town != ''){
+								address += ', ' + town;
+							}
+							var city = data.child("city").val();
+							if(city != ''){
+								address += ', ' + city;
+							}
+							var county = data.child("county").val();
+							if(county != ''){
+								address += ', ' + county;
+							}
+							var postcode = data.child("postcode").val();
+							address += ', ' + postcode.toUpperCase();
+							
+							if(address != ''){
+								address = capitalLetter(address);
+								//append address to table
+								var appendIssue = "<tr><td class='tg-us36' value='"+key+"'>"+address+"</td><td class='tg-us36'><button class='btn btn-primary' value='"+firstLine+"' onclick='sendRequestByUsername(this)' style='border-color:#79c879;;background-color:#79c879;;width:100%;'>Send Request</button></td></tr>";
+								$('#searchResults').append(appendIssue);
+							}
+						});
+					});
+			  });
+			  
+		  });
+		}<!--End of snapshot.val() if statement-->
+		else{
+			// Handle Errors here
+			//If landlord not found
+			show(alertErrorMessage);
+			setTimeout(function(){
+				hide(alertErrorMessage);
+			},3000);
+		}
+	});
+	}<!--End of table.innerHTML == '' if statment-->
+	else{
+		//if table contains address form previous search, clear the table and append address found from landlord from new search
+		table.innerHTML = '';
+		ref.orderByChild("username").equalTo(username.value).once("value", function(snapshot) {
+		if(snapshot.val()){
+			//If username found
+		  snapshot.forEach(function(child) {
+			  var key = child.key;
+			  refAdd.orderByChild("landlord").equalTo(key).once("value", function(snapshot) {
+					snapshot.forEach(function(child) {
+						var propKey = child.key;
+						refAdd.child(propKey).once("value", function(data) {
+							var address;
+							var firstLine = data.child("firstLine").val();
+							address = firstLine;
+							var secondLine = data.child("secondLine").val();
+							if(secondLine != ''){
+								address += ', ' + secondLine
+							}
+							var thirdLine = data.child("thirdLine").val();
+							if(thirdLine != ''){
+								address += ', ' + thirdLine;
+							}
+							var town = data.child("town").val();
+							if(town != ''){
+								address += ', ' + town;
+							}
+							var city = data.child("city").val();
+							if(city != ''){
+								address += ', ' + city;
+							}
+							var county = data.child("county").val();
+							if(county != ''){
+								address += ', ' + county;
+							}
+							var postcode = data.child("postcode").val();
+							address += ', ' + postcode.toUpperCase();
+
+							var appendIssue = "<tr><td class='tg-us36' value='"+key+"'>"+address+"</td><td class='tg-us36'><button class='btn btn-primary' value='"+firstLine+"' onclick='sendRequestByUsername(this)' style='border-color:#79c879;;background-color:#79c879;;width:100%;'>Send Request</button></td></tr>";
+							$('#searchResults').append(appendIssue);
+						});
+					});
+			  });
+			  
+		  });
+		}
+		else{
+			//If landlord not found not found
+			show(alertErrorMessage);
+			setTimeout(function(){
+				hide(alertErrorMessage);
+			},3000);
+		}
+	});
+	}<!--table.innerHTML == '' else statment-->
+}<!--End of searchLandlord() function-->
+
+
+
+function sendMessage(){
+	var theDiv = document.getElementById('displayBox');
+	var message = document.getElementById("messageInput").value;
+	var currentProperty = localStorage.getItem("prop");
+	var user = firebase.auth().currentUser;
+	var db = firebase.database();
+	//date
+	var date = new Date;
+	day = date.getDate();
+	month = date.getMonth() + 1;										
+	year = date.getFullYear();
+	var newDate = [day, month, year].join('/');
+	var db = firebase.database();
+	//time
+	hours = date.getHours(); // => 9
+	mins = date.getMinutes(); // =>  30
+	var time = [hours, mins].join(':');
+	
+	db.ref('users/'+user.uid+'/username').once("value", function(snapshot){
+		var username = snapshot.val();
+		var messageDetails = {
+		"uid": user.uid,
+		"message": message,
+		"date": newDate,
+		"time": time,
+		"timeStamp": firebase.database.ServerValue.TIMESTAMP,
+		"username": username
+		}
+		
+		if(message == ''){
+			document.getElementById("messageInput").style.border = '1px solid red';
+		}
+		else{
+			db.ref('addresses/'+currentProperty+'/chat/group').push(messageDetails).then(function(){
+				document.getElementById("messageInput").value = '';
+				theDiv.scrollTop = '99999';
+			});
+		}
+	});	
+}
+
+</script>
+</body>
+</html>
